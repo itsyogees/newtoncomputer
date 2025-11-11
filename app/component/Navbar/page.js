@@ -162,8 +162,8 @@ export default function Navbar() {
                 <Link href="/pages/LaptopDamage" onClick={closeMenu}>Laptop Damage</Link>
                 <Link href="/pages/ChipLevelServicePage" onClick={closeMenu}>Chip Level Service</Link>
                 <Link href="/pages/UpgradePage" onClick={closeMenu}>Laptop Upgrade</Link>
-                <Link href="/services/data-recovery" onClick={closeMenu}>Data Recovery</Link>
-                <Link href="/services/accessories" onClick={closeMenu}>Laptop Accessories</Link>
+                <Link href="/pages/DataRecoveryPage"onClick={closeMenu}>Data Recovery</Link>
+                <Link href="/pages/LaptopAccessories" onClick={closeMenu}>Laptop Accessories</Link>
               </div>
             </div>
 
@@ -173,7 +173,7 @@ export default function Navbar() {
                 IT Services <FaChevronDown className="dropdown-arrow" />
               </span>
               <div className="dropdown-menu">
-                <Link href="/it-services/business-email" onClick={closeMenu}>Business Mail Services</Link>
+                <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
                 <Link href="/it-services/network-security" onClick={closeMenu}>Network Security Solutions</Link>
                 <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
                 <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
@@ -287,8 +287,8 @@ export default function Navbar() {
                   <Link href="/pages/LaptopDamage" onClick={closeMenu}>Laptop Damage</Link>
                   <Link href="/pages/ChipLevelServicePage" onClick={closeMenu}>Chip Level Service</Link>
                   <Link href="/pages/UpgradePage" onClick={closeMenu}>Laptop Upgrade</Link>
-                  <Link href="/services/data-recovery" onClick={closeMenu}>Data Recovery</Link>
-                  <Link href="/services/accessories" onClick={closeMenu}>Laptop Accessories</Link>
+                  <Link href="/pages/DataRecoveryPage" onClick={closeMenu}>Data Recovery</Link>
+                  <Link href="/pages/LaptopAccessories" onClick={closeMenu}>Laptop Accessories</Link>
                 </div>
               </details>
             </div>
@@ -298,7 +298,7 @@ export default function Navbar() {
               <details>
                 <summary>IT Services</summary>
                 <div className="mobile-dropdown-content">
-                  <Link href="/it-services/business-email" onClick={closeMenu}>Business Mail Services</Link>
+                  <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
                   <Link href="/it-services/network-security" onClick={closeMenu}>Network Security Solutions</Link>
                   <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
                   <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>

@@ -59,22 +59,16 @@
 
     &.active {
       border-color: #0d6efd;
-      background: linear-gradient(135deg, #667eea 0%, #0d6efd 100%);
+      background: #0d6efd;
       
-      .service-content {
-        .service-label {
-          color: white;
-        }
-        .service-description {
-          color: rgba(255, 255, 255, 0.9);
-        }
+      // This targets the service label when parent has active class
+      .service-contents .service-labels {
+        color: white !important;
       }
 
-      .service-indicator {
-        .indicator-dot {
-          background: white;
-          transform: scale(1.2);
-        }
+      .service-indicator .indicator-dot {
+        background: white;
+        transform: scale(1.2);
       }
 
       &::before {
@@ -96,10 +90,7 @@
         font-weight: 600;
         color: #1e293b; 
         transition: color 0.3s ease;
-        
-    &.active {
-        color: #ffffff !important;
-    }
+        margin: 0; // Added to remove default margin
       }
 
       .service-description {

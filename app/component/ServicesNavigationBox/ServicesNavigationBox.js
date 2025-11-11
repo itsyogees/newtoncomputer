@@ -24,12 +24,12 @@ const ServicesNavigationBox = () => {
       description: 'Performance upgrades and enhancements'
     },
     {
-      path: '/services/data-recovery',
+      path: '/pages/DataRecoveryPage',
       label: 'Data Recovery',
       description: 'Secure data recovery services'
     },
     {
-      path: '/services/accessories',
+      path: '/pages/LaptopAccessories',
       label: 'Laptop Accessories',
       description: 'Genuine accessories and parts'
     }
@@ -47,7 +47,7 @@ const ServicesNavigationBox = () => {
               className={`service-link ${pathname === service.path ? 'active' : ''}`}
             >
               <div className="service-contents">
-                <h4 className="service-labels">{service.label}</h4>
+                <p className="service-labels">{service.label}</p>
               </div>
               
             </Link>

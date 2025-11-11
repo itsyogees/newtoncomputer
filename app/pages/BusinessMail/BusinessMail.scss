@@ -1,0 +1,936 @@
+// BusinessMail.scss
+
+// =============================================
+// VARIABLES & MIXINS
+// =============================================
+$primary-color: #667eea;
+$secondary-color: #2563eb;
+$accent-color: #2563eb;
+$text-dark: #1e293b;
+$text-medium: #374151;
+$text-light: #64748b;
+$text-muted: #94a3b8;
+$bg-light: #f8fafc;
+$bg-medium: #f1f5f9;
+$border-color: #e2e8f0;
+$white: #ffffff;
+$shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+$shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.1);
+$shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+$border-radius: 1rem;
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin gradient-bg {
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+}
+
+@mixin text-gradient {
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// =============================================
+// BASE STYLES
+// =============================================
+.business-mail-page {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    width: 95%;
+    padding: 0 1rem;
+  }
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $text-dark;
+  margin-bottom: 3rem;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    @include gradient-bg;
+    border-radius: 2px;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.75rem;
+  }
+}
+
+// =============================================
+// HERO SECTION
+// =============================================
+.business-hero {
+  position: relative;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  color: #000;
+  padding: 6rem 0;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 350px;
+    height: 300px;
+    background-image:  
+      radial-gradient(circle at 75% 75%, #94a3b8 1px, transparent 1px),
+      radial-gradient(circle at 75% 75%, #cbd5e1 1px, transparent 1px);
+    background-size: 20px 20px, 30px 30px;
+    z-index: 1;
+    border-radius: 0 0 0 10px;
+  }
+
+  &__container {
+    @extend .container;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+  }
+
+  &__content {
+    animation: slideInFromLeft 1s ease-out 0.3s both;
+    
+    @media (max-width: 768px) {
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: $text-dark;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+    @include text-gradient;
+
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
+  }
+
+  &__description {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    color: $text-light;
+    animation: fadeInUp 0.8s ease-out 0.7s both;
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.9s both;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    text-decoration: none;
+    display: inline-block;
+    font-family: inherit;
+    animation: fadeInUp 0.8s ease-out 1.1s both;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    &--primary {
+      @include gradient-bg;
+      color: $white;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      }
+    }
+
+    &--secondary {
+      background: transparent;
+      color: $primary-color;
+      border: 2px solid $primary-color;
+
+      &:hover {
+        background: $primary-color;
+        color: $white;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  &__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    animation: slideInFromRight 1s ease-out 0.3s both;
+
+    @media (max-width: 768px) {
+      animation: fadeInUp 1s ease-out 0.5s both;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      max-width: 600px;
+      object-fit: contain;
+      border-radius: $border-radius;
+      transition: $transition;
+      animation: imageFadeIn 0.8s ease-out 0.5s both;
+    }
+  }
+}
+
+// =============================================
+// CERTIFIED PARTNER SECTION
+// =============================================
+.certified-partner {
+  padding: 5rem 0;
+  background: $white;
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    align-items: center;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0;
+    @include text-gradient;
+  }
+
+  &__logo {
+    display: flex;
+    justify-content: center;
+    
+    img {
+      max-width: 300px;
+      height: auto;
+    }
+  }
+
+  &__btn {
+    padding: 1rem 2rem;
+    background: $primary-color;
+    color: $white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover {
+      background: $secondary-color;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+
+      &::before {
+        left: 100%;
+      }
+    }
+  }
+
+  &__description {
+    p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: $text-light;
+      margin: 0;
+    }
+  }
+}
+
+// =============================================
+// PLANS SECTION
+// =============================================
+.plans-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, $bg-light 0%, $bg-medium 100%);
+}
+
+.plans-intro {
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: $text-light;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
+}
+
+.plans-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.plans-toggle__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: $white;
+  border: 2px solid $border-color;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $text-medium;
+  cursor: pointer;
+  transition: $transition;
+
+  &.active {
+    @include gradient-bg;
+    color: $white;
+    border-color: $primary-color;
+  }
+
+  &:hover:not(.active) {
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+
+  .toggle-icon {
+    font-size: 1.5rem;
+  }
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+.plan-card {
+  background: $white;
+  border-radius: $border-radius;
+  padding: 2rem;
+  box-shadow: $shadow-medium;
+  transition: $transition;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-heavy;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 1rem;
+  }
+
+  &__price {
+    .price-amount {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: $primary-color;
+    }
+
+    .price-period {
+      font-size: 1rem;
+      color: $text-light;
+      margin-left: 0.5rem;
+    }
+  }
+
+  &__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    flex-grow: 1;
+  }
+
+  &__btn {
+    padding: 1rem 2rem;
+    background: $primary-color;
+    color: $white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover {
+      background: $secondary-color;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+
+      &::before {
+        left: 100%;
+      }
+    }
+  }
+}
+
+.plan-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: $text-medium;
+
+  .feature-icon {
+    color: #10b981;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+}
+
+// =============================================
+// BUSINESS SERVICES SECTION
+// =============================================
+.business-services {
+  padding: 5rem 0;
+  background: $white;
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  &__description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: $text-light;
+    margin: 0;
+  }
+
+  &__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .services-img {
+      width: 100%;
+      height: auto;
+      max-width: 500px;
+      border-radius: $border-radius;
+      box-shadow: $shadow-heavy;
+    }
+  }
+}
+
+// =============================================
+// OFFERING SECTION
+// =============================================
+.offering-section {
+  padding: 5rem 0;
+
+  .offering-bg {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url('/assets/business-mail-partner-chennai.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: $white;
+    padding: 5rem 0;
+    border-radius: $border-radius;
+  }
+
+  .section-title {
+    color: $white;
+    
+    &::after {
+      background: $white;
+    }
+  }
+}
+
+.offering-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.offering-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: $border-radius;
+  padding: 2rem;
+  transition: $transition;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+  }
+}
+
+.offering-icon {
+  font-size: 3rem;
+  color: $primary-color;
+  margin-bottom: 1.5rem;
+}
+
+.offering-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: $white;
+}
+
+.offering-details {
+  h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: $primary-color;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.support-section {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: $border-radius;
+  padding: 3rem 2rem;
+  margin-top: 2rem;
+}
+
+.support-icon {
+  font-size: 3rem;
+  color: $primary-color;
+  margin-bottom: 1.5rem;
+}
+
+.support-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: $white;
+}
+
+.support-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+// =============================================
+// ADVANTAGES SECTION
+// =============================================
+.advantages-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, $bg-light 0%, $bg-medium 100%);
+}
+
+.advantages-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+}
+
+.advantages-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $text-dark;
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+}
+
+.advantages-intro {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: $text-light;
+  margin-bottom: 2rem;
+}
+
+.advantages-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.advantage-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: $white;
+  border-radius: $border-radius;
+  box-shadow: $shadow-light;
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-medium;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+}
+
+.advantage-icon {
+  font-size: 2rem;
+  color: $primary-color;
+  flex-shrink: 0;
+}
+
+.advantage-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: $text-dark;
+  margin: 0 0 0.5rem;
+}
+
+.advantage-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: $text-light;
+  margin: 0;
+}
+
+.advantages-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .advantages-img {
+    width: 100%;
+    height: auto;
+    max-width: 500px;
+    border-radius: $border-radius;
+    box-shadow: $shadow-heavy;
+  }
+}
+
+// =============================================
+// CTA SECTION
+// =============================================
+.business-cta {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: $white;
+  text-align: center;
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  &__description {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    &--primary {
+      background: $white;
+      color: $primary-color;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    &--secondary {
+      background: transparent;
+      color: $white;
+      border: 2px solid $white;
+
+      &:hover {
+        background: $white;
+        color: $primary-color;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// =============================================
+// ANIMATIONS
+// =============================================
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes imageFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

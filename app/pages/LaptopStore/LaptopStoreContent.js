@@ -14,8 +14,9 @@ import {
   FaCheckCircle,
   FaSyncAlt
 } from 'react-icons/fa';
+import CommonBanner from '../../component/CommonBanner/CommonBanner'; 
 import './LaptopStore.scss';
-
+import Loading from '../../component/Loading/Loading';
 const LaptopStoreContent = () => {
   const searchParams = useSearchParams();
   const brand = searchParams.get('brand');
@@ -266,23 +267,29 @@ const LaptopStoreContent = () => {
     e.target.src = '/assets/placeholder-lap.png';
   };
 
+ useEffect(() => {
+    // Simulate data loading
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+  }, []);
+
   if (loading) {
     return (
-      <div className="laptop-store-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading laptops...</p>
-      </div>
+      <Loading 
+        type="spinner" 
+        text="Loading laptops..." 
+        fullScreen={true}
+        size="large"
+      />
     );
   }
+
 
   return (
     <div className="laptop-store">
       {/* Simple Banner Section */}
-      <section className="laptop-store-banner">
-        <div className="banner-content">
-          <h1 className="banner-title">{getBannerTitle()}</h1>
-        </div>
-      </section>
+     <CommonBanner title={getBannerTitle()}/>
 
       {/* Filters and Search Section */}
       <section className="laptop-store-filters">

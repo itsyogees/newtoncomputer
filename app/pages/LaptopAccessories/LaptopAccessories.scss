@@ -1,0 +1,296 @@
+.laptop-accessories-page {
+  background: #f8fafc;
+  min-height: 100vh; 
+
+  .accessories-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    
+    @media (max-width: 768px) {
+      padding: 0 1rem;
+    }
+  }
+
+  // Accessory Sections
+  .accessory-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 2.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+
+    @media (max-width: 768px) {
+      padding: 1.5rem;
+    }
+
+    .section-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+
+      &.reverse {
+        direction: rtl;
+        
+        > * {
+          direction: ltr;
+        }
+      }
+
+      @media (max-width: 968px) {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        
+        &.reverse {
+          direction: ltr;
+        }
+      }
+
+      .text-content {
+        .section-header {
+          margin-bottom: 2rem;
+
+          .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+
+            @media (max-width: 768px) {
+              font-size: 1.5rem;
+            }
+          }
+
+          .section-description {
+            font-size: 1.125rem;
+            color: #64748b;
+            line-height: 1.6;
+          }
+        }
+      }
+
+      .image-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .image-wrapper {
+          position: relative;
+          border-radius: 0.75rem;
+          overflow: hidden;
+  
+
+        
+          .accessory-image {
+            width: 100%;
+            // height: auto;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+          }
+        }
+      }
+    }
+
+    // For sections without images (like connectivity)
+    .section-header {
+      margin-bottom: 2rem;
+
+      .section-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+
+        @media (max-width: 768px) {
+          font-size: 1.5rem;
+        }
+      }
+
+      .section-description {
+        font-size: 1.125rem;
+        color: #64748b;
+        line-height: 1.6;
+      }
+    }
+  }
+
+  // Brands Section
+  .brands-list {
+    margin: 2rem 0;
+
+    .brands-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+    }
+
+    .brands-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+
+      .brand-tag {
+        background: #f1f5f9;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #e2e8f0;
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+
+  // Features Grid
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+
+    .feature-card {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .feature-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .feature-description {
+        color: #64748b;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  // Features List
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+
+      .feature-bullet {
+        color: #0d6efd;
+        font-weight: bold;
+        font-size: 1.25rem;
+        line-height: 1.4;
+        flex-shrink: 0;
+      }
+
+      span {
+        color: #374151;
+        line-height: 1.5;
+        flex: 1;
+      }
+    }
+  }
+
+  // Quality Assurance
+  .quality-assurance {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+
+    .quality-text {
+      color: #0369a1;
+      font-style: italic;
+      text-align: center;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  // Modules Grid
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+
+    .module-column {
+      .module-subtitle {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .tech-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        .tech-item {
+          background: #f8fafc;
+          padding: 0.75rem 1rem;
+          border-radius: 0.5rem;
+          border: 1px solid #e2e8f0;
+          color: #374151;
+          font-weight: 500;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #e2e8f0;
+            transform: translateX(5px);
+          }
+        }
+      }
+    }
+  }
+
+  // Use Cases
+  .use-cases {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+
+    .use-cases-text {
+      font-size: 1.125rem;
+      color: #64748b;
+      font-weight: 500;
+      font-style: italic;
+      margin: 0;
+    }
+  }
+}

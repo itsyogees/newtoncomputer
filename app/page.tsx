@@ -1,5 +1,6 @@
-import React from 'react' 
-import Home from './pages/Home/page'
+"use client"
+import React from 'react';
+import Home from './pages/Home/page';
 
 const page = () => {
   return (

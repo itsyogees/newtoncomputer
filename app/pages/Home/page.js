@@ -1,13 +1,16 @@
-"use client"
-import Image from 'next/image'
-import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes } from 'react-icons/fa'
-import { useState } from 'react'
-import './Home.scss'
+"use client";
+import { useState } from 'react';
+import Image from 'next/image';
+import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes } from 'react-icons/fa';
 
+import Loading from '../../component/Loading/Loading';
+import './Home.scss';
+ 
 export default function Home() {
   const [selectedLaptop, setSelectedLaptop] = useState(null)
   const [hoveredLaptop, setHoveredLaptop] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
+
 
   const laptopServices = [
     'Laptop Upgradation',
@@ -97,7 +100,7 @@ export default function Home() {
   const handleSideImageClick = (image) => {
     setSelectedImage(image)
   }
-
+ 
   return (
     <div className="homepage">
       
