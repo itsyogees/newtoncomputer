@@ -1,11 +1,12 @@
 .footer {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  color: #1e293b;
+  background: #000000;
+  color: #ffffff;
   position: relative;
   overflow: hidden;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #333333;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
+  /* Background shapes */
   &::before {
     content: '';
     position: absolute;
@@ -16,10 +17,68 @@
     background: linear-gradient(90deg, transparent, #3b82f6, #8b5cf6, transparent);
   }
 
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 400px;
+    height: 400px;
+    background: url('/assets/footer-shape-1.png') no-repeat;
+    background-size: contain;
+    opacity: 0.2;
+    z-index: 1;
+    filter: brightness(0) invert(1);
+
+    @media (max-width: 768px) {
+      width: 250px;
+      height: 250px;
+      top: -30px;
+      left: -30px;
+    }
+
+    @media (max-width: 480px) {
+      width: 200px;
+      height: 200px;
+      top: -20px;
+      left: -20px;
+    }
+  }
+
+  /* Right corner shape */
+  .footer-shape-right {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 400px;
+    height: 400px;
+    background: url('/assets/footer-shape-2.png') no-repeat;
+    background-size: contain;
+    opacity: 0.2;
+    z-index: 1;
+    filter: brightness(0) invert(1);
+
+    @media (max-width: 768px) {
+      width: 250px;
+      height: 250px;
+      top: -30px;
+      right: -30px;
+    }
+
+    @media (max-width: 480px) {
+      width: 200px;
+      height: 200px;
+      top: -20px;
+      right: -20px;
+    }
+  }
+
   &__container {
-    max-width: 1200px;
+    width:90%;
     margin: 0 auto;
     padding: 0 1rem;
+    position: relative;
+    z-index: 2;
 
     @media (min-width: 1400px) {
       max-width: 1400px;
@@ -29,6 +88,8 @@
   // Main Footer
   &__main {
     padding: 3rem 0 2rem;
+    position: relative;
+    z-index: 2;
 
     @media (min-width: 768px) {
       padding: 4rem 0 3rem;
@@ -71,15 +132,16 @@
       margin-bottom: 1.5rem;
 
       .brand-logo {
-        width: 150px;
+        width: 200px;
         height: auto;
         object-fit: contain;
+        // filter: brightness(0) invert(1);
       }
     }
 
     .brand-description {
       line-height: 1.7;
-      color: #475569;
+      color: #e5e7eb;
       margin-bottom: 2rem;
       font-size: 0.95rem;
       text-align: left;
@@ -91,32 +153,32 @@
         align-items: center;
         gap: 0.75rem;
         padding: 0.75rem 1rem;
-        background: rgba(59, 130, 246, 0.08);
-        border-radius: 8px;
-        border: 1px solid rgba(59, 130, 246, 0.15);
+        background: rgba(255, 255, 255, 0.1); 
+        border: 1px solid rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
         max-width: fit-content;
+        color: #ffffff;
 
         &:hover {
-          background: rgba(59, 130, 246, 0.12);
+          background: rgba(255, 255, 255, 0.15);
           transform: translateX(5px);
         }
 
         .contact-icon {
-          color: #3b82f6;
+          color: #ffffff;
           font-size: 1.1rem;
           flex-shrink: 0;
         }
 
         a {
-          color: #1e293b;
+          color: #ffffff;
           text-decoration: none;
           font-weight: 500;
           transition: color 0.3s ease;
           font-size: 0.95rem;
 
           &:hover {
-            color: #3b82f6;
+            color: #60a5fa;
           }
         }
       }
@@ -137,10 +199,10 @@
       flex: 0 0 200px;
     }
 
-    .section-title {
+    .section-titles {
       font-size: 1.25rem;
       font-weight: 600;
-      color: #1e293b;
+      color: #ffffff;
       margin-bottom: 1.5rem;
       position: relative;
       padding-bottom: 0.75rem;
@@ -150,10 +212,9 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        width: 40px;
-        height: 3px;
-        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-        border-radius: 2px;
+        width: 50px;
+        height: 2px;
+        background: #ffffff; 
       }
     }
 
@@ -168,22 +229,21 @@
       align-items: center;
       gap: 0.75rem;
       padding: 0.75rem 1rem;
-      color: #475569;
-      text-decoration: none;
-      border-radius: 8px;
+      color: #e5e7eb;
+      text-decoration: none; 
       transition: all 0.3s ease;
-      background: rgba(15, 23, 42, 0.04);
-      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
 
       &:hover {
-        background: rgba(59, 130, 246, 0.1);
-        color: #1e293b;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
         transform: translateX(8px);
-        border-color: rgba(59, 130, 246, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
       }
 
       .link-icon {
-        color: #3b82f6;
+        color: #ffffff;
         font-size: 1rem;
         transition: transform 0.3s ease;
         flex-shrink: 0;
@@ -228,10 +288,10 @@
       min-width: 250px;
     }
 
-    .section-title {
+    .section-titles {
       font-size: 1.25rem;
       font-weight: 600;
-      color: #1e293b;
+      color: #ffffff;
       margin-bottom: 1.5rem;
       position: relative;
       padding-bottom: 0.75rem;
@@ -241,28 +301,27 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        width: 40px;
-        height: 3px;
-        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-        border-radius: 2px;
+        width: 50px;
+        height: 2px;
+        background: #ffffff; 
       }
     }
   }
 
   // Location Cards
   .location-card {
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333333; 
+    padding: 1.5rem;
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     height: fit-content;
+    color: #ffffff;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     }
 
     .location-header {
@@ -271,7 +330,7 @@
       margin-bottom: 1.5rem;
 
       .location-icon {
-        color: #3b82f6;
+        color: #ffffff;
         font-size: 1.5rem;
         margin-top: 0.25rem;
         flex-shrink: 0;
@@ -280,13 +339,13 @@
       .location-address {
         p {
           margin: 0.25rem 0;
-          color: #475569;
+          color: #e5e7eb;
           line-height: 1.4;
           font-size: 0.95rem;
 
           &.location-name {
             font-weight: 600;
-            color: #1e293b;
+            color: #ffffff;
             font-size: 1rem;
           }
         }
@@ -306,34 +365,34 @@
       padding: 0.5rem 0;
 
       .detail-icon {
-        color: #3b82f6;
+        color: #ffffff;
         font-size: 0.9rem;
         flex-shrink: 0;
         width: 16px;
       }
 
       span, a {
-        color: #475569;
+        color: #e5e7eb;
         font-size: 0.9rem;
       }
 
       .location-tag {
-        background: rgba(59, 130, 246, 0.1);
-        color: #3b82f6;
-        padding: 0.25rem 0.75rem;
-        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        padding: 0.25rem 0.75rem; 
         font-weight: 600;
         font-size: 0.8rem;
-        border: 1px solid rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
 
       .phone-link {
         text-decoration: none;
         font-weight: 600;
         transition: color 0.3s ease;
+        color: #e5e7eb;
 
         &:hover {
-          color: #3b82f6;
+          color: #ffffff;
         }
       }
     }
@@ -341,11 +400,12 @@
 
   // Services Section
   &__services {
-    background: rgba(248, 250, 252, 0.8);
-    border-top: 1px solid #e2e8f0;
-    border-bottom: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
     padding: 2rem 0;
     position: relative;
+    z-index: 2;
   }
 
   .services-header {
@@ -354,7 +414,7 @@
     gap: 0.75rem;
     justify-content: center;
     margin-bottom: 1.5rem;
-    color: #3b82f6;
+    color: #ffffff;
     font-weight: 600;
     font-size: 1.1rem;
 
@@ -373,12 +433,12 @@
   }
 
   .service-tag {
-    background: rgba(59, 130, 246, 0.08);
-    color: #475569;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e5e7eb;
     padding: 0.6rem 1.2rem;
-    border-radius: 25px;
+    border-radius: 8px;
     font-size: 0.85rem;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
     cursor: default;
     white-space: nowrap;
@@ -386,11 +446,11 @@
     text-align: center;
 
     &:hover {
-      background: rgba(59, 130, 246, 0.15);
-      color: #1e293b;
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
       transform: translateY(-2px);
-      border-color: #3b82f6;
-      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
     }
 
     @media (max-width: 640px) {
@@ -402,9 +462,11 @@
 
   // Footer Bottom
   &__bottom {
-    background: rgba(248, 250, 252, 0.9);
+    background: rgba(255, 255, 255, 0.05);
     padding: 1.5rem 0;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #333333;
+    position: relative;
+    z-index: 2;
   }
 
   .footer-bottom-content {
@@ -421,30 +483,31 @@
   }
 
   .copyright {
-    color: #64748b;
+    color: #e5e7eb;
     font-size: 0.9rem;
     margin: 0;
     font-weight: 500;
   }
 
   .back-to-top {
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    color: white;
+    background: #ffffff;
+    color: #000000;
     border: none;
     padding: 0.75rem 1.5rem;
-    border-radius: 25px;
+ 
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
     font-size: 0.9rem;
 
     &:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+      background: #f8fafc;
     }
 
     &:active {

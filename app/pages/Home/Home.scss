@@ -1,13 +1,13 @@
-// Home.scss - Complete Styles with Animations
+// Home.scss - Complete Styles with Blue & Red Color Scheme
 
 // =============================================
 // VARIABLES & MIXINS
 // =============================================
-$primary-color: #667eea;
-$secondary-color: #2563eb;
-$accent-color: #2563eb;
-$text-dark: #1e293b;
-$text-medium: #374151;
+$primary-color: #2563eb; // Blue as primary
+$secondary-color: #DC1728; // Red for accents
+$accent-color: #7c3aed;
+$text-dark: #282828;
+$text-medium: #333333;
 $text-light: #64748b;
 $text-muted: #94a3b8;
 $bg-light: #f8fafc;
@@ -19,6 +19,29 @@ $shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.1);
 $shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
 $border-radius: 1rem;
 $transition: all 0.3s ease;
+
+// Gradient mixins
+@mixin blue-gradient-bg {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+@mixin red-gradient-bg {
+  background: linear-gradient(135deg, #DC1728 0%, #b3121f 100%);
+}
+
+@mixin blue-text-gradient {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin red-text-gradient {
+  background: linear-gradient(135deg, #DC1728 0%, #b3121f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 // Mixins
 @mixin flex-center {
@@ -32,17 +55,6 @@ $transition: all 0.3s ease;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-@mixin gradient-bg {
-  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
-}
-
-@mixin text-gradient {
-  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 // =============================================
@@ -143,18 +155,305 @@ $transition: all 0.3s ease;
 }
 
 // =============================================
+// SLIDER SECTION
+// =============================================
+.slider-section {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  min-height: 500px;
+  max-height: 800px;
+  overflow: hidden;
+  background: #000;
+
+  @media (max-width: 1024px) {
+    height: 60vh;
+    min-height: 400px;
+  }
+
+  @media (max-width: 768px) {
+    height: 50vh;
+    min-height: 350px;
+  }
+
+  @media (max-width: 480px) {
+    height: 45vh;
+    min-height: 300px;
+  }
+}
+
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slider-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  transform: translateX(100%);
+
+  &.active {
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 2;
+  }
+
+  &:not(.active) {
+    transform: translateX(-100%);
+  }
+}
+
+.slide-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .slider-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .slide-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.6) 100%
+    );
+    z-index: 1;
+  }
+}
+
+.slide-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-text {
+  text-align: center;
+  color: $white;
+  max-width: 800px;
+  padding: 0 2rem;
+  animation: fadeInUp 1s ease-out 0.5s both;
+
+  @media (max-width: 768px) {
+    padding: 0 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 1rem;
+  }
+}
+
+.slide-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 1024px) {
+    font-size: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.slide-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  opacity: 0.9;
+
+  @media (max-width: 1024px) {
+    font-size: 1.3rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.slide-btn {
+  padding: 1.2rem 3rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: $primary-color;
+  color: $white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: $transition;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+
+  &:hover {
+    background: #1d4ed8;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(29, 78, 216, 0.4);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  background: transparent;
+  border: none;
+  color: $white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 3;
+  transition: $transition;
+  @include flex-center;
+
+  &:hover {
+    transform: translateY(-50%) scale(1.2);
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  &--prev {
+    left: 2rem;
+  }
+
+  &--next {
+    right: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+
+    &--prev {
+      left: 1rem;
+    }
+
+    &--next {
+      right: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}
+
+.slider-dots {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  z-index: 3;
+
+  @media (max-width: 768px) {
+    bottom: 1.5rem;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    bottom: 1rem;
+    gap: 0.5rem;
+  }
+}
+
+.slider-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: $transition;
+
+  &.active {
+    background: $white;
+    border-color: $white;
+    transform: scale(1.2);
+  }
+
+  &:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    width: 12px;
+    height: 12px;
+  }
+
+  @media (max-width: 480px) {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+// =============================================
 // BASE STYLES
 // =============================================
 .homepage {
   min-height: 100vh;
   scroll-behavior: smooth;
   animation: pageLoad 0.5s ease-out;
-  
 }
 
 .container {
-  width: 90%;
-  max-width: 1200px;
+  width: 90%; 
   margin: 0 auto;
   
   @media (max-width: 768px) {
@@ -167,7 +466,7 @@ $transition: all 0.3s ease;
   text-align: center;
   font-size: 2.5rem;
   font-weight: 700;
-  color: $text-dark;
+  color: #000;
   margin-bottom: 3rem;
   position: relative;
   
@@ -179,7 +478,7 @@ $transition: all 0.3s ease;
     transform: translateX(-50%);
     width: 100px;
     height: 4px;
-    @include gradient-bg;
+    @include blue-gradient-bg;
     border-radius: 2px;
   }
   
@@ -198,7 +497,7 @@ $transition: all 0.3s ease;
 // =============================================
 .hero {
   position: relative;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: white;
   color: #000;
   padding: 6rem 0;
   min-height: 80vh;
@@ -213,9 +512,7 @@ $transition: all 0.3s ease;
     right: 0;
     width: 350px;
     height: 300px;
-    background-image:  
-      radial-gradient(circle at 75% 75%, #94a3b8 1px, transparent 1px),
-      radial-gradient(circle at 75% 75%, #cbd5e1 1px, transparent 1px);
+    
     background-size: 20px 20px, 30px 30px;
     z-index: 1;
     border-radius: 0 0 0 10px;
@@ -250,9 +547,9 @@ $transition: all 0.3s ease;
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: 1.5rem;
-    color: $text-dark;
+    color: #000;
     animation: fadeInUp 0.8s ease-out 0.5s both;
-    @include text-gradient;
+    // @include blue-text-gradient;
 
     @media (max-width: 768px) {
       font-size: 2.5rem;
@@ -264,10 +561,10 @@ $transition: all 0.3s ease;
   }
 
   &__description {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.7;
     margin-bottom: 2rem;
-    color: $text-light;
+    color: $text-medium;
     animation: fadeInUp 0.8s ease-out 0.7s both;
 
     @media (max-width: 768px) {
@@ -289,8 +586,7 @@ $transition: all 0.3s ease;
 
   &__btn {
     padding: 1rem 2rem;
-    border: none;
-    border-radius: 0.5rem;
+    border: none; 
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -318,26 +614,27 @@ $transition: all 0.3s ease;
     }
 
     &--primary {
-      @include gradient-bg;
+      @include blue-gradient-bg;
       color: $white;
 
       &:hover {
+        background: #1d4ed8;
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
       }
     }
 
     &--secondary {
-      background: transparent;
-      color: $primary-color;
-      border: 2px solid $primary-color;
+    background: transparent;
+    color: $secondary-color;
+    border: 2px solid $secondary-color;
 
-      &:hover {
-        background: $primary-color;
-        color: $white;
-        transform: translateY(-2px);
-      }
+    &:hover {
+      background: $secondary-color;
+      color: $white;
+      transform: translateY(-2px);
     }
+  }
   }
 
   &__image {
@@ -357,12 +654,9 @@ $transition: all 0.3s ease;
       width: 100%;
       height: auto;
       max-width: 600px;
-      object-fit: contain;
-      border-radius: $border-radius;
+      object-fit: contain; 
       transition: $transition;
       animation: imageFadeIn 0.8s ease-out 0.5s both;
-      
-      
     }
   }
 }
@@ -414,8 +708,7 @@ $transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 280px;
-  border-radius: $border-radius;
+  min-height: 280px; 
   animation: fadeInUp 0.8s ease-out both;
 
   &:nth-child(1) { animation-delay: 0.2s; }
@@ -429,7 +722,7 @@ $transition: all 0.3s ease;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
     transition: left 0.5s;
   }
 
@@ -443,7 +736,7 @@ $transition: all 0.3s ease;
 
     .feature-card__icon {
       transform: scale(1.1) translateY(-5px);
-      color: $primary-color;
+      color: $secondary-color;
     }
   }
 
@@ -454,7 +747,7 @@ $transition: all 0.3s ease;
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
-    color: $primary-color;
+     color: $secondary-color;
     transition: $transition;
     flex-shrink: 0;
   }
@@ -479,7 +772,7 @@ $transition: all 0.3s ease;
   &__description {
     font-size: 1rem;
     line-height: 1.6;
-    color: $text-light;
+    color: $text-medium;
     margin-bottom: 2rem;
     flex-grow: 1;
 
@@ -507,8 +800,7 @@ $transition: all 0.3s ease;
 
 .feature-btn {
   padding: 0.875rem 1.75rem;
-  border: none;
-  border-radius: 0.5rem;
+  border: none; 
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -535,12 +827,22 @@ $transition: all 0.3s ease;
   }
 
   &--primary {
-    @include gradient-bg;
+    @include red-gradient-bg();
     color: $white;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    }
+  }
+
+  &--secondary {
+    @include red-gradient-bg;
+    color: $white;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(220, 23, 40, 0.4);
     }
   }
 
@@ -557,7 +859,7 @@ $transition: all 0.3s ease;
 // =============================================
 .online-store {
   padding: 5rem 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: #ffffff;
   position: relative;
   overflow: hidden;
 
@@ -568,9 +870,7 @@ $transition: all 0.3s ease;
     right: 0;
     width: 350px;
     height: 300px;
-    background-image:  
-      radial-gradient(circle at 75% 75%, #94a3b8 1px, transparent 1px),
-      radial-gradient(circle at 75% 75%, #cbd5e1 1px, transparent 1px);
+ 
     background-size: 20px 20px, 30px 30px;
     z-index: 1;
     border-radius: 0 0 0 10px;
@@ -584,9 +884,7 @@ $transition: all 0.3s ease;
     left: 0;
     width: 250px;
     height: 250px;
-    background-image:  
-      radial-gradient(circle at 25% 25%, #94a3b8 1px, transparent 1px),
-      radial-gradient(circle at 25% 25%, #cbd5e1 1px, transparent 1px);
+    
     background-size: 15px 15px, 25px 25px;
     z-index: 1;
     border-radius: 0 10px 0 0;
@@ -611,7 +909,7 @@ $transition: all 0.3s ease;
 }
 
 .brand-category {
-  @include gradient-bg;
+  @include blue-gradient-bg;
   padding: 0.75rem 1.5rem;
   text-align: center;
   transition: $transition;
@@ -676,7 +974,7 @@ $transition: all 0.3s ease;
     transform: translateX(-50%);
     width: 100px;
     height: 4px;
-    @include gradient-bg;
+    @include blue-gradient-bg;
     border-radius: 2px;
   }
 
@@ -703,8 +1001,7 @@ $transition: all 0.3s ease;
 .laptop-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: $border-radius;
+  border: 1px solid rgba(255, 255, 255, 0.2); 
   overflow: hidden;
   box-shadow: $shadow-medium;
   transition: $transition;
@@ -719,7 +1016,7 @@ $transition: all 0.3s ease;
     transform: translateY(-8px);
     box-shadow: $shadow-heavy;
     background: $white;
-    border-color: rgba(102, 126, 234, 0.3);
+    border-color: rgba(37, 99, 235, 0.3);
   }
 
   &__image {
@@ -732,7 +1029,6 @@ $transition: all 0.3s ease;
       height: 100%;
       object-fit: cover;
       transition: transform 0.3s ease;
-      // animation: imageFadeIn 0.6s ease-out;
     }
 
     &:hover .laptop-image {
@@ -800,7 +1096,7 @@ $transition: all 0.3s ease;
 .current-price {
   font-size: 1.2rem;
   font-weight: 700;
-  color: $primary-color;
+  color: $secondary-color;
 }
 
 .overlay-btn {
@@ -836,7 +1132,7 @@ $transition: all 0.3s ease;
     background: $primary-color;
 
     &:hover {
-      background: #5a6fd8;
+      background: #1d4ed8;
       transform: scale(1.1);
     }
   }
@@ -844,8 +1140,7 @@ $transition: all 0.3s ease;
 
 .laptop-btn {
   padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.5rem;
+  border: none; 
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -871,22 +1166,22 @@ $transition: all 0.3s ease;
   }
 
   &--primary {
-    @include gradient-bg;
+    @include blue-gradient-bg;
     color: $white;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
     }
   }
 
   &--secondary {
     background: transparent;
-    color: $primary-color;
-    border: 2px solid $primary-color;
+    color: $secondary-color;
+    border: 2px solid $secondary-color;
 
     &:hover {
-      background: $primary-color;
+      background: $secondary-color;
       color: $white;
       transform: translateY(-2px);
     }
@@ -897,12 +1192,11 @@ $transition: all 0.3s ease;
 // LAPTOP SERVICES SECTION
 // =============================================
 .laptop-services {
-  padding: 5rem 0;
-  background: $white;
+  padding: 5rem 0; 
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);;
 
   .container {
-    width: 90%;
-    max-width: 1200px;
+    width: 90%; 
     margin: 0 auto;
   }
 
@@ -922,7 +1216,7 @@ $transition: all 0.3s ease;
       transform: translateX(-50%);
       width: 100px;
       height: 4px;
-      @include gradient-bg;
+      @include blue-gradient-bg;
       border-radius: 2px;
     }
 
@@ -973,13 +1267,10 @@ $transition: all 0.3s ease;
     
     img {
       width: 100%;
-      height: auto;
-      border-radius: $border-radius;
+      height: auto; 
       box-shadow: $shadow-heavy;
       transition: $transition;
       animation: imageFadeIn 0.8s ease-out;
-
-     
     }
 
     @media (max-width: 768px) {
@@ -1021,8 +1312,7 @@ $transition: all 0.3s ease;
   justify-content: space-between;
   padding: 1rem;
   background: $bg-light;
-  border: 2px solid $border-color;
-  border-radius: 0.75rem;
+  border: 2px solid $border-color; 
   font-size: 1rem;
   font-weight: 600;
   color: $text-medium;
@@ -1048,15 +1338,15 @@ $transition: all 0.3s ease;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
     transition: left 0.5s;
   }
 
   &:hover {
-    @include gradient-bg;
+    @include blue-gradient-bg;
     color: $white;
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
     border-color: $primary-color;
 
     &::before {
@@ -1080,7 +1370,7 @@ $transition: all 0.3s ease;
   }
 
   &__icon {
-    color: $primary-color;
+    color: var(--color-red);
     font-size: 0.9rem;
     transition: $transition;
     flex-shrink: 0;
@@ -1113,7 +1403,7 @@ $transition: all 0.3s ease;
 // =============================================
 .services-section {
   padding: 5rem 0;
-  background: linear-gradient(135deg, $bg-light 0%, $bg-medium 100%);
+  background: #ffffff;
   position: relative;
   overflow: hidden;
 }
@@ -1141,7 +1431,7 @@ $transition: all 0.3s ease;
     transform: translateX(-50%);
     width: 100px;
     height: 4px;
-    @include gradient-bg;
+    @include blue-gradient-bg;
     border-radius: 2px;
   }
 
@@ -1154,16 +1444,13 @@ $transition: all 0.3s ease;
   }
 }
 
-
-
 .service-item {
   display: flex;
   align-items: center;
   gap: 1rem;
   justify-content: center;
   padding: 1.5rem;
-  background: $white;
-  border-radius: $border-radius;
+  background: $white; 
   box-shadow: $shadow-light;
   transition: $transition;
   border: 2px solid transparent;
@@ -1186,14 +1473,14 @@ $transition: all 0.3s ease;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
     transition: left 0.5s;
   }
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: $shadow-heavy;
-    border-color: $primary-color;
+    border-color: $secondary-color;
 
     &::before {
       left: 100%;
@@ -1201,11 +1488,11 @@ $transition: all 0.3s ease;
 
     .service-icon {
       transform: scale(1.1);
-      color: $primary-color;
+      color: $secondary-color;
     }
 
     .service-name {
-      color: $primary-color;
+      color: $secondary-color;
     }
   }
 
@@ -1268,7 +1555,7 @@ $transition: all 0.3s ease;
 .services-description {
   font-size: 1.1rem;
   line-height: 1.7;
-  color: $text-light;
+  color: $text-medium;
   margin: 0;
   animation: fadeInUp 0.8s ease-out 0.2s both;
 
@@ -1292,8 +1579,7 @@ $transition: all 0.3s ease;
 
 .services-btn {
   padding: 1rem 2rem;
-  border: none;
-  border-radius: 0.75rem;
+  border: none; 
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -1320,13 +1606,13 @@ $transition: all 0.3s ease;
   }
 
   &--primary {
-    @include gradient-bg;
+    @include blue-gradient-bg;
     color: $white;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
 
     &:hover {
       transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 12px 35px rgba(37, 99, 235, 0.4);
     }
 
     &:active {
@@ -1336,14 +1622,14 @@ $transition: all 0.3s ease;
 
   &--secondary {
     background: transparent;
-    color: $primary-color;
-    border: 2px solid $primary-color;
+    color: $secondary-color;
+    border: 2px solid $secondary-color;
 
     &:hover {
-      background: $primary-color;
+      background: $secondary-color;
       color: $white;
       transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 8px 25px rgba(220, 23, 40, 0.3);
     }
   }
 
@@ -1376,7 +1662,7 @@ $transition: all 0.3s ease;
     right: -20px;
     width: 150px;
     height: 150px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     border-radius: 50%;
     z-index: 1;
     animation: pulse 3s ease-in-out infinite;
@@ -1389,7 +1675,7 @@ $transition: all 0.3s ease;
     left: -20px;
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     border-radius: 50%;
     z-index: 1;
     animation: float 4s ease-in-out infinite;
@@ -1398,8 +1684,7 @@ $transition: all 0.3s ease;
   .services-img {
     width: 100%;
     height: auto;
-    max-width: 500px;
-    border-radius: $border-radius;
+    max-width: 500px; 
     box-shadow: $shadow-heavy;
     transition: $transition;
     position: relative;
@@ -1483,7 +1768,7 @@ $transition: all 0.3s ease;
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  background: #ef4444;
+  background: $secondary-color;
   color: $white;
   border: none;
   border-radius: 50%;
@@ -1494,12 +1779,12 @@ $transition: all 0.3s ease;
   cursor: pointer;
   z-index: 10;
   transition: $transition;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 12px rgba(220, 23, 40, 0.3);
 
   &:hover {
-    background: #dc2626;
+    background: #b3121f;
     transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    box-shadow: 0 6px 20px rgba(179, 18, 31, 0.4);
   }
 
   @media (max-width: 768px) {
@@ -1571,7 +1856,7 @@ $transition: all 0.3s ease;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    background: linear-gradient(45deg, rgba(37, 99, 235, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -1589,7 +1874,6 @@ $transition: all 0.3s ease;
     transition: transform 0.3s ease;
     position: relative;
     z-index: 1;
-    // animation: imageFadeIn 0.5s ease-out;
     
     @media (max-width: 1024px) {
       max-height: 350px;
@@ -1647,7 +1931,7 @@ $transition: all 0.3s ease;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    background: linear-gradient(45deg, rgba(37, 99, 235, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -1655,7 +1939,7 @@ $transition: all 0.3s ease;
   &:hover {
     border-color: $primary-color;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
     
     &::before {
       opacity: 1;
@@ -1665,7 +1949,7 @@ $transition: all 0.3s ease;
   &.active {
     border-color: $primary-color;
     border-width: 3px;
-    box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
     transform: translateY(-2px);
     
     &::before {
@@ -1718,7 +2002,7 @@ $transition: all 0.3s ease;
   color: $text-dark;
   margin: 0;
   line-height: 1.3;
-  @include text-gradient;
+  @include blue-text-gradient;
   
   @media (max-width: 1024px) {
     font-size: 1.6rem;
@@ -1768,7 +2052,7 @@ $transition: all 0.3s ease;
 .modal-current-price {
   font-size: 1.75rem;
   font-weight: 800;
-  color: $primary-color;
+  color: $secondary-color;
   line-height: 1;
 }
 
@@ -1794,21 +2078,21 @@ $transition: all 0.3s ease;
 }
 
 .modal-warranty {
-  background: linear-gradient(135deg, #fff9ed 0%, #fef3e2 100%);
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   padding: 1.5rem;
   border-radius: $border-radius;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1); 
+  box-shadow: 0 4px 12px rgba(220, 23, 40, 0.1);
 
   h4 {
     margin: 0 0 0.75rem 0;
-    color: #d97706;
+    color: #dc2626;
     font-size: 1.1rem;
     font-weight: 700;
   }
 
   p {
     margin: 0;
-    color: #92400e;
+    color: #991b1b;
     line-height: 1.6;
     font-size: 0.95rem;
   }
@@ -1843,7 +2127,7 @@ $transition: all 0.3s ease;
     &:focus {
       outline: none;
       border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
     &:hover {
@@ -1883,13 +2167,13 @@ $transition: all 0.3s ease;
     }
 
     &--primary {
-      @include gradient-bg;
+      @include blue-gradient-bg;
       color: $white;
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
 
       &:hover {
         transform: translateY(-3px);
-        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 12px 35px rgba(37, 99, 235, 0.4);
       }
 
       &:active {
@@ -1901,7 +2185,7 @@ $transition: all 0.3s ease;
 
 .modal-category {
   padding: 1rem 1.5rem;
-  @include gradient-bg;
+  @include blue-gradient-bg;
   border-radius: 0.75rem;
   text-align: center;
   color: $white;
@@ -2028,7 +2312,6 @@ $transition: all 0.3s ease;
 .p-2 { padding: 2rem; }
 .p-3 { padding: 3rem; }
 
- 
 .laptop-image,
 .modal-laptop-image,
 .services-img,
@@ -2037,7 +2320,6 @@ $transition: all 0.3s ease;
   animation: imageFadeIn 0.5s ease-out 0.3s forwards;
 }
 
- 
 .scroll-animate {
   opacity: 0;
   transform: translateY(30px);

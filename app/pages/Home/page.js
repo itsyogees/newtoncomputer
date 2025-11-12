@@ -1,16 +1,42 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes } from 'react-icons/fa';
+import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 import Loading from '../../component/Loading/Loading';
 import './Home.scss';
- 
+
 export default function Home() {
   const [selectedLaptop, setSelectedLaptop] = useState(null)
   const [hoveredLaptop, setHoveredLaptop] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
+  // Slider data
+  const sliderData = [
+    {
+      id: 1,
+      image: '/assets/home-banner.jpg',
+      title: 'Premium Laptops & Services',
+      subtitle: 'Get the best deals on refurbished laptops with warranty',
+      buttonText: 'Shop Now'
+    },
+    {
+      id: 2,
+      image: '/assets/laptop-banner.jpg',
+      title: 'Expert Laptop Repair Services',
+      subtitle: 'Chip level service, data recovery, and hardware upgrades',
+      buttonText: 'Book Service'
+    },
+    {
+      id: 3,
+      image: '/assets/home-banner.jpg',
+      title: 'IT Solutions & Support',
+      subtitle: 'Complete IT services for home and business',
+      buttonText: 'Get Quote'
+    }
+  ]
 
   const laptopServices = [
     'Laptop Upgradation',
@@ -87,9 +113,33 @@ export default function Home() {
     },
   ]
 
+  // Slider functions
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % sliderData.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + sliderData.length) % sliderData.length)
+  }
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index)
+  }
+
+  // Auto play slider
+  useEffect(() => {
+    if (!isAutoPlaying) return
+
+    const interval = setInterval(() => {
+      nextSlide()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [isAutoPlaying, currentSlide])
+
   const openModal = (laptop) => {
     setSelectedLaptop(laptop)
-    setSelectedImage(laptop.image) // Set main image as default
+    setSelectedImage(laptop.image)
   }
 
   const closeModal = () => {
@@ -100,11 +150,66 @@ export default function Home() {
   const handleSideImageClick = (image) => {
     setSelectedImage(image)
   }
- 
+
   return (
     <div className="homepage">
       
-      {/* Hero Section */}
+      {/* Slider Section */}
+      <section 
+        className="slider-section"
+        onMouseEnter={() => setIsAutoPlaying(false)}
+        onMouseLeave={() => setIsAutoPlaying(true)}
+      >
+        <div className="slider-container">
+          {sliderData.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`slider-slide ${index === currentSlide ? 'active' : ''}`}
+            >
+              <div className="slide-image">
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  className="slider-img"
+                />
+                <div className="slide-overlay"></div>
+              </div>
+              {/* <div className="slide-content">
+                <div className="slide-text">
+                  <h1 className="slide-title">{slide.title}</h1>
+                  <p className="slide-subtitle">{slide.subtitle}</p>
+                  <button className="slide-btn">
+                    {slide.buttonText}
+                  </button>
+                </div>
+              </div> */}
+            </div>
+          ))}
+          
+          {/* Navigation Arrows */}
+          <button className="slider-arrow slider-arrow--prev" onClick={prevSlide}>
+            <FaChevronLeft />
+          </button>
+          <button className="slider-arrow slider-arrow--next" onClick={nextSlide}>
+            <FaChevronRight />
+          </button>
+
+          {/* Dots Indicator */}
+          <div className="slider-dots">
+            {sliderData.map((_, index) => (
+              <button
+                key={index}
+                className={`slider-dot ${index === currentSlide ? 'active' : ''}`}
+                onClick={() => goToSlide(index)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Hero Section - Moved below slider */}
       <section className="hero">
         <div className="hero__container">
           <div className="hero__content">
@@ -138,6 +243,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Rest of your existing sections remain the same */}
       {/* New Feature Cards Section */}
       <section className="features">
         <div className="container">
@@ -199,17 +305,16 @@ export default function Home() {
           <h2 className="section-title">Online Laptop Store</h2>
           
           {/* Brand Categories */}
-         <div className="brand-categories">
-  {laptopBrands.map((brand, index) => (
-    <div key={index} className="brand-category">
-      <h3 className="brand-category__title">{brand}</h3>
-    </div>
-  ))}
-</div>
+          <div className="brand-categories">
+            {laptopBrands.map((brand, index) => (
+              <div key={index} className="brand-category">
+                <h3 className="brand-category__title">{brand}</h3>
+              </div>
+            ))}
+          </div>
 
           {/* Refurbished Laptops */}
           <div className="refurbished-section">
-           
             <div className="laptops-grid">
               {refurbishedLaptops.map((laptop) => (
                 <div 
@@ -300,77 +405,74 @@ export default function Home() {
         </div>
       </section>
 
-     
-<section className="services-section">
-  <div className="container">
-    <div className="services-content">
-        <h2 className="services-title">Our Comprehensive IT Services</h2>
-          <div className="services-grid">
-          <div className="service-item">
-            <FaLaptop className="service-icon" />
-            <span className="service-name">Laptop & Desktop</span>
-          </div>
-          <div className="service-item">
-            <FaEye className="service-icon" />
-            <span className="service-name">CCTV Solutions</span>
-          </div>
-          <div className="service-item">
-            <FaShieldAlt className="service-icon" />
-            <span className="service-name">Network Security</span>
-          </div>
-          <div className="service-item">
-            <FaWifi className="service-icon" />
-            <span className="service-name">Wi-Fi & Networking</span>
-          </div>
-          <div className="service-item">
-            <FaServer className="service-icon" />
-            <span className="service-name">Server and Storage</span>
-          </div>
-          <div className="service-item">
-            <FaEnvelope className="service-icon" />
-            <span className="service-name">Business email</span>
-          </div>
-          <div className="service-item">
-            <FaCloud className="service-icon" />
-            <span className="service-name">Cloud storage</span>
+      {/* IT Services Section */}
+      <section className="services-section">
+        <div className="container">
+          <div className="services-content">
+            <h2 className="services-title">Our Comprehensive IT Services</h2>
+            <div className="services-grid">
+              <div className="service-item">
+                <FaLaptop className="service-icon" />
+                <span className="service-name">Laptop & Desktop</span>
+              </div>
+              <div className="service-item">
+                <FaEye className="service-icon" />
+                <span className="service-name">CCTV Solutions</span>
+              </div>
+              <div className="service-item">
+                <FaShieldAlt className="service-icon" />
+                <span className="service-name">Network Security</span>
+              </div>
+              <div className="service-item">
+                <FaWifi className="service-icon" />
+                <span className="service-name">Wi-Fi & Networking</span>
+              </div>
+              <div className="service-item">
+                <FaServer className="service-icon" />
+                <span className="service-name">Server and Storage</span>
+              </div>
+              <div className="service-item">
+                <FaEnvelope className="service-icon" />
+                <span className="service-name">Business email</span>
+              </div>
+              <div className="service-item">
+                <FaCloud className="service-icon" />
+                <span className="service-name">Cloud storage</span>
+              </div>
+            </div>
+            <div className="servives-content">
+              <div className="services-text">
+                <p className="services-description">
+                  At Newton Computer Services, we are committed to providing the best computer services 
+                  tailored to meet your personal or business needs. From hardware repairs and software 
+                  installations to network setup and IT support, our team of skilled technicians ensures 
+                  reliable, fast, and affordable solutions. We pride ourselves on excellent customer 
+                  service, quick turnaround times, and a passion for technology that keeps your systems 
+                  running smoothly.
+                </p>
+                <div className="services-actions">
+                  <button className="services-btn services-btn--primary">
+                    Get a Quote
+                  </button>
+                  <button className="services-btn services-btn--secondary">
+                    Contact Us
+                  </button>
+                </div>
+              </div>
+              <div className="services-image">
+                <Image 
+                  src="/assets/service-img.png" 
+                  alt="IT Services" 
+                  width={600} 
+                  height={500}
+                  priority
+                  className="services-img"
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <div className="servives-content">
-   <div className="services-text">
-      
-        <p className="services-description">
-          At Newton Computer Services, we are committed to providing the best computer services 
-          tailored to meet your personal or business needs. From hardware repairs and software 
-          installations to network setup and IT support, our team of skilled technicians ensures 
-          reliable, fast, and affordable solutions. We pride ourselves on excellent customer 
-          service, quick turnaround times, and a passion for technology that keeps your systems 
-          running smoothly.
-        </p>
-      
-        <div className="services-actions">
-          <button className="services-btn services-btn--primary">
-            Get a Quote
-          </button>
-          <button className="services-btn services-btn--secondary">
-            Contact Us
-          </button>
-        </div>
-      </div>
-      <div className="services-image">
-        <Image 
-          src="/assets/service-img.png" 
-          alt="IT Services" 
-          width={600} 
-          height={500}
-          priority
-          className="services-img"
-        />
-      </div>
-        </div>
-   
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Laptop Details Modal */}
       {selectedLaptop && (

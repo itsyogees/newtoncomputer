@@ -52,6 +52,9 @@ const Footer = () => {
 
   return (
     <footer className="footer">
+      {/* Background Shapes */}
+      <div className="footer-shape-right"></div>
+      
       {/* Main Footer Content */}
       <div className="footer__main">
         <div className="footer__container">
@@ -61,10 +64,10 @@ const Footer = () => {
             <div className="footer__brand">
               <div className="brand-header">
                 <Image 
-                  src="/logo-newton.png" 
+                  src="/assets/footer-logo-1.png" 
                   alt="Newton Computers" 
-                  width={150} 
-                  height={50} 
+                  width={200} 
+                  height={60} 
                   priority
                   className="brand-logo"
                 />
@@ -84,7 +87,7 @@ const Footer = () => {
 
             {/* Quick Links */}
             <div className="footer__section footer__quick-links">
-              <h4 className="section-title">Quick Links</h4>
+              <h4 className="section-titles">Quick Links</h4>
               <div className="quick-links">
                 {quickLinks.map((link) => (
                   <Link key={link.name} href={link.href} className="quick-link">
@@ -99,7 +102,7 @@ const Footer = () => {
             <div className="footer__locations">
               {/* Head Office */}
               <div className="footer__section footer__location-section">
-                <h4 className="section-title">Head Office</h4>
+                <h4 className="section-titles">Head Office</h4>
                 <div className="location-card">
                   <div className="location-header">
                     <FaMapMarkerAlt className="location-icon" />
@@ -129,7 +132,7 @@ const Footer = () => {
 
               {/* Branch Store */}
               <div className="footer__section footer__location-section">
-                <h4 className="section-title">Branch Store</h4>
+                <h4 className="section-titles">Branch Store</h4>
                 <div className="location-card">
                   <div className="location-header">
                     <FaMapMarkerAlt className="location-icon" />

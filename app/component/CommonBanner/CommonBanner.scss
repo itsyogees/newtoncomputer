@@ -1,7 +1,20 @@
+$primary-navy: #1a237e;
+$primary-white: #ffffff;
+$primary-black: #000000;
+$accent-red: #ff3d00;
+
+$navy-light: #534bae;
+$navy-dark: #000051;
+$red-light: #ff7539;
+$red-dark: #c30000;
+$gray-light: #f5f5f5;
+$gray-medium: #9e9e9e;
+$gray-dark: #424242;
+
 .common-banner {
  background: 
-  linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)),
-  url('/assets/laptop-banner.jpg') center/cover no-repeat;
+    linear-gradient(rgba(26, 35, 126, 0.8), rgba(26, 35, 126, 0.6)),
+    url('/assets/laptop-banner.jpg') center/cover no-repeat;
   height: 30vh;
   display: flex;
   align-items: center;
@@ -21,8 +34,8 @@
   .banner-content {
     z-index: 2;
     
-    .banner-title {
-      color: #fff;
+     .banner-title {
+      color: $primary-white;
       text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
       letter-spacing: 1px;
       margin: 0; 
@@ -38,8 +51,8 @@
       }
     }
 
-    .banner-subtitle {
-      color: #fff;
+     .banner-subtitle {
+      color: $primary-white;
       font-size: 1.25rem;
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
       margin-top: 1rem;

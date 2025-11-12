@@ -172,14 +172,14 @@ export default function BusinessMail() {
         </div>
       </section>
 
-      {/* Plans Section */}
+      {/* Plans Section */} 
       <section className="plans-section">
         <div className="container">
-          <h2 className="section-title">Plans for Every Business Need</h2>
+          <h2 className="section-title">Solutions for Every Business Need</h2>
           <p className="plans-intro">
-            We recognize that each business has unique needs, which is why Newton Computer Services offers various plans 
-            for Google Workspace and Microsoft 365. Our experts work with you to determine the ideal plan that aligns with 
-            your operational requirements, helping you choose options that optimize cost, features, and scalability.
+            We recognize that each business has unique needs, which is why Newton Computer Services offers comprehensive solutions 
+            for Google Workspace and Microsoft 365. Our experts work with you to determine the ideal setup that aligns with 
+            your operational requirements, helping you choose options that optimize productivity, security, and scalability.
           </p>
           
           <div className="plans-toggle">
@@ -199,27 +199,33 @@ export default function BusinessMail() {
             </button>
           </div>
 
-          <div className="plans-grid">
+          <div className="solutions-grid">
             {(activePlan === 'google' ? googlePlans : microsoftPlans).map((plan, index) => (
-              <div key={index} className="plan-card">
-                <div className="plan-card__header">
-                  <h3 className="plan-card__name">{plan.name}</h3>
-                  <div className="plan-card__price">
-                    <span className="price-amount">{plan.price}</span>
-                    <span className="price-period">{plan.period}</span>
+              <div key={index} className="solution-card">
+                <div className="solution-card__header">
+                  <h3 className="solution-card__name">{plan.name}</h3>
+                  <div className="solution-card__type">
+                    {activePlan === 'google' ? 'Google Workspace' : 'Microsoft 365'}
                   </div>
                 </div>
-                <ul className="plan-card__features">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="plan-feature">
-                      <FaCheck className="feature-icon" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button className="plan-card__btn">
-                  Select Plan
-                </button>
+                <div className="solution-card__content">
+                  <h4 className="solution-card__subtitle">Key Features & Benefits</h4>
+                  <ul className="solution-card__features">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="solution-feature">
+                        <FaCheck className="feature-icon" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="solution-card__description">
+                    <p>
+                      This solution is ideal for businesses looking for {plan.name.toLowerCase()} capabilities 
+                      with robust collaboration tools and enterprise-grade security features.
+                    </p>
+                  </div>
+                </div>
+               
               </div>
             ))}
           </div>
@@ -318,7 +324,7 @@ export default function BusinessMail() {
         </div>
       </section>
 
-      {/* Advantages Section */}
+       {/* Advantages Section */}
       <section className="advantages-section">
         <div className="container">
           <div className="advantages-content">
@@ -330,20 +336,10 @@ export default function BusinessMail() {
                 By choosing Newton Computer Services, you gain a reliable partner committed to delivering tailored email 
                 solutions that enhance productivity, security, and scalability. Our services offer:
               </p>
-              
-             
             </div>
             
-            <div className="advantages-image">
-              <Image 
-                src="/assets/business-mail-advantages.jpg" 
-                alt="Business Mail Advantages" 
-                width={600} 
-                height={500}
-                className="advantages-img"
-              />
-            </div>
-             <div className="advantages-grid">
+            <div className="advantages-container">
+              <div className="advantages-flex">
                 {advantages.map((advantage, index) => (
                   <div key={index} className="advantage-item">
                     <div className="advantage-icon">
@@ -354,29 +350,22 @@ export default function BusinessMail() {
                   </div>
                 ))}
               </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="business-cta">
-        <div className="container">
-          <div className="business-cta__content">
-            <h2 className="business-cta__title">Ready to Transform Your Business Communication?</h2>
-            <p className="business-cta__description">
-              Contact us today to discuss your business email needs and discover how our solutions can drive your organization forward.
-            </p>
-            <div className="business-cta__actions">
-              <button className="business-cta__btn business-cta__btn--primary">
-                Get Started Now
-              </button>
-              <button className="business-cta__btn business-cta__btn--secondary">
-                Schedule a Consultation
-              </button>
+              
+              <div className="advantages-image">
+                <Image 
+                  src="/assets/business-mail-advantages.jpg" 
+                  alt="Business Mail Advantages" 
+                  width={600} 
+                  height={500}
+                  className="advantages-img"
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+     
     </div>
   );
 }

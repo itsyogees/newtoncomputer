@@ -2,12 +2,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { FaShoppingCart, FaPhone, FaEnvelope, FaChevronDown, FaMapMarkerAlt } from "react-icons/fa";
+import { FaShoppingCart, FaPhone, FaEnvelope, FaChevronDown, FaMapMarkerAlt, FaSearch, FaUser } from "react-icons/fa";
 import "./Navbar.scss";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const cartCount = 0;
 
   useEffect(() => {
@@ -30,12 +31,23 @@ export default function Navbar() {
   // Function to handle laptop store navigation with brand filter
   const handleLaptopStoreClick = (brand = '') => {
     closeMenu();
-    // Navigate to laptop store page with brand parameter
     if (brand) {
-      // You can use query parameters or dynamic routes
       window.location.href = `/pages/LaptopStore?brand=${brand}`;
     } else {
       window.location.href = '/pages/LaptopStore';
+    }
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      console.log("Searching for:", searchQuery);
+      // window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -80,7 +92,7 @@ export default function Navbar() {
           <div className="navbar__logo">
             <Link href="/">
               <Image 
-                src="/logo-newton.png" 
+                src="/new-logo.png" 
                 alt="Newton Computers" 
                 width={150} 
                 height={50} 
@@ -89,114 +101,34 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="navbar__links">
-            <Link href="/" className="nav-item" onClick={closeMenu}>
-              Home
-            </Link>
-            
-            {/* Laptop Store Dropdown */}
-            <div className="nav-dropdown">
-              <span className="nav-item">
-                Laptop Store <FaChevronDown className="dropdown-arrow" />
-              </span>
-              <div className="dropdown-menu">
-                <Link 
-                  href="/pages/LaptopStore" 
-                 
-                  onClick={() => handleLaptopStoreClick('')}
-                >
-                  All Laptops
-                </Link>
-                <Link 
-                  href="/pages/LaptopStore?brand=dell" 
-                
-                  onClick={() => handleLaptopStoreClick('dell')}
-                >
-                  Dell Laptops
-                </Link>
-                <Link 
-                  href="/pages/LaptopStore?brand=lenovo" 
-                
-                  onClick={() => handleLaptopStoreClick('lenovo')}
-                >
-                  Lenovo Laptops
-                </Link>
-                <Link 
-                  href="/pages/LaptopStore?brand=hp" 
-                
-                  onClick={() => handleLaptopStoreClick('hp')}
-                >
-                  HP Laptops
-                </Link>
-                <Link 
-                  href="/pages/LaptopStore?brand=acer" 
-                  className="nav-item"
-                  onClick={() => handleLaptopStoreClick('acer')}
-                >
-                  Acer Laptops
-                </Link>
-                <Link 
-                  href="/pages/LaptopStore?brand=asus" 
-           
-                  onClick={() => handleLaptopStoreClick('asus')}
-                >
-                  ASUS Laptops
-                </Link>
-                <Link 
-                  href="/pages/LaptopStore?brand=msi" 
-           
-                  onClick={() => handleLaptopStoreClick('msi')}
-                >
-                  MSI Laptops
-                </Link>
-              </div>
-            </div>
-
-            {/* Laptop Services Dropdown */}
-            <div className="nav-dropdown">
-              <span className="nav-item">
-                Laptop Services <FaChevronDown className="dropdown-arrow" />
-              </span>
-              <div className="dropdown-menu">
-                <Link href="/pages/LaptopDamage" onClick={closeMenu}>Laptop Damage</Link>
-                <Link href="/pages/ChipLevelServicePage" onClick={closeMenu}>Chip Level Service</Link>
-                <Link href="/pages/UpgradePage" onClick={closeMenu}>Laptop Upgrade</Link>
-                <Link href="/pages/DataRecoveryPage"onClick={closeMenu}>Data Recovery</Link>
-                <Link href="/pages/LaptopAccessories" onClick={closeMenu}>Laptop Accessories</Link>
-              </div>
-            </div>
-
-            {/* IT Services Dropdown */}
-            <div className="nav-dropdown">
-              <span className="nav-item">
-                IT Services <FaChevronDown className="dropdown-arrow" />
-              </span>
-              <div className="dropdown-menu">
-                <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
-                <Link href="/it-services/network-security" onClick={closeMenu}>Network Security Solutions</Link>
-                <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
-                <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
-                <Link href="/it-services/cctv" onClick={closeMenu}>CCTV Solution</Link>
-                <Link href="/it-services/cloud-hosting" onClick={closeMenu}>Cloud hosting services</Link>
-              </div>
-            </div>
-
-            {/* Contact Dropdown */}
-            <div className="nav-dropdown">
-              <span className="nav-item">
-                Contact Us <FaChevronDown className="dropdown-arrow" />
-              </span>
-              <div className="dropdown-menu">
-                <Link href="/about" onClick={closeMenu}>About Us</Link>
-                <Link href="/branches" onClick={closeMenu}>Branches</Link>
-                <Link href="/contact" onClick={closeMenu}>Contact Form</Link>
-              </div>
-            </div>
-          </nav>
+          {/* Search Bar - First Row */}
+          <div className="navbar__search-container">
+            {/* <div className="search-icon-left">
+              <FaSearch className="search-icon" />
+            </div> */}
+            <input
+              type="text"
+              placeholder="Search Your Product..."
+              className="navbar__search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            <button 
+              className="navbar__search-btn"
+              onClick={handleSearch}
+              aria-label="Search"
+            >
+              <FaSearch className="search-icon" />
+            </button>
+          </div>
 
           {/* Desktop Actions */}
           <div className="navbar__actions">
+            <Link href="/account" className="account-btn">
+              <FaUser className="account-icon" />
+              <span className="account-text">My Account</span>
+            </Link>
             <Link href="/cart" className="cart">
               <FaShoppingCart className="cart-icon" />
               <span className="cart-text">Cart</span>
@@ -221,63 +153,150 @@ export default function Navbar() {
           </button>
         </div>
 
+        {/* Second Row - Navigation Links */}
+        <div className="navbar__secondary">
+          <nav className="navbar__links">
+            <Link href="/" className="nav-item" onClick={closeMenu}>
+              Home
+            </Link>
+            
+            {/* Shop Dropdown */}
+            <div className="nav-dropdown">
+              <span className="nav-item">
+                Shop <FaChevronDown className="dropdown-arrow" />
+              </span>
+              <div className="dropdown-menu">
+                <Link href="/pages/LaptopStore" onClick={() => handleLaptopStoreClick('')}>
+                  All Laptops
+                </Link>
+                <Link href="/pages/LaptopStore?brand=dell" onClick={() => handleLaptopStoreClick('dell')}>
+                  Dell Laptops
+                </Link>
+                <Link href="/pages/LaptopStore?brand=lenovo" onClick={() => handleLaptopStoreClick('lenovo')}>
+                  Lenovo Laptops
+                </Link>
+                <Link href="/pages/LaptopStore?brand=hp" onClick={() => handleLaptopStoreClick('hp')}>
+                  HP Laptops
+                </Link>
+                <Link href="/pages/LaptopStore?brand=acer" onClick={() => handleLaptopStoreClick('acer')}>
+                  Acer Laptops
+                </Link>
+                <Link href="/pages/LaptopStore?brand=asus" onClick={() => handleLaptopStoreClick('asus')}>
+                  ASUS Laptops
+                </Link>
+                <Link href="/pages/LaptopStore?brand=msi" onClick={() => handleLaptopStoreClick('msi')}>
+                  MSI Laptops
+                </Link>
+              </div>
+            </div>
+
+        
+
+            {/* Laptop Services Dropdown */}
+            <div className="nav-dropdown">
+              <span className="nav-item">
+                Laptop Services <FaChevronDown className="dropdown-arrow" />
+              </span>
+              <div className="dropdown-menu">
+                <Link href="/pages/LaptopDamage" onClick={closeMenu}>Laptop Damage</Link>
+                <Link href="/pages/ChipLevelServicePage" onClick={closeMenu}>Chip Level Service</Link>
+                <Link href="/pages/UpgradePage" onClick={closeMenu}>Laptop Upgrade</Link>
+                <Link href="/pages/DataRecoveryPage" onClick={closeMenu}>Data Recovery</Link>
+                <Link href="/pages/LaptopAccessories" onClick={closeMenu}>Laptop Accessories</Link>
+              </div>
+            </div>
+
+            {/* IT Services Dropdown */}
+            <div className="nav-dropdown">
+              <span className="nav-item">
+                IT Services <FaChevronDown className="dropdown-arrow" />
+              </span>
+              <div className="dropdown-menu">
+                <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
+                <Link href="/it-services/network-security" onClick={closeMenu}>Network Security Solutions</Link>
+                <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
+                <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
+                <Link href="/it-services/cctv" onClick={closeMenu}>CCTV Solution</Link>
+                <Link href="/it-services/cloud-hosting" onClick={closeMenu}>Cloud hosting services</Link>
+              </div>
+            </div>
+
+            {/* Contact Us Dropdown */}
+            <div className="nav-dropdown">
+              <span className="nav-item">
+                Contact Us <FaChevronDown className="dropdown-arrow" />
+              </span>
+              <div className="dropdown-menu">
+                <Link href="/about" onClick={closeMenu}>About Us</Link>
+                <Link href="/branches" onClick={closeMenu}>Branches</Link>
+                <Link href="/contact" onClick={closeMenu}>Contact Form</Link>
+              </div>
+            </div>
+
+            
+          </nav>
+        </div>
+
         {/* Mobile Navigation */}
         <div className={`navbar__mobile ${isMenuOpen ? 'navbar__mobile--active' : ''}`}>
+          {/* Mobile Search */}
+          <div className="navbar__mobile-search">
+            <div className="search-container">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search Your Product..."
+                className="mobile-search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+              <button 
+                className="mobile-search-btn"
+                onClick={handleSearch}
+                aria-label="Search"
+              >
+               <FaSearch/>
+              </button>
+            </div>
+          </div>
+
           <nav className="navbar__mobile-links">
             <Link href="/" className="nav-item" onClick={closeMenu}>
               Home
             </Link>
             
-            {/* Mobile Laptop Store Dropdown */}
+            {/* Mobile Shop Dropdown */}
             <div className="mobile-dropdown">
               <details>
-                <summary>Laptop Store</summary>
+                <summary>Shop</summary>
                 <div className="mobile-dropdown-content">
-                  <Link 
-                    href="/pages/LaptopStore" 
-                    onClick={() => handleLaptopStoreClick('')}
-                  >
+                  <Link href="/pages/LaptopStore" onClick={() => handleLaptopStoreClick('')}>
                     All Laptops
                   </Link>
-                  <Link 
-                    href="/pages/LaptopStore?brand=dell" 
-                    onClick={() => handleLaptopStoreClick('dell')}
-                  >
+                  <Link href="/pages/LaptopStore?brand=dell" onClick={() => handleLaptopStoreClick('dell')}>
                     Dell Laptops
                   </Link>
-                  <Link 
-                    href="/pages/LaptopStore?brand=lenovo" 
-                    onClick={() => handleLaptopStoreClick('lenovo')}
-                  >
+                  <Link href="/pages/LaptopStore?brand=lenovo" onClick={() => handleLaptopStoreClick('lenovo')}>
                     Lenovo Laptops
                   </Link>
-                  <Link 
-                    href="/pages/LaptopStore?brand=hp" 
-                    onClick={() => handleLaptopStoreClick('hp')}
-                  >
+                  <Link href="/pages/LaptopStore?brand=hp" onClick={() => handleLaptopStoreClick('hp')}>
                     HP Laptops
                   </Link>
-                  <Link 
-                    href="/pages/LaptopStore?brand=acer" 
-                    onClick={() => handleLaptopStoreClick('acer')}
-                  >
+                  <Link href="/pages/LaptopStore?brand=acer" onClick={() => handleLaptopStoreClick('acer')}>
                     Acer Laptops
                   </Link>
-                  <Link 
-                    href="/pages/LaptopStore?brand=asus" 
-                    onClick={() => handleLaptopStoreClick('asus')}
-                  >
+                  <Link href="/pages/LaptopStore?brand=asus" onClick={() => handleLaptopStoreClick('asus')}>
                     ASUS Laptops
                   </Link>
-                  <Link 
-                    href="/pages/LaptopStore?brand=msi" 
-                    onClick={() => handleLaptopStoreClick('msi')}
-                  >
+                  <Link href="/pages/LaptopStore?brand=msi" onClick={() => handleLaptopStoreClick('msi')}>
                     MSI Laptops
                   </Link>
                 </div>
               </details>
             </div>
+
+       
 
             {/* Mobile Laptop Services Dropdown */}
             <div className="mobile-dropdown">
@@ -308,7 +327,7 @@ export default function Navbar() {
               </details>
             </div>
 
-            {/* Mobile Contact Dropdown */}
+            {/* Mobile Contact Us Dropdown */}
             <div className="mobile-dropdown">
               <details>
                 <summary>Contact Us</summary>
@@ -319,9 +338,14 @@ export default function Navbar() {
                 </div>
               </details>
             </div>
+
             
             {/* Mobile Actions */}
             <div className="navbar__mobile-actions">
+              <Link href="/account" className="account-mobile" onClick={closeMenu}>
+                <FaUser className="account-icon" />
+                <span>My Account</span>
+              </Link>
               <Link href="/cart" className="cart-mobile" onClick={closeMenu}>
                 <FaShoppingCart className="cart-icon" />
                 <span>Cart {cartCount > 0 && `(${cartCount})`}</span>
