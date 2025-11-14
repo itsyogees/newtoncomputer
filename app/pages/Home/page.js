@@ -159,7 +159,7 @@ const getServiceImage = (serviceName) => {
   const imageMap = {
     'Laptop Upgradation': '/assets/laptop-upgradation.webp',
     'Motherboard': '/assets/mother-board.webp',
-    'Hinges': '/assets/Hinges.webp',
+    'Hinges': '/assets/hinges.webp',
     'Touchpad': '/assets/Touchpad.webp',
     'Chip Level Service': '/assets/mother-board.webp',
     'Ram & SSD': '/assets/laptop-upgradation.webp',
