@@ -2,7 +2,7 @@
 import React from 'react';
 import './CommonBanner.scss';
 
-const CommonBanner = ({ title, subtitle, backgroundImage = '/assets/laptop-banner.jpg' }) => {
+const CommonBanner = ({ title, subtitle , backgroundImage = '/assets/laptop-banner.jpg' }) => {
   return (
     <section 
       className="common-banner"

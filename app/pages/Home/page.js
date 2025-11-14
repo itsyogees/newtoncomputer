@@ -1,23 +1,123 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRef} from 'react';
 import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaCheck, FaCopy } from 'react-icons/fa'; 
+import { LuCctv } from "react-icons/lu";
+import { MdOutlineSecurity } from "react-icons/md";
+import { LuWifi } from "react-icons/lu";
+import { FiServer } from "react-icons/fi";
+import { CiMail } from "react-icons/ci";
+import { TiCloudStorageOutline } from "react-icons/ti";
+import { 
+  FaXTwitter, 
+  FaInstagram, 
+  FaFacebook, 
+  FaWhatsapp, 
+  FaLinkedin 
+} from 'react-icons/fa6';
 
 import Loading from '../../component/Loading/Loading';
 import './Home.scss';
 
 export default function Home() {
-  const [selectedLaptop, setSelectedLaptop] = useState(null)
-  const [hoveredLaptop, setHoveredLaptop] = useState(null)
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const [selectedLaptop, setSelectedLaptop] = useState(null);
+  const [hoveredLaptop, setHoveredLaptop] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+   const [currentClientIndex, setCurrentClientIndex] = useState(0);
+  const clientScrollRef = useRef(null);
 
+
+     const clientLogos = [
+    '/assets/vrr.png',
+    '/assets/NB.png',
+    '/assets/Priy.png',
+    '/assets/coffee-shastra-logo.png',
+    '/assets/sdat.jpeg',
+    '/assets/gc.jpeg',
+    '/assets/tamilnadu.jpeg',
+    '/assets/car.png',
+    '/assets/tiru.jpeg'
+  ];
+
+ useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentClientIndex((prevIndex) => 
+        prevIndex === clientLogos.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [clientLogos.length]);
+
+  // Scroll to current client
+  useEffect(() => {
+    if (clientScrollRef.current) {
+      const clientWidth = 180; // Width of each client logo including margin
+      clientScrollRef.current.scrollTo({
+        left: currentClientIndex * clientWidth,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentClientIndex]);
+
+
+    // Social media data
+    const socialMedia = [
+      {
+        name: 'X (Twitter)',
+        icon: FaXTwitter,
+        url: 'https://twitter.com/yourusername',
+        color: '#000000'
+      },
+      {
+        name: 'Instagram',
+        icon: FaInstagram,
+        url: 'https://instagram.com/yourusername',
+        color: '#E4405F'
+      },
+      {
+        name: 'Facebook',
+        icon: FaFacebook,
+        url: 'https://facebook.com/yourusername',
+        color: '#1877F2'
+      },
+      {
+        name: 'WhatsApp',
+        icon: FaWhatsapp,
+        url: 'https://wa.me/yourphonenumber',
+        color: '#25D366'
+      },
+      {
+        name: 'LinkedIn',
+        icon: FaLinkedin,
+        url: 'https://linkedin.com/company/yourcompany',
+        color: '#0A66C2'
+      }
+    ]
+  
+    // Copy page link function
+    const copyPageLink = () => {
+      const pageUrl = 'https://newtoncomputer.vercel.app/';
+      navigator.clipboard.writeText(pageUrl)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+    }
   // Slider data
   const sliderData = [
     {
       id: 1,
-      image: '/assets/home-banner.jpg',
+      image: '/assets/banner1.png',
       title: 'Premium Laptops & Services',
       subtitle: 'Get the best deals on refurbished laptops with warranty',
       buttonText: 'Shop Now'
@@ -38,20 +138,59 @@ export default function Home() {
     }
   ]
 
-  const laptopServices = [
-    'Laptop Upgradation',
-    'Motherboard',
-    'Hinges',
-    'Touchpad',
-    'Chip Level Service',
-    'Ram & SSD',
-    'Adapters',
-    'Data Recovery',
-    'Batteries',
-    'Display',
-    'WIFI & Bluetooth',
-    'Keypads'
-  ]
+// Laptop Services Data
+const laptopServices = [
+  'Laptop Upgradation',
+  'Motherboard',
+  'Hinges',
+  'Touchpad',
+  'Chip Level Service',
+  'Ram & SSD',
+  'Adapters',
+  'Data Recovery',
+  'Batteries',
+  'Display',
+  'WIFI & Bluetooth',
+  'Keypads'
+];
+
+// Get service image
+const getServiceImage = (serviceName) => {
+  const imageMap = {
+    'Laptop Upgradation': '/assets/laptop-upgradation.webp',
+    'Motherboard': '/assets/mother-board.webp',
+    'Hinges': '/assets/Hinges.webp',
+    'Touchpad': '/assets/Touchpad.webp',
+    'Chip Level Service': '/assets/mother-board.webp',
+    'Ram & SSD': '/assets/laptop-upgradation.webp',
+    'Adapters': '/assets/mother-board.webp',
+    'Data Recovery': '/assets/laptop-upgradation.webp',
+    'Batteries': '/assets/mother-board.webp',
+    'Display': '/assets/Touchpad.webp',
+    'WIFI & Bluetooth': '/assets/Hinges.webp',
+    'Keypads': '/assets/Touchpad.webp'
+  };
+  return imageMap[serviceName] || '/assets/laptop-upgradation.webp';
+};
+
+// Update slides to show based on screen size
+useEffect(() => {
+  const updateSlidesToShow = () => {
+    if (window.innerWidth < 640) {
+      setSlidesToShow(1);
+    } else if (window.innerWidth < 1024) {
+      setSlidesToShow(2);
+    } else {
+      setSlidesToShow(3);
+    }
+  };
+
+  updateSlidesToShow();
+  window.addEventListener('resize', updateSlidesToShow);
+  return () => window.removeEventListener('resize', updateSlidesToShow);
+}, []);
+
+
 
   const laptopBrands = [
     'Dell Laptops',
@@ -126,6 +265,28 @@ export default function Home() {
     setCurrentSlide(index)
   }
 
+    // Laptop Services Slider Functions
+ const [currentServiceSlide, setCurrentServiceSlide] = useState(0);
+const [slidesToShow, setSlidesToShow] = useState(3);
+
+const nextServiceSlide = () => {
+  const maxSlide = laptopServices.length - slidesToShow;
+  setCurrentServiceSlide(prev => 
+    prev >= maxSlide ? 0 : prev + 1
+  );
+};
+
+ const prevServiceSlide = () => {
+  const maxSlide = laptopServices.length - slidesToShow;
+  setCurrentServiceSlide(prev => 
+    prev <= 0 ? maxSlide : prev - 1
+  );
+};
+
+  const handleServiceClick = (service, index) => {
+    setSelectedService(selectedService === index ? null : index);
+  }
+
   // Auto play slider
   useEffect(() => {
     if (!isAutoPlaying) return
@@ -153,6 +314,41 @@ export default function Home() {
 
   return (
     <div className="homepage">
+      
+   <div className="social-sidebar">
+  <div className="social-icons">
+    {socialMedia.map((social, index) => {
+      const IconComponent = social.icon;
+      return (
+        <a
+          key={social.name}
+          href={social.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+          style={{ '--delay': index * 0.1 + 's' }}  
+          aria-label={`Visit our ${social.name}`}
+        >
+          <IconComponent className="social-icon-svg" />
+          <span className="social-tooltip">{social.name}</span>
+        </a>
+      );
+    })}
+    
+    {/* Copy Link Button */}
+    <button
+      className="social-icon copy-link-btn"
+      onClick={copyPageLink}
+      style={{ '--delay': '0.5s' }} 
+      aria-label="Copy page link"
+    >
+      {copied ? <FaCheck className="social-icon-svg" /> : <FaCopy className="social-icon-svg" />}
+      <span className="social-tooltip">
+        {copied ? 'Copied!' : 'Copy Link'}
+      </span>
+    </button>
+  </div>
+</div>
       
       {/* Slider Section */}
       <section 
@@ -210,9 +406,11 @@ export default function Home() {
       </section>
 
       {/* Hero Section - Moved below slider */}
+       
       <section className="hero">
         <div className="hero__container">
           <div className="hero__content">
+            <div className="hero__bg-overlay"></div>
             <h1 className="hero__title">
               MULTI-BRAND Laptop Store and Services
             </h1>
@@ -243,8 +441,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Rest of your existing sections remain the same */}
-      {/* New Feature Cards Section */}
+      {/* Rest of your existing sections remain the same */} 
       <section className="features">
         <div className="container">
           <div className="features__grid">
@@ -260,6 +457,7 @@ export default function Home() {
               <div className="feature-card__actions">
                 <button className="feature-btn feature-btn--primary">
                   Book Service
+                     <FaArrowRight className="btn-arrow" />
                 </button>
               </div>
             </div>
@@ -276,6 +474,7 @@ export default function Home() {
               <div className="feature-card__actions">
                 <button className="feature-btn feature-btn--primary">
                   Get a Quote
+                     <FaArrowRight className="btn-arrow" />
                 </button>
               </div>
             </div>
@@ -292,188 +491,281 @@ export default function Home() {
               <div className="feature-card__actions">
                 <button className="feature-btn feature-btn--primary">
                   Become a Partner
+                     <FaArrowRight className="btn-arrow" />
                 </button>
               </div>
             </div>
           </div>
         </div>
       </section>
+ 
+<section className="online-store">
+  <div className="bottom-left-circle"></div>
+  <div className="decoration-left"></div>
+  <div className="decoration-right"></div>
+  <div className="container">
+    <h2 className="section-title">Our Laptops</h2>
+  
+    
+    {/* Brand Categories - Direct Images without wrapper */}
+    <div className="brand-categories">
+      {laptopBrands.map((brand, index) => {
+        const getBrandImage = (brandName) => {
+          const imageMap = {
+            'Dell Laptops': '/assets/dell.png',
+            'Lenovo Laptops': '/assets/lenovo.png',
+            'HP Laptops': '/assets/hp.png',
+            'Acer Laptops': '/assets/acer.png',
+            'MSI Laptops': '/assets/msi.png',
+            'ASUS Laptops': '/assets/asus.png'
+          };
+          return imageMap[brandName] || '/assets/default-brand.jpg';
+        };
 
-      {/* Online Laptop Store Section */}
-      <section className="online-store">
-        <div className="container">
-          <h2 className="section-title">Online Laptop Store</h2>
+        return (
+          <div key={index} className="brand-category">
+            <Image 
+              src={getBrandImage(brand)}
+              alt={brand}
+              width={120}
+              height={50}
+              className="brand-image"
+            />
+          </div>
+        );
+      })}
+    </div>
+
+    {/* Refurbished Laptops Grid */}
+    <div className="refurbished-section">
+      <div className="laptops-grid">
+        {refurbishedLaptops.map((laptop) => {
+          const discount = Math.round((laptop.originalPrice - laptop.currentPrice) / laptop.originalPrice * 100);
           
-          {/* Brand Categories */}
-          <div className="brand-categories">
-            {laptopBrands.map((brand, index) => (
-              <div key={index} className="brand-category">
-                <h3 className="brand-category__title">{brand}</h3>
-              </div>
-            ))}
-          </div>
-
-          {/* Refurbished Laptops */}
-          <div className="refurbished-section">
-            <div className="laptops-grid">
-              {refurbishedLaptops.map((laptop) => (
-                <div 
-                  key={laptop.id}
-                  className="laptop-card"
-                  onMouseEnter={() => setHoveredLaptop(laptop.id)}
-                  onMouseLeave={() => setHoveredLaptop(null)}
-                >
-                  <div className="laptop-card__image">
-                    <Image 
-                      src={laptop.image} 
-                      alt={laptop.name}
-                      width={300}
-                      height={200}
-                      className="laptop-image"
-                    />
-                    
-                    {/* Hover Overlay */}
-                    {hoveredLaptop === laptop.id && (
-                      <div className="laptop-card__overlay">
-                        <button className="overlay-btn overlay-btn--wishlist">
-                          <FaHeart />
-                        </button>
-                        <button className="overlay-btn overlay-btn--cart">
-                          <FaShoppingCart />
-                        </button>
-                        <button 
-                          className="overlay-btn overlay-btn--view"
-                          onClick={() => openModal(laptop)}
-                        >
-                          <FaEye />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="laptop-card__content">
-                    <h4 className="laptop-card__name">{laptop.name}</h4>
-                    <p className="laptop-card__specs">{laptop.specs}</p>
-                    <div className="laptop-card__pricing">
-                      <span className="original-price">{laptop.originalPrice}</span>
-                      <span className="current-price">{laptop.currentPrice}</span>
-                    </div>
-                    <div className="laptop-card__actions">
-                      <button className="laptop-btn laptop-btn--primary">
-                        Add to Cart
-                      </button>
-                      <button 
-                        className="laptop-btn laptop-btn--secondary"
-                        onClick={() => openModal(laptop)}
-                      >
-                        View Details
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Laptop Services Section */}
-      <section className="laptop-services">
-        <div className="container">
-          <h2 className="laptop-services__main-title">Laptop Services</h2>
-          <div className="laptop-services__flex">
-            <div className="laptop-services__content">
-              <div className="services-grid">
-                {laptopServices.map((service, index) => (
-                  <div key={index} className="service-btn">
-                    <span className="service-btn__text">{service}</span>
-                    <FaArrowRight className="service-btn__icon" />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="laptop-services__image">
-              <Image 
-                src="/about-us.png" 
-                alt="Laptop Services" 
-                width={500} 
-                height={400}
-                priority
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* IT Services Section */}
-      <section className="services-section">
-        <div className="container">
-          <div className="services-content">
-            <h2 className="services-title">Our Comprehensive IT Services</h2>
-            <div className="services-grid">
-              <div className="service-item">
-                <FaLaptop className="service-icon" />
-                <span className="service-name">Laptop & Desktop</span>
-              </div>
-              <div className="service-item">
-                <FaEye className="service-icon" />
-                <span className="service-name">CCTV Solutions</span>
-              </div>
-              <div className="service-item">
-                <FaShieldAlt className="service-icon" />
-                <span className="service-name">Network Security</span>
-              </div>
-              <div className="service-item">
-                <FaWifi className="service-icon" />
-                <span className="service-name">Wi-Fi & Networking</span>
-              </div>
-              <div className="service-item">
-                <FaServer className="service-icon" />
-                <span className="service-name">Server and Storage</span>
-              </div>
-              <div className="service-item">
-                <FaEnvelope className="service-icon" />
-                <span className="service-name">Business email</span>
-              </div>
-              <div className="service-item">
-                <FaCloud className="service-icon" />
-                <span className="service-name">Cloud storage</span>
-              </div>
-            </div>
-            <div className="servives-content">
-              <div className="services-text">
-                <p className="services-description">
-                  At Newton Computer Services, we are committed to providing the best computer services 
-                  tailored to meet your personal or business needs. From hardware repairs and software 
-                  installations to network setup and IT support, our team of skilled technicians ensures 
-                  reliable, fast, and affordable solutions. We pride ourselves on excellent customer 
-                  service, quick turnaround times, and a passion for technology that keeps your systems 
-                  running smoothly.
-                </p>
-                <div className="services-actions">
-                  <button className="services-btn services-btn--primary">
-                    Get a Quote
-                  </button>
-                  <button className="services-btn services-btn--secondary">
-                    Contact Us
-                  </button>
-                </div>
-              </div>
-              <div className="services-image">
+          return (
+            <div 
+              key={laptop.id}
+              className="laptop-card"
+              onMouseEnter={() => setHoveredLaptop(laptop.id)}
+              onMouseLeave={() => setHoveredLaptop(null)}
+            >
+              <div className="laptop-card__badge">Refurbished</div>
+              
+              <div className="laptop-card__image">
                 <Image 
-                  src="/assets/service-img.png" 
-                  alt="IT Services" 
-                  width={600} 
-                  height={500}
-                  priority
-                  className="services-img"
+                  src={hoveredLaptop === laptop.id && laptop.sideImages?.[0] 
+                    ? laptop.sideImages[0] 
+                    : laptop.image} 
+                  alt={laptop.name}
+                  width={250}
+                  height={150}
+                  className="laptop-image"
                 />
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
+              <div className="laptop-card__content">
+                <h4 className="laptop-card__name">{laptop.name}</h4>
+                <p className="laptop-card__specs">{laptop.specs}</p>
+                
+                <div className="laptop-card__features">
+                  {laptop.features?.slice(0, 3).map((feature, index) => (
+                    <span key={index} className="laptop-card__feature">
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+                
+                <div className="laptop-card__pricing">
+                  <span className="original-price">${laptop.originalPrice}</span>
+                  <span className="current-price">${laptop.currentPrice}</span>
+                  {discount > 0 && (
+                    <span className="discount-badge">{discount}% OFF</span>
+                  )}
+                </div>
+                
+                <div className="laptop-card__actions">
+                  <button className="laptop-btn laptop-btn--primary">
+                    Add to Cart
+                  </button>
+                  <button 
+                    className="laptop-btn laptop-btn--secondary"
+                    onClick={() => openModal(laptop)}
+                  >
+                    Quick View
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>
+
+      {/* Laptop Services Section */}
+    
+<section className="laptop-services">
+  <div className="container">
+    <h2 className="laptop-services__main-title">Laptop Services</h2>
+    
+    <div className="laptop-services__slider">
+      <button 
+        className="slider-btn slider-btn--prev" 
+        onClick={prevServiceSlide}
+        aria-label="Previous services"
+      >
+        <FaChevronLeft />
+      </button>
+      
+      <div className="services-slider-wrapper">
+        <div 
+          className="services-slider-container"
+          style={{
+            transform: `translateX(-${currentServiceSlide * (100 / slidesToShow)}%)`,
+            transition: 'transform 0.5s ease-in-out'
+          }}
+        >
+          {laptopServices.map((service, index) => (
+            <div 
+              key={index} 
+              className={`service-slide ${selectedService === index ? 'active' : ''}`}
+              onClick={() => setSelectedService(selectedService === index ? null : index)}
+              style={{
+                minWidth: `calc(${100 / slidesToShow}% - ${(30 * (slidesToShow - 1)) / slidesToShow}px)`
+              }}
+            >
+              <div className="service-slide__image">
+                <Image 
+                  src={getServiceImage(service)}
+                  alt={service}
+                  width={300}
+                  height={220}
+                  className="service-image"
+                />
+              </div>
+              <div className="service-slide__content">
+                <h3 className="service-slide__title">{service}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <button 
+        className="slider-btn slider-btn--next" 
+        onClick={nextServiceSlide}
+        aria-label="Next services"
+      >
+        <FaChevronRight />
+      </button>
+    </div>
+  </div>
+</section>
+
+{/* IT Services Section */}
+<section className="services-section">
+  
+    <div className="services-hero">
+      <div className="services-hero-content">
+        <h1 className="services-main-title">
+          Our Comprehensive<br />
+          <span className="services-main-title-accent">IT Services</span>
+        </h1>
+  <div className="services-list">
+  <div className="service-list-item">
+    <FaLaptop className="service-icon" />
+    <span className="service-list-name">Laptop & Desktop</span>
+  </div>
+  <div className="service-list-item">
+    <LuCctv className="service-icon" />
+    <span className="service-list-name">CCTV Solutions</span>
+  </div>
+  <div className="service-list-item">
+    <MdOutlineSecurity className="service-icon" />
+    <span className="service-list-name">Network Security</span>
+  </div>
+  <div className="service-list-item">
+    <LuWifi className="service-icon" />
+    <span className="service-list-name">Wi-Fi & Networking</span>
+  </div>
+  <div className="service-list-item">
+    <FiServer className="service-icon" />
+    <span className="service-list-name">Server and Storage</span>
+  </div>
+  <div className="service-list-item">
+    <CiMail className="service-icon" />
+    <span className="service-list-name">Business Mail</span>
+  </div>
+  <div className="service-list-item">
+    <TiCloudStorageOutline className="service-icon" />
+    <span className="service-list-name">Cloud Storage</span>
+  </div>
+</div>
+      </div>
+    </div>
+
+    {/* Additional content section */}
+ 
+  
+</section>
+<section className='service-details'>
+  <div className="service-details-circles">
+    <div className="circle-decoration circle-1"></div>
+    <div className="circle-decoration circle-2"></div>
+    <div className="circle-decoration circle-3"></div>
+    <div className="circle-decoration circle-4"></div>
+  </div>
+  
+  <div className="container">
+    <div className="services-content-bottom">
+ <div className="services-text">
+  <div className="service-details-head">
+    <h2>Keeping Your Systems<br /><span data-text="Strong and Secure">Strong and Secure</span></h2>
+  </div>
+  <p className="services-description">
+    Newton Computer Services delivers reliable, fast, and affordable 
+    computer solutions for personal and business needs. From hardware 
+    repairs and software setup to networking and IT support, our skilled team 
+    ensures smooth performance and excellent customer service every time.
+  </p>
+  <div className="services-actions">
+    <button className="services-btn services-btn--primary">
+      Get a Quote
+    </button>
+    <button className="services-btn services-btn--secondary">
+      Contact Us
+    </button>
+  </div>
+</div>
+      
+    </div>
+  </div>
+</section>
+ 
+<section className="our-clients">
+  <div className="container">
+    <h2 className="clients-title">Our Valued Clients</h2>
+    
+    <div className="clients-carousel-container">
+      <div 
+        ref={clientScrollRef}
+        className="clients-carousel"
+      >
+        {clientLogos.map((logo, index) => (
+          <Image
+            key={index}
+            src={logo}
+            alt={`Client logo ${index + 1}`}
+            width={120}
+            height={60}
+            className="client-logo"
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
       {/* Laptop Details Modal */}
       {selectedLaptop && (
         <div className="modal-overlay" onClick={closeModal}>
