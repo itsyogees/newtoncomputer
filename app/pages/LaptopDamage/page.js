@@ -15,7 +15,6 @@ import CommonBanner from '../../component/CommonBanner/CommonBanner';
 import ServicesNavigationBox from '../../component/ServicesNavigationBox/ServicesNavigationBox';
 import './LaptopDamage.scss';
 
-
 const LaptopDamagePage = () => {
   const repairServices = [
     {
@@ -105,19 +104,18 @@ const LaptopDamagePage = () => {
 
   return (
     <div className="laptop-damage-page">
-  
-       <CommonBanner 
-            title="Laptop Damage"
-            subtitle="Professional laptop damage repair services"
-          />
+      <CommonBanner 
+        title="Laptop Damage"
+        subtitle="Professional laptop damage repair services"
+      />
 
       {/* Introduction Section */}
-      <section className="damage-intro">
-        <div className="container">
-          <div className="intro-content">
+      <section className="laptop-damage-intro">
+        <div className="laptop-damage-container">
+          <div className="laptop-damage-intro-content">
             <h2>Professional Laptop Damage Repairs</h2>
             <p>
-              In todays fast-paced world, laptops are essential tools for both personal and professional tasks. 
+              In today's fast-paced world, laptops are essential tools for both personal and professional tasks. 
               However, any damage to a laptop can disrupt productivity. At Newton Computer Service, we offer 
               expert laptop repair services to get your device back to optimal condition quickly and efficiently.
             </p>
@@ -126,63 +124,49 @@ const LaptopDamagePage = () => {
       </section>
 
       {/* Repair Services Section */}
-      <section className="repair-services">
-        <div className="container">
-          <div className="section-header">
-            <h2>Laptop Damage and Their Solutions</h2> 
+      <section className="laptop-damage-services">
+        <div className="laptop-damage-container">
+          <div className="laptop-damage-section-header">
+            <h2>Laptop Damage and Their Solutions</h2>
           </div>
 
-          <div className="services-list">
+          <div className="laptop-damage-services-list">
             {repairServices.map((service, index) => (
               <div 
                 key={service.id} 
-                className={`service-item ${index % 2 === 0 ? 'image-left' : 'image-right'}`}
+                className={`laptop-damage-service-item ${index % 2 === 0 ? 'laptop-damage-image-left' : 'laptop-damage-image-right'}`}
               >
-                <div className="service-image-container">
-                  <div className="service-image">
+                <div className="laptop-damage-service-image-container">
+                  <div className="laptop-damage-service-image">
                     <Image 
                       src={service.image} 
                       alt={service.title}
                       width={600}
                       height={400}
-                      className="service-img"
+                      className="laptop-damage-service-img"
                     />
- 
                   </div>
                 </div>
 
-                <div className="service-content">
-                  <h3 className="service-title">{service.title}</h3>
-                  <p className="service-description">{service.description}</p>
+                <div className="laptop-damage-service-content">
+                  <h3 className="laptop-damage-service-title">{service.title}</h3>
+                  <p className="laptop-damage-service-description">{service.description}</p>
 
-                  <div className="service-details">
-                    <div className="symptoms-section">
+                  <div className="laptop-damage-service-details">
+                    <div className="laptop-damage-symptoms-section">
                       <h4>Symptoms:</h4>
-                      <ul className="symptoms-list">
+                      <ul className="laptop-damage-symptoms-list">
                         {service.symptoms.map((symptom, index) => (
                           <li key={index}>{symptom}</li>
                         ))}
                       </ul>
                     </div>
 
-                    <div className="solution-section">
+                    <div className="laptop-damage-solution-section">
                       <h4>Solution:</h4>
                       <p>{service.solution}</p>
                     </div>
-
-                    {/* <div className="features-section">
-                      <div className="features-tags">
-                        {service.features.map((feature, index) => (
-                          <span key={index} className="feature-tag">{feature}</span>
-                        ))}
-                      </div>
-                    </div> */}
                   </div>
-
-                  {/* <div className="service-actions">
-                    <button className="repair-btn">Get This Repair</button>
-                    <button className="info-btn">Learn More</button>
-                  </div> */}
                 </div>
               </div>
             ))}
@@ -191,12 +175,12 @@ const LaptopDamagePage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="damage-features">
-        <div className="container">
-          <div className="features-grid">
+      <section className="laptop-damage-features">
+        <div className="laptop-damage-container">
+          <div className="laptop-damage-features-grid">
             {features.map((feature, index) => (
-              <div key={index} className="feature-item">
-                <div className="feature-icon">
+              <div key={index} className="laptop-damage-feature-item">
+                <div className="laptop-damage-feature-icon">
                   {feature.icon}
                 </div>
                 <h3>{feature.title}</h3>
@@ -207,7 +191,7 @@ const LaptopDamagePage = () => {
         </div>
       </section>
 
-   <ServicesNavigationBox />
+      <ServicesNavigationBox />
     </div>
   );
 };

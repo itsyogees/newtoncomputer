@@ -1,23 +1,20 @@
+// LaptopDamage.scss
 .laptop-damage-page {
   min-height: 100vh;
   background: #f8fafc;
 }
 
-.container {
-  width:90%;
-  margin: 0 auto; 
+.laptop-damage-container {
+  width: 90%;
+  margin: 0 auto;
 }
 
- 
-
 // Introduction Section
-.damage-intro {
+.laptop-damage-intro {
   padding: 4rem 0;
   background: white;
 
-  .intro-content { 
- 
-
+  .laptop-damage-intro-content {
     h2 {
       font-size: 2rem;
       font-weight: 700;
@@ -38,10 +35,10 @@
 }
 
 // Repair Services Section
-.repair-services {
+.laptop-damage-services {
   padding: 4rem 0;
 
-  .section-header {
+  .laptop-damage-section-header {
     text-align: center;
     margin-bottom: 2rem;
 
@@ -55,14 +52,9 @@
         font-size: 1.5rem;
       }
     }
-
-    p {
-      font-size: 1rem;
-      color: #64748b;
-    }
   }
 
-  .services-list {
+  .laptop-damage-services-list {
     display: flex;
     flex-direction: column;
     gap: 4rem;
@@ -72,22 +64,17 @@
     }
   }
 
-  .service-item {
+  .laptop-damage-service-item {
     display: flex;
     align-items: center;
     gap: 3rem;
-    background: white; 
+    background: white;
+    border-radius: 8px;
     overflow: hidden;
-  
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    position: relative;
 
-    // &:hover {
-    //   transform: translateY(-8px);
-    //   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    // }
-
-    &.image-left {
+    &.laptop-damage-image-left {
       flex-direction: row;
 
       @media (max-width: 768px) {
@@ -95,7 +82,7 @@
       }
     }
 
-    &.image-right {
+    &.laptop-damage-image-right {
       flex-direction: row-reverse;
 
       @media (max-width: 768px) {
@@ -103,11 +90,11 @@
       }
     }
 
-    .service-image-container {
-    
+    .laptop-damage-service-image-container {
+      flex: 1;
     }
 
-    .service-image {
+    .laptop-damage-service-image {
       position: relative;
       height: 300px;
       overflow: hidden;
@@ -116,16 +103,14 @@
         height: 300px;
       }
 
-      .service-img {
+      .laptop-damage-service-img {
         width: 100%;
         height: 100%;
-        object-fit: cover; 
+        object-fit: cover;
       }
- 
-   
     }
 
-    .service-content {
+    .laptop-damage-service-content {
       flex: 1;
       padding: 2rem;
       min-width: 0;
@@ -134,23 +119,23 @@
         padding: 1.5rem;
       }
 
-      .service-title {
+      .laptop-damage-service-title {
         font-size: 1.5rem;
         font-weight: 700;
         color: #1e293b;
         margin-bottom: 1rem;
       }
 
-      .service-description {
+      .laptop-damage-service-description {
         color: #64748b;
         line-height: 1.6;
         margin-bottom: 1.5rem;
         font-size: 1rem;
       }
 
-      .service-details {
-        .symptoms-section,
-        .solution-section {
+      .laptop-damage-service-details {
+        .laptop-damage-symptoms-section,
+        .laptop-damage-solution-section {
           margin-bottom: 1.5rem;
 
           h4 {
@@ -161,7 +146,7 @@
           }
         }
 
-        .symptoms-list {
+        .laptop-damage-symptoms-list {
           list-style: none;
           padding: 0;
 
@@ -181,73 +166,12 @@
           }
         }
 
-        .solution-section p {
+        .laptop-damage-solution-section p {
           color: #64748b;
           line-height: 1.6;
           background: #f8fafc;
           padding: 1rem;
           border-radius: 0.5rem;
-          
-        }
-
-        .features-section {
-          margin-bottom: 1.5rem;
-
-          .features-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-
-            .feature-tag {
-              padding: 0.5rem 1rem;
-              background: #667eea;
-              color: white;
-              border-radius: 2rem;
-              font-size: 0.875rem;
-              font-weight: 500;
-            }
-          }
-        }
-      }
-
-      .service-actions {
-        display: flex;
-        gap: 0.75rem;
-
-        @media (max-width: 480px) {
-          flex-direction: column;
-        }
-
-        .repair-btn,
-        .info-btn {
-          flex: 1;
-          padding: 0.75rem 1.5rem;
-          border: none;
-          border-radius: 0.5rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .repair-btn {
-          background: #667eea;
-          color: white;
-
-          &:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
-          }
-        }
-
-        .info-btn {
-          background: transparent;
-          color: #667eea;
-          border: 2px solid #667eea;
-
-          &:hover {
-            background: #667eea;
-            color: white;
-          }
         }
       }
     }
@@ -255,21 +179,21 @@
 }
 
 // Features Section
-.damage-features {
+.laptop-damage-features {
   background: white;
   padding: 4rem 0;
   border-top: 1px solid #e2e8f0;
 
-  .features-grid {
+  .laptop-damage-features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
 
-    .feature-item {
+    .laptop-damage-feature-item {
       text-align: center;
       padding: 2rem 1rem;
 
-      .feature-icon {
+      .laptop-damage-feature-icon {
         font-size: 3rem;
         color: #667eea;
         margin-bottom: 1rem;
@@ -290,132 +214,21 @@
   }
 }
 
-// CTA Section
-.damage-cta {
-  background: 
-    linear-gradient(rgba(102, 126, 234, 0.9), rgba(102, 126, 234, 0.9)),
-    url('/assets/laptop-banner.jpg') center/cover no-repeat;
-  padding: 4rem 0;
-  color: white;
-
-  .cta-content {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-
-      @media (max-width: 768px) {
-        font-size: 2rem;
-      }
-    }
-
-    p {
-      font-size: 1.125rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-    }
-
-    .cta-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-
-      .cta-button {
-        padding: 1rem 2rem;
-        border: none;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-
-        &.primary {
-          background: white;
-          color: #667eea;
-
-          &:hover {
-            background: #f8fafc;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
-          }
-
-          &.large {
-            padding: 1.25rem 2.5rem;
-          }
-        }
-
-        &.secondary {
-          background: transparent;
-          color: white;
-          border: 2px solid white;
-
-          &:hover {
-            background: white;
-            color: #667eea;
-            transform: translateY(-2px);
-          }
-
-          &.large {
-            padding: 1.25rem 2.5rem;
-          }
-        }
-      }
-    }
-  }
-}
-
 // Responsive Design
 @media (max-width: 768px) {
-  .damage-hero-banner {
- height: 25vh;
-  }
-
-  .damage-intro,
-  .repair-services,
-  .damage-features {
+  .laptop-damage-intro,
+  .laptop-damage-services,
+  .laptop-damage-features {
     padding: 3rem 0;
   }
 
-  .service-item {
+  .laptop-damage-service-item {
     gap: 0 !important;
-  }
-
-  .damage-cta {
-    padding: 3rem 0;
   }
 }
 
 @media (max-width: 480px) {
-  .damage-hero-banner {
-    height: 20vh;
-
-    .banner-title {
-      font-size: 1.5rem;
-    }
-
-    .banner-subtitle {
-      font-size: 1rem;
-    }
-  }
-
-  .service-content {
+  .laptop-damage-service-content {
     padding: 1rem !important;
-  }
-
-  .cta-actions {
-    flex-direction: column;
-    align-items: center;
-
-    .cta-button {
-      width: 100%;
-      max-width: 300px;
-    }
   }
 }

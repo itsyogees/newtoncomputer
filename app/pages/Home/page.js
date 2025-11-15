@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRef} from 'react';
-import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope,FaUserCheck, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FaCheck, FaCopy } from 'react-icons/fa'; 
 import { LuCctv } from "react-icons/lu";
 import { MdOutlineSecurity } from "react-icons/md";
@@ -311,7 +311,103 @@ const nextServiceSlide = () => {
   const handleSideImageClick = (image) => {
     setSelectedImage(image)
   }
+  const aboutSectionRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+  const [counted, setCounted] = useState(false);
+  const [animatedStats, setAnimatedStats] = useState({
+    years: 0,
+    customers: 0
+  });
 
+  const achievementStats = [
+    { id: 1, number: 14, suffix: '+', label: 'Years of Experience', key: 'years' },
+    { id: 2, number: 1500, suffix: '+', label: 'Happy Customers', key: 'customers' }
+  ];
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !counted) {
+            setIsVisible(true);
+            setCounted(true);
+          }
+        });
+      },
+      { 
+        threshold: 0.3,
+        rootMargin: '0px 0px -100px 0px'
+      }
+    );
+
+    if (aboutSectionRef.current) {
+      observer.observe(aboutSectionRef.current);
+    }
+
+    return () => {
+      if (aboutSectionRef.current) {
+        observer.unobserve(aboutSectionRef.current);
+      }
+    };
+  }, [counted]);
+  useEffect(() => {
+    if (isVisible && counted) {
+      const duration = 2000; // 2 seconds
+      const steps = 60; // 60fps
+      const stepDuration = duration / steps;
+
+      achievementStats.forEach((stat) => {
+        let currentStep = 0;
+        const stepValue = stat.number / steps;
+
+        const timer = setInterval(() => {
+          currentStep++;
+          const currentValue = Math.min(
+            Math.floor(stepValue * currentStep),
+            stat.number
+          );
+
+          setAnimatedStats(prev => ({
+            ...prev,
+            [stat.key]: currentValue
+          }));
+
+          if (currentStep >= steps) {
+            clearInterval(timer);
+          }
+        }, stepDuration);
+      });
+    }
+  }, [isVisible, counted]);
+  const startCounting = () => {
+    const counters = document.querySelectorAll('.stat-number');
+    
+    counters.forEach(counter => {
+      const target = parseInt(counter.getAttribute('data-count'));
+      const suffix = counter.getAttribute('data-suffix') || '';
+      const duration = 2000; // 2 seconds
+      const step = target / (duration / 16); // 60fps
+      let current = 0;
+      
+      const updateCount = () => {
+        current += step;
+        if (current < target) {
+          counter.textContent = Math.floor(current) + suffix;
+          requestAnimationFrame(updateCount);
+        } else {
+          counter.textContent = target + suffix;
+        }
+      };
+      
+      updateCount();
+    });
+  };
+
+  // Start counting when section becomes visible
+  useEffect(() => {
+    if (isVisible && !counted) {
+      startCounting();
+    }
+  }, [isVisible, counted]);
   return (
     <div className="homepage">
       
@@ -505,9 +601,7 @@ const nextServiceSlide = () => {
   <div className="decoration-right"></div>
   <div className="container">
     <h2 className="section-title">Our Laptops</h2>
-  
-    
-    {/* Brand Categories - Direct Images without wrapper */}
+   
     <div className="brand-categories">
       {laptopBrands.map((brand, index) => {
         const getBrandImage = (brandName) => {
@@ -538,67 +632,77 @@ const nextServiceSlide = () => {
 
     {/* Refurbished Laptops Grid */}
     <div className="refurbished-section">
-      <div className="laptops-grid">
-        {refurbishedLaptops.map((laptop) => {
-          const discount = Math.round((laptop.originalPrice - laptop.currentPrice) / laptop.originalPrice * 100);
-          
-          return (
-            <div 
-              key={laptop.id}
-              className="laptop-card"
-              onMouseEnter={() => setHoveredLaptop(laptop.id)}
-              onMouseLeave={() => setHoveredLaptop(null)}
-            >
-              <div className="laptop-card__badge">Refurbished</div>
-              
-              <div className="laptop-card__image">
-                <Image 
-                  src={hoveredLaptop === laptop.id && laptop.sideImages?.[0] 
-                    ? laptop.sideImages[0] 
-                    : laptop.image} 
-                  alt={laptop.name}
-                  width={250}
-                  height={150}
-                  className="laptop-image"
-                />
-              </div>
+ <div className="laptops-grid">
+  {refurbishedLaptops.map((laptop) => {
+    const discount = Math.round(
+      ((laptop.originalPrice - laptop.currentPrice) / laptop.originalPrice) * 100
+    );
+    
+    return (
+      <div 
+        key={laptop.id}
+        className="laptop-card"
+        onMouseEnter={() => setHoveredLaptop(laptop.id)}
+        onMouseLeave={() => setHoveredLaptop(null)}
+      >
+        <div className="laptop-card__badge">Refurbished</div>
+        
+        <div className="laptop-card__image">
+          <Image 
+            src={
+              hoveredLaptop === laptop.id && laptop.sideImages?.[0] 
+                ? laptop.sideImages[0] 
+                : laptop.image
+            } 
+            alt={laptop.name}
+            width={280}
+            height={180}
+            className="laptop-image"
+          />
+        </div>
 
-              <div className="laptop-card__content">
-                <h4 className="laptop-card__name">{laptop.name}</h4>
-                <p className="laptop-card__specs">{laptop.specs}</p>
-                
-                <div className="laptop-card__features">
-                  {laptop.features?.slice(0, 3).map((feature, index) => (
-                    <span key={index} className="laptop-card__feature">
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-                
-                <div className="laptop-card__pricing">
-                  <span className="original-price">${laptop.originalPrice}</span>
-                  <span className="current-price">${laptop.currentPrice}</span>
-                  {discount > 0 && (
-                    <span className="discount-badge">{discount}% OFF</span>
-                  )}
-                </div>
-                
-                <div className="laptop-card__actions">
-                  <button className="laptop-btn laptop-btn--primary">
-                    Add to Cart
-                  </button>
-                  <button 
-                    className="laptop-btn laptop-btn--secondary"
-                    onClick={() => openModal(laptop)}
-                  >
-                    Quick View
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        <div className="laptop-card__content">
+          <h4 className="laptop-card__name">{laptop.name}</h4>
+          <p className="laptop-card__specs">{laptop.specs}</p>
+          
+          <div className="laptop-card__features">
+            {laptop.features?.slice(0, 3).map((feature, index) => (
+              <span key={index} className="laptop-card__feature">
+                {feature}
+              </span>
+            ))}
+          </div>
+          
+          <div className="laptop-card__pricing">
+            <span className="original-price">
+              ${laptop.originalPrice?.toLocaleString()}
+            </span>
+            <span className="current-price">
+              ${laptop.currentPrice?.toLocaleString()}
+            </span>
+            {discount > 0 && (
+              <span className="discount-badge">
+                {discount}% OFF
+              </span>
+            )}
+          </div>
+          
+          <div className="laptop-card__actions">
+            <button className="laptop-btn laptop-btn--primary">
+              Add to Cart
+            </button>
+            <button 
+              className="laptop-btn laptop-btn--secondary"
+              onClick={() => openModal(laptop)}
+            >
+              Quick View
+            </button>
+          </div>
+        </div>
       </div>
+    );
+  })}
+</div>
     </div>
   </div>
 </section>
@@ -719,26 +823,36 @@ const nextServiceSlide = () => {
   
   <div className="container">
     <div className="services-content-bottom">
- <div className="services-text">
-  <div className="service-details-head">
-    <h2>Keeping Your Systems<br /><span data-text="Strong and Secure">Strong and Secure</span></h2>
-  </div>
-  <p className="services-description">
-    Newton Computer Services delivers reliable, fast, and affordable 
-    computer solutions for personal and business needs. From hardware 
-    repairs and software setup to networking and IT support, our skilled team 
-    ensures smooth performance and excellent customer service every time.
-  </p>
-  <div className="services-actions">
-    <button className="services-btn services-btn--primary">
-      Get a Quote
-    </button>
-    <button className="services-btn services-btn--secondary">
-      Contact Us
-    </button>
-  </div>
-</div>
+      <div className="services-text">
+        <div className="service-details-head">
+          <h2>Keeping Your Systems<br /><span data-text="Strong and Secure">Strong and Secure</span></h2>
+        </div>
+        <p className="services-description">
+          Newton Computer Services delivers reliable, fast, and affordable 
+          computer solutions for personal and business needs. From hardware 
+          repairs and software setup to networking and IT support, our skilled team 
+          ensures smooth performance and excellent customer service every time.
+        </p>
+        <div className="services-actions">
+          <button className="services-btn services-btn--primary">
+            Get a Quote
+          </button>
+          <button className="services-btn services-btn--secondary">
+            Contact Us
+          </button>
+        </div>
+      </div>
       
+      {/* Right side image */}
+      <div className="services-image">
+        <Image 
+          src="/assets/service-details-right-bg.png"
+          alt="Service Details"
+          width={500}
+          height={400}
+          className="service-image"
+        />
+      </div>
     </div>
   </div>
 </section>
@@ -748,24 +862,174 @@ const nextServiceSlide = () => {
     <h2 className="clients-title">Our Valued Clients</h2>
     
     <div className="clients-carousel-container">
-      <div 
-        ref={clientScrollRef}
-        className="clients-carousel"
-      >
+      <div className="clients-carousel">
+        {/* First set of logos */}
         {clientLogos.map((logo, index) => (
-          <Image
-            key={index}
-            src={logo}
-            alt={`Client logo ${index + 1}`}
-            width={120}
-            height={60}
-            className="client-logo"
-          />
+          <div key={`first-${index}`} className="client-logo-wrapper">
+            <Image
+              src={logo}
+              alt={`Client logo ${index + 1}`}
+              width={120}
+              height={60}
+              className="client-logo"
+            />
+          </div>
+        ))}
+        {/* Duplicate set for seamless loop */}
+        {clientLogos.map((logo, index) => (
+          <div key={`second-${index}`} className="client-logo-wrapper">
+            <Image
+              src={logo}
+              alt={`Client logo ${index + 1}`}
+              width={120}
+              height={60}
+              className="client-logo"
+            />
+          </div>
         ))}
       </div>
     </div>
   </div>
 </section>
+
+{/* GeM Section */}
+<section className="gem-section">
+  <div className="container">
+    <div className="gem-content">
+      <div className="gem-left">
+        <div className="gem-text">
+          <div className="gem-badge">
+            <span>Authorized Partner</span>
+          </div>
+          <h2 className="gem-title">
+            Authorized <span className="gem-highlight">GeM Seller</span> – Your Reliable Procurement Partner
+          </h2>
+          <p className="gem-description">
+            We are an authorized and trusted partner on the Government e-Marketplace (GeM), 
+            committed to delivering excellence in public procurement. With strong ties to 
+            multiple government organizations and departments, we have built a reputation 
+            for reliability, quality, and transparency.
+          </p>
+        </div>
+
+   
+      </div>
+      
+      <div className="gem-image">
+        <div className="gem-image-container">
+          <Image 
+            src="/assets/ge_m-removebg-preview.png" 
+            alt="Government e-Marketplace GeM Logo"
+            width={500}
+            height={400}
+            className="gem-logo"
+            priority
+          />
+          <div className="gem-image-glow"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{/* About Newton Computers Section */}
+     <section className="about-newton" ref={aboutSectionRef}>
+        <div className="container">
+          <div className="about-content">
+            <div className="about-images">
+              <div className="image-collage">
+                <div className="image-main">
+                  <Image 
+                    src="/assets/newton-zigzag2.jpg" 
+                    alt="Newton Computers Store"
+                    width={400}
+                    height={500}
+                    className="about-img main-img"
+                  />
+                  <div className="experience-badge">
+                    <span className="years">14+</span>
+                    <span className="text">Years of Excellence</span>
+                  </div>
+                </div>
+                <div className="image-secondary">
+                  <Image 
+                    src="/assets/newton-zigzag.jpg" 
+                    alt="Our Team"
+                    width={300}
+                    height={300}
+                    className="about-img secondary-img"
+                  />
+                  <div className="stats-overlay">
+                    <div className="stat-item">
+                      <span className="stat-number">{animatedStats.customers}+</span>
+                      <span className="stat-text">People Believe Our Work</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="about-text">
+              <div className="section-badge">
+                <span>About Us</span>
+              </div>
+              
+              <h2 className="about-title">
+                Newton Computers
+                <span className="subtitle">Your One-Stop Multi-Brand Laptop Store</span>
+              </h2>
+              
+              <p className="about-tagline">
+                More Than 14 Years We Provide Multi-Brand Laptop Store & Service
+              </p>
+              
+              <p className="about-description">
+                Since the establishment in 2010, we are dealing all major brands and achieving more than 1500+ satisfied customers across India. We are receiving overwhelming response from all the sides of the customers.
+              </p>
+
+              <div className="features-grid">
+                <div className="feature-item">
+                  <div className="feature-icon">
+                    <FaHeadset />
+                  </div>
+                  <div className="feature-content">
+                    <h4>Brilliant Client Service</h4>
+                    <p>24/7 Support & Free Consultations</p>
+                  </div>
+                </div>
+                
+                <div className="feature-item">
+                  <div className="feature-icon">
+                    <FaUserCheck />
+                  </div>
+                  <div className="feature-content">
+                    <h4>User Experience</h4>
+                    <p>Laptop & Desktop Quick Tips and Advice</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Achievement Stats with Counting Animation */}
+              <div className="achievement-stats">
+                {achievementStats.map((stat) => (
+                  <div key={stat.id} className="stat-card">
+                    <div className="stat-number">
+                      {animatedStats[stat.key]}{stat.suffix}
+                    </div>
+                    <div className="stat-label">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="about-actions">
+                <button className="about-btn about-btn--primary">
+                  Learn More About Us
+                  <FaArrowRight className="btn-arrow" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Laptop Details Modal */}
       {selectedLaptop && (
         <div className="modal-overlay" onClick={closeModal}>
