@@ -825,7 +825,7 @@ const nextServiceSlide = () => {
     <div className="services-content-bottom">
       <div className="services-text">
         <div className="service-details-head">
-          <h2>Keeping Your Systems<br /><span data-text="Strong and Secure">Strong and Secure</span></h2>
+          <h2>Keeping Your Systems<br />Strong and Secure</h2>
         </div>
         <p className="services-description">
           Newton Computer Services delivers reliable, fast, and affordable 
@@ -932,104 +932,88 @@ const nextServiceSlide = () => {
   </div>
 </section>
 {/* About Newton Computers Section */}
-     <section className="about-newton" ref={aboutSectionRef}>
-        <div className="container">
-          <div className="about-content">
-            <div className="about-images">
-              <div className="image-collage">
-                <div className="image-main">
-                  <Image 
-                    src="/assets/newton-zigzag2.jpg" 
-                    alt="Newton Computers Store"
-                    width={400}
-                    height={500}
-                    className="about-img main-img"
-                  />
-                  <div className="experience-badge">
-                    <span className="years">14+</span>
-                    <span className="text">Years of Excellence</span>
-                  </div>
-                </div>
-                <div className="image-secondary">
-                  <Image 
-                    src="/assets/newton-zigzag.jpg" 
-                    alt="Our Team"
-                    width={300}
-                    height={300}
-                    className="about-img secondary-img"
-                  />
-                  <div className="stats-overlay">
-                    <div className="stat-item">
-                      <span className="stat-number">{animatedStats.customers}+</span>
-                      <span className="stat-text">People Believe Our Work</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+ 
+<section className="about-newton" ref={aboutSectionRef}>
+  <div className="container" ref={aboutSectionRef}>
+    <div className="about-content" ref={aboutSectionRef}>
+      <div className="about-images" ref={aboutSectionRef}>
+        <div className="image-collage">
+          <div className="image-main">
+            <Image 
+              src="/assets/newton-zigzag2.jpg" 
+              alt="Newton Computers Store"
+              width={400}
+              height={500}
+              className="about-img main-img"
+            />
+            <div className="experience-badge">
+              <span className="years">{animatedStats.years}+</span>
+              <span className="text">Years of Excellence</span>
             </div>
-
-            <div className="about-text">
-              <div className="section-badge">
-                <span>About Us</span>
-              </div>
-              
-              <h2 className="about-title">
-                Newton Computers
-                <span className="subtitle">Your One-Stop Multi-Brand Laptop Store</span>
-              </h2>
-              
-              <p className="about-tagline">
-                More Than 14 Years We Provide Multi-Brand Laptop Store & Service
-              </p>
-              
-              <p className="about-description">
-                Since the establishment in 2010, we are dealing all major brands and achieving more than 1500+ satisfied customers across India. We are receiving overwhelming response from all the sides of the customers.
-              </p>
-
-              <div className="features-grid">
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <FaHeadset />
-                  </div>
-                  <div className="feature-content">
-                    <h4>Brilliant Client Service</h4>
-                    <p>24/7 Support & Free Consultations</p>
-                  </div>
-                </div>
-                
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <FaUserCheck />
-                  </div>
-                  <div className="feature-content">
-                    <h4>User Experience</h4>
-                    <p>Laptop & Desktop Quick Tips and Advice</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Achievement Stats with Counting Animation */}
-              <div className="achievement-stats">
-                {achievementStats.map((stat) => (
-                  <div key={stat.id} className="stat-card">
-                    <div className="stat-number">
-                      {animatedStats[stat.key]}{stat.suffix}
-                    </div>
-                    <div className="stat-label">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="about-actions">
-                <button className="about-btn about-btn--primary">
-                  Learn More About Us
-                  <FaArrowRight className="btn-arrow" />
-                </button>
+          </div>
+          <div className="image-secondary" ref={aboutSectionRef}>
+            <Image 
+              src="/assets/newton-zigzag.jpg" 
+              alt="Our Team"
+              width={400}  
+              height={350}  
+              className="about-img secondary-img"
+            />
+            <div className="stats-overlay">
+              <div className="stat-item">
+                <span className="stat-number">{animatedStats.customers}+</span>
+                <span className="stat-text">Happy Customers</span>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      <div className="about-text">
+        <div className="section-badge">
+          <span>About Us</span>
+        </div>
+        
+        <h2 className="about-title">
+          Newton Computers
+          <span className="subtitle">Your One-Stop Multi-Brand Laptop Store</span>
+        </h2>
+        
+        <p className="about-tagline">
+          More Than 14 Years We Provide Multi-Brand Laptop Store & Service
+        </p>
+        
+        <p className="about-description">
+          Since the establishment in 2010, we are dealing all major brands and achieving more than 1500+ satisfied customers across India. We are receiving overwhelming response from all the sides of the customers.
+        </p>
+
+        <div className="features-grid">
+          <div className="feature-item">
+            <div className="feature-icon">
+              <FaHeadset />
+            </div>
+            <div className="feature-content">
+              <h4>Brilliant Client Service</h4>
+              <p>24/7 Support & Free Consultations</p>
+            </div>
+          </div>
+          
+          <div className="feature-item">
+            <div className="feature-icon">
+              <FaUserCheck />
+            </div>
+            <div className="feature-content">
+              <h4>User Experience</h4>
+              <p>Laptop & Desktop Quick Tips and Advice</p>
+            </div>
+          </div>
+        </div>
+
+       
+      </div>
+    </div>
+  </div>
+</section>
       {/* Laptop Details Modal */}
       {selectedLaptop && (
         <div className="modal-overlay" onClick={closeModal}>
