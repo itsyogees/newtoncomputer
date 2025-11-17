@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRef} from 'react';
-import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope,FaUserCheck, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope,FaUserCheck, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaPhone, FaMapMarkerAlt, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FaCheck, FaCopy } from 'react-icons/fa'; 
 import { LuCctv } from "react-icons/lu";
 import { MdOutlineSecurity } from "react-icons/md";
@@ -17,7 +17,7 @@ import {
   FaWhatsapp, 
   FaLinkedin 
 } from 'react-icons/fa6';
-
+import BookServiceModal from '@/app/component/BookServiceModal/BookServiceModal';
 import Loading from '../../component/Loading/Loading';
 import './Home.scss';
 
@@ -31,7 +31,7 @@ export default function Home() {
   const [selectedService, setSelectedService] = useState(null);
    const [currentClientIndex, setCurrentClientIndex] = useState(0);
   const clientScrollRef = useRef(null);
-
+const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
 
      const clientLogos = [
     '/assets/vrr.png',
@@ -408,9 +408,38 @@ const nextServiceSlide = () => {
       startCounting();
     }
   }, [isVisible, counted]);
+  // Add to your existing state variables
+ 
+
+// Partners logos data
+const partnerLogos = [
+  '/assets/partner1.png',
+  '/assets/partner2.png',
+  '/assets/partner3.png',
+  '/assets/partner4.png',
+  '/assets/partner5.png',
+  '/assets/partner6.png',
+  '/assets/msi.png',
+  '/assets/lenovo.png',
+  '/assets/hp.png',
+  '/assets/acer.png',
+  '/assets/asus.png',
+  '/assets/dell.png'
+];
+
+  
+ const handleBookService = () => {
+  setIsBookServiceModalOpen(true);
+};
+
+ 
+ 
   return (
     <div className="homepage">
-      
+      <BookServiceModal 
+  isOpen={isBookServiceModalOpen}
+  onClose={() => setIsBookServiceModalOpen(false)}
+/>
    <div className="social-sidebar">
   <div className="social-icons">
     {socialMedia.map((social, index) => {
@@ -520,9 +549,12 @@ const nextServiceSlide = () => {
               <button className="hero__btn hero__btn--primary">
                 Get Quote
               </button>
-              <button className="hero__btn hero__btn--secondary">
-                Book Service
-              </button>
+             <button 
+  className="hero__btn hero__btn--secondary"
+  onClick={handleBookService}
+>
+  Book Service
+</button>
             </div>
           </div>
           <div className="hero__image">
@@ -1010,6 +1042,179 @@ const nextServiceSlide = () => {
         </div>
 
        
+      </div>
+    </div>
+  </div>
+</section>
+{/* Contact Section */}
+{/* Contact Section */}
+<section className="contact-section">
+  <div className="container">
+    <div className="contact-content">
+      <div className="contact-info">
+        <div className="contact-header">
+          <h2 className="contact-title">Contact Us</h2>
+          <p className="contact-subtitle">
+            Don't Hesitate to Contact Us If You Have Any Question
+          </p>
+        </div>
+
+        <div className="contact-details">
+          <div className="contact-item">
+            <div className="contact-icon">
+              <FaMapMarkerAlt />
+            </div>
+            <div className="contact-text">
+              <h4>Location:</h4>
+              <p>No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097.</p>
+            </div>
+          </div>
+
+          <div className="contact-item">
+            <div className="contact-icon">
+              <FaPhone />
+            </div>
+            <div className="contact-text">
+              <h4>Call Us:</h4>
+              <p>+91 99401 85417</p>
+            </div>
+          </div>
+
+          <div className="contact-item">
+            <div className="contact-icon">
+              <FaEnvelope />
+            </div>
+            <div className="contact-text">
+              <h4>Mail Us:</h4>
+              <p>info@newtoncomputers.in</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="contact-form-container">
+        <form className="contact-form">
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="name">Name*</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required 
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="phone">Phone*</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                required 
+                placeholder="Enter your phone number"
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email*</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required 
+              placeholder="Enter your email address"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="complaints">Select Complaints*</label>
+            <select id="complaints" name="complaints" required>
+              <option value="">Select a service</option>
+              <option value="laptop-repair">Laptop Repair</option>
+              <option value="desktop-repair">Desktop Repair</option>
+              <option value="cctv-installation">CCTV Installation</option>
+              <option value="network-setup">Network Setup</option>
+              <option value="data-recovery">Data Recovery</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="time-slot">Time Slot *</label>
+            <select id="time-slot" name="time-slot" required>
+              <option value="">Select preferred time</option>
+              <option value="morning">Morning (9 AM - 12 PM)</option>
+              <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+              <option value="evening">Evening (4 PM - 7 PM)</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="address">Location / Address</label>
+            <input 
+              type="text" 
+              id="address" 
+              name="address" 
+              placeholder="Enter your complete address"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="message">Your Message</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              rows="3" 
+              placeholder="Tell us about your requirements..."
+            ></textarea>
+          </div>
+
+          <button type="submit" className="submit-btn">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{/* Our Partners Section */} 
+<section className="partners-section">
+  <div className="container">
+    <div className="partners-header">
+      <h2 className="partners-title">Our Partners</h2>
+      <p className="partners-subtitle">Trusted by leading brands worldwide</p>
+    </div>
+    
+    <div className="partners-container">
+      <div className="partners-scroll">
+        <div className="partners-track">
+          {/* First set of logos */}
+          {partnerLogos.map((logo, index) => (
+            <div key={`first-${index}`} className="partner-logo">
+              <Image
+                src={logo}
+                alt={`Partner ${index + 1}`}
+                width={120}
+                height={60}
+                className="partner-image"
+              />
+            </div>
+          ))}
+          {/* Duplicate set for seamless loop */}
+          {partnerLogos.map((logo, index) => (
+            <div key={`second-${index}`} className="partner-logo">
+              <Image
+                src={logo}
+                alt={`Partner ${index + 1}`}
+                width={120}
+                height={60}
+                className="partner-image"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </div>

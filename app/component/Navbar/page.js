@@ -3,12 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { FaShoppingCart, FaPhone, FaEnvelope, FaChevronDown, FaMapMarkerAlt, FaSearch, FaUser } from "react-icons/fa";
+import BookServiceModal from "../BookServiceModal/BookServiceModal"; // Adjust path as needed
 import "./Navbar.scss";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
   const cartCount = 0;
 
   useEffect(() => {
@@ -49,6 +51,12 @@ export default function Navbar() {
     if (e.key === 'Enter') {
       handleSearch();
     }
+  };
+
+  // Book Service Modal Handler
+  const handleBookService = () => {
+    closeMenu(); // Close mobile menu if open
+    setIsBookServiceModalOpen(true);
   };
 
   return (
@@ -103,9 +111,6 @@ export default function Navbar() {
 
           {/* Search Bar - First Row */}
           <div className="navbar__search-container">
-            {/* <div className="search-icon-left">
-              <FaSearch className="search-icon" />
-            </div> */}
             <input
               type="text"
               placeholder="Search Your Product..."
@@ -134,9 +139,13 @@ export default function Navbar() {
               <span className="cart-text">Cart</span>
               {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
             </Link>
-            <Link href="/book-service" className="book-btn">
+            {/* Updated Book Service Button */}
+            <button 
+              className="book-btn"
+              onClick={handleBookService}
+            >
               BOOK SERVICE
-            </Link>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -190,8 +199,6 @@ export default function Navbar() {
               </div>
             </div>
 
-        
-
             {/* Laptop Services Dropdown */}
             <div className="nav-dropdown">
               <span className="nav-item">
@@ -232,8 +239,6 @@ export default function Navbar() {
                 <Link href="/contact" onClick={closeMenu}>Contact Form</Link>
               </div>
             </div>
-
-            
           </nav>
         </div>
 
@@ -256,7 +261,7 @@ export default function Navbar() {
                 onClick={handleSearch}
                 aria-label="Search"
               >
-               <FaSearch/>
+                <FaSearch/>
               </button>
             </div>
           </div>
@@ -295,8 +300,6 @@ export default function Navbar() {
                 </div>
               </details>
             </div>
-
-       
 
             {/* Mobile Laptop Services Dropdown */}
             <div className="mobile-dropdown">
@@ -339,7 +342,6 @@ export default function Navbar() {
               </details>
             </div>
 
-            
             {/* Mobile Actions */}
             <div className="navbar__mobile-actions">
               <Link href="/account" className="account-mobile" onClick={closeMenu}>
@@ -350,9 +352,13 @@ export default function Navbar() {
                 <FaShoppingCart className="cart-icon" />
                 <span>Cart {cartCount > 0 && `(${cartCount})`}</span>
               </Link>
-              <Link href="/book-service" className="book-btn-mobile" onClick={closeMenu}>
+              {/* Updated Mobile Book Service Button */}
+              <button 
+                className="book-btn-mobile"
+                onClick={handleBookService}
+              >
                 BOOK SERVICE
-              </Link>
+              </button>
             </div>
           </nav>
         </div>
@@ -364,6 +370,12 @@ export default function Navbar() {
           ></div>
         )}
       </header>
+
+      {/* Book Service Modal */}
+      <BookServiceModal 
+        isOpen={isBookServiceModalOpen}
+        onClose={() => setIsBookServiceModalOpen(false)}
+      />
     </>
   );
 }
