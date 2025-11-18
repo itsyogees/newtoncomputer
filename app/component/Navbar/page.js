@@ -2,8 +2,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { FaShoppingCart, FaPhone, FaEnvelope, FaChevronDown, FaMapMarkerAlt, FaSearch, FaUser } from "react-icons/fa";
-import BookServiceModal from "../BookServiceModal/BookServiceModal"; // Adjust path as needed
+import { FaShoppingCart, FaPhone, FaEnvelope, FaChevronDown, FaMapMarkerAlt, FaSearch, FaUser, FaSignInAlt } from "react-icons/fa";
+import BookServiceModal from "../BookServiceModal/page";
 import "./Navbar.scss";
 
 export default function Navbar() {
@@ -11,7 +11,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
-  const cartCount = 0;
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // You can manage this state with your auth logic
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +30,6 @@ export default function Navbar() {
     setIsMenuOpen(false);
   };
 
-  // Function to handle laptop store navigation with brand filter
   const handleLaptopStoreClick = (brand = '') => {
     closeMenu();
     if (brand) {
@@ -43,7 +42,6 @@ export default function Navbar() {
   const handleSearch = () => {
     if (searchQuery.trim()) {
       console.log("Searching for:", searchQuery);
-      // window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
     }
   };
 
@@ -53,9 +51,8 @@ export default function Navbar() {
     }
   };
 
-  // Book Service Modal Handler
   const handleBookService = () => {
-    closeMenu(); // Close mobile menu if open
+    closeMenu();
     setIsBookServiceModalOpen(true);
   };
 
@@ -128,18 +125,27 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Desktop Actions */}
+          {/* Desktop Actions - All buttons displayed together */}
           <div className="navbar__actions">
-            <Link href="/account" className="account-btn">
+            {/* My Account - Always visible */}
+            <Link href="/pages/Account" className="account-btn">
               <FaUser className="account-icon" />
               <span className="account-text">My Account</span>
             </Link>
+
+            {/* Cart - Always visible */}
             <Link href="/cart" className="cart">
               <FaShoppingCart className="cart-icon" />
               <span className="cart-text">Cart</span>
-              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
             </Link>
-            {/* Updated Book Service Button */}
+
+            {/* Login - Always visible */}
+            <Link href="/component/Login" className="login-btn">
+              <FaSignInAlt className="login-icon" />
+              <span className="login-text">Login</span>
+            </Link>
+            
+            {/* Book Service - Always visible */}
             <button 
               className="book-btn"
               onClick={handleBookService}
@@ -342,17 +348,27 @@ export default function Navbar() {
               </details>
             </div>
 
-            {/* Mobile Actions */}
+            {/* Mobile Actions - All buttons displayed together */}
             <div className="navbar__mobile-actions">
-              <Link href="/account" className="account-mobile" onClick={closeMenu}>
+              {/* My Account - Always visible */}
+              <Link href="/pages/Account" className="account-mobile" onClick={closeMenu}>
                 <FaUser className="account-icon" />
                 <span>My Account</span>
               </Link>
+
+              {/* Cart - Always visible */}
               <Link href="/cart" className="cart-mobile" onClick={closeMenu}>
                 <FaShoppingCart className="cart-icon" />
-                <span>Cart {cartCount > 0 && `(${cartCount})`}</span>
+                <span>Cart</span>
               </Link>
-              {/* Updated Mobile Book Service Button */}
+
+              {/* Login - Always visible */}
+              <Link href="/component/Login" className="login-btn-mobile" onClick={closeMenu}>
+                <FaSignInAlt className="login-icon" />
+                <span>Login</span>
+              </Link>
+              
+              {/* Book Service - Always visible */}
               <button 
                 className="book-btn-mobile"
                 onClick={handleBookService}

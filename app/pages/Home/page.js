@@ -17,7 +17,7 @@ import {
   FaWhatsapp, 
   FaLinkedin 
 } from 'react-icons/fa6';
-import BookServiceModal from '@/app/component/BookServiceModal/BookServiceModal';
+import BookServiceModal from '@/app/component/BookServiceModal/page';
 import Loading from '../../component/Loading/Loading';
 import './Home.scss';
 

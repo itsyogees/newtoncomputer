@@ -286,7 +286,7 @@ select {
   justify-content: center;
   
   &:hover {
-    background: darken($primary-color, 10%);
+    background: ($primary-color);
   }
   
   @media (min-width: 768px) {
@@ -423,7 +423,7 @@ select {
   transition: background-color 0.15s ease;
   
   &:hover {
-    background: darken($secondary-color, 10%);
+    background: ($secondary-color);
   }
 }
 
@@ -472,8 +472,8 @@ select {
   border: 1px solid $primary-color;
   
   &:hover {
-    background: darken($primary-color, 10%);
-    border-color: darken($primary-color, 10%);
+    background: ($primary-color);
+    border-color: ($primary-color);
     transform: translateY(-1px);
   }
   
@@ -502,8 +502,8 @@ select {
   border: 1px solid $text-dark;
   
   &:hover {
-    background: lighten($text-dark, 10%);
-    border-color: lighten($text-dark, 10%);
+    background: $text-dark;
+    border-color: $text-dark;
   }
 }
 
@@ -564,7 +564,7 @@ select {
     border-radius: 3px;
     
     &:hover {
-      background-color: darken($border-color, 10%);
+      background-color: $border-color, 10;
     }
   }
 }
