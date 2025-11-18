@@ -496,7 +496,7 @@ flex-direction: column;
       }
 
       .account-icon,
-      .cart-icon {
+      .cart-icon, .login-icon {
         width: 1.25rem;
         height: 1.25rem;
         color: var(--color-red);
@@ -1010,7 +1010,7 @@ flex-direction: column;
     margin-top: auto;
 
     .account-mobile,
-    .cart-mobile {
+    .cart-mobile, .login-btn-mobile {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1035,7 +1035,7 @@ flex-direction: column;
       }
 
       .account-icon,
-      .cart-icon {
+      .cart-icon, .login-icon {
         width: 1.25rem;
         height: 1.25rem;
         color: var(--color-red);
