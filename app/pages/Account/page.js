@@ -364,7 +364,7 @@ const Account = () => {
                           </div>
                         </div>
                         
-                        <div className="service-details">
+                        <div className="service-details-content">
                           <div className="detail-item">
                             <span className="detail-label">Laptop Model:</span>
                             <span className="detail-value">{service.laptopModel}</span>
