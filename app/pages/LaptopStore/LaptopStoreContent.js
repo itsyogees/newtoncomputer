@@ -17,6 +17,7 @@ import {
 import CommonBanner from '../../component/CommonBanner/CommonBanner'; 
 import './LaptopStore.scss';
 import Loading from '../../component/Loading/Loading';
+
 const LaptopStoreContent = () => {
   const searchParams = useSearchParams();
   const brand = searchParams.get('brand');
@@ -151,6 +152,62 @@ const LaptopStoreContent = () => {
         weight: '1.9 kg',
         os: 'Windows 10 Home'
       }
+    },
+    {
+      id: 5,
+      name: 'ASUS ROG Strix G15 – Gaming Laptop',
+      brand: 'asus',
+      specs: 'Intel® Core i7 – 11th Gen/ 16 GB/ 1 TB SSD/ RTX 3050',
+      originalPrice: 85470,
+      currentPrice: 79470,
+      image: '/assets/placeholder-lap.png',
+      sideImages: [],
+      category: 'Gaming',
+      rating: 4.8,
+      reviews: 156,
+      inStock: true,
+      features: ['16GB RAM', '1TB SSD', '15.6" FHD 144Hz', 'RTX 3050'],
+      description: 'Powerful gaming laptop for immersive gaming experience.',
+      fullDescription: 'The ASUS ROG Strix G15 delivers exceptional gaming performance with its high-refresh-rate display and powerful graphics card.',
+      warranty: '12 Months Warranty',
+      specifications: {
+        processor: 'Intel Core i7-11800H',
+        ram: '16GB DDR4',
+        storage: '1TB SSD',
+        display: '15.6" FHD 144Hz',
+        graphics: 'NVIDIA RTX 3050 4GB',
+        battery: '4-cell 90Wh',
+        weight: '2.3 kg',
+        os: 'Windows 11 Home'
+      }
+    },
+    {
+      id: 6,
+      name: 'MSI Modern 14 – Ultrabook',
+      brand: 'msi',
+      specs: 'Intel® Core i5 – 11th Gen/ 8 GB/ 512 GB SSD',
+      originalPrice: 65470,
+      currentPrice: 59470,
+      image: '/assets/placeholder-lap.png',
+      sideImages: [],
+      category: 'Premium',
+      rating: 4.4,
+      reviews: 89,
+      inStock: true,
+      features: ['8GB RAM', '512GB SSD', '14" FHD', 'Ultra-thin'],
+      description: 'Sleek and powerful ultrabook for professionals.',
+      fullDescription: 'The MSI Modern 14 combines portability with performance in a sleek, lightweight design.',
+      warranty: '12 Months Warranty',
+      specifications: {
+        processor: 'Intel Core i5-1135G7',
+        ram: '8GB DDR4',
+        storage: '512GB SSD',
+        display: '14" FHD IPS',
+        graphics: 'Intel Iris Xe',
+        battery: '3-cell 52Wh',
+        weight: '1.3 kg',
+        os: 'Windows 11 Home'
+      }
     }
   ];
 
@@ -171,7 +228,7 @@ const LaptopStoreContent = () => {
       setLaptops(laptopData);
       setFilteredLaptops(laptopData);
       setLoading(false);
-    }, 1000);
+    }, 1500);
   }, []);
 
   // Filtering function
@@ -267,29 +324,26 @@ const LaptopStoreContent = () => {
     e.target.src = '/assets/placeholder-lap.png';
   };
 
- useEffect(() => {
-    // Simulate data loading
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-  }, []);
-
   if (loading) {
     return (
-      <Loading 
-        type="spinner" 
-        text="Loading laptops..." 
-        fullScreen={true}
-        size="large"
-      />
+      <div className="laptop-store">
+        <CommonBanner title={getBannerTitle()}/>
+        <div className="loading-section">
+          <Loading 
+            type="spinner" 
+            text="Loading laptops..." 
+            fullScreen={false}
+            size="large"
+          />
+        </div>
+      </div>
     );
   }
-
 
   return (
     <div className="laptop-store">
       {/* Simple Banner Section */}
-     <CommonBanner title={getBannerTitle()}/>
+      <CommonBanner title={getBannerTitle()}/>
 
       {/* Filters and Search Section */}
       <section className="laptop-store-filters">

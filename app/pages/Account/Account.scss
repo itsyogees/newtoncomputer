@@ -24,6 +24,17 @@
     margin: 0 15px;
     border-radius: 8px;
   }
+  .loading-section {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  
+  @media (max-width: 768px) {
+    min-height: 300px;
+  }
+}
 }
 
 // Mobile Bottom Navigation
@@ -801,6 +812,10 @@
 // Content transitions
 .tab-content {
   animation: fadeIn 0.3s ease;
+   &.loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 
 @keyframes fadeIn {

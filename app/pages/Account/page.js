@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Account.scss';
 import { 
   FaUser, 
@@ -11,12 +11,15 @@ import {
   FaCheckCircle,
   FaEye
 } from 'react-icons/fa';
-import BookServiceModal from '../../component/BookServiceModal/page'
+import BookServiceModal from '../../component/BookServiceModal/page';
+import Loading from '../../component/Loading/Loading';
 
 const Account = () => {
   const [activeTab, setActiveTab] = useState('services');
   const [isEditing, setIsEditing] = useState(false);
   const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
   const [userData, setUserData] = useState({
     name: 'John Doe',
     email: 'john.doe@example.com',
@@ -25,72 +28,8 @@ const Account = () => {
   });
 
   // Sample service bookings data
-  const [serviceBookings, setServiceBookings] = useState([
-    {
-      id: 'SRV001',
-      laptopModel: 'Dell Inspiron 15',
-      serviceType: 'Screen Replacement',
-      bookingDate: '2024-01-15',
-      status: 'completed',
-      estimatedCost: '₹3,500',
-      finalCost: '₹3,200',
-      technician: 'Raj Kumar',
-      completionDate: '2024-01-18'
-    },
-    {
-      id: 'SRV002',
-      laptopModel: 'Lenovo ThinkPad T480',
-      serviceType: 'Motherboard Repair',
-      bookingDate: '2024-01-20',
-      status: 'in-progress',
-      estimatedCost: '₹8,000',
-      finalCost: null,
-      technician: 'Suresh Patel',
-      completionDate: null
-    },
-    {
-      id: 'SRV003',
-      laptopModel: 'HP Pavilion',
-      serviceType: 'Battery Replacement',
-      bookingDate: '2024-01-25',
-      status: 'pending',
-      estimatedCost: '₹4,500',
-      finalCost: null,
-      technician: null,
-      completionDate: null
-    }
-  ]);
-
-  // Sample order history
-  const [orders, setOrders] = useState([
-    {
-      id: 'ORD001',
-      product: 'Refurbished Dell Latitude E7440',
-      orderDate: '2024-01-10',
-      status: 'delivered',
-      price: '₹24,999',
-      quantity: 1,
-      deliveryDate: '2024-01-15'
-    },
-    {
-      id: 'ORD002',
-      product: 'Laptop Bag & Accessories Kit',
-      orderDate: '2024-01-18',
-      status: 'shipped',
-      price: '₹2,499',
-      quantity: 1,
-      deliveryDate: '2024-01-22'
-    },
-    {
-      id: 'ORD003',
-      product: 'Wireless Mouse',
-      orderDate: '2024-01-25',
-      status: 'pending',
-      price: '₹899',
-      quantity: 2,
-      deliveryDate: '2024-01-30'
-    }
-  ]);
+  const [serviceBookings, setServiceBookings] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   const [newService, setNewService] = useState({
     laptopModel: '',
@@ -99,6 +38,88 @@ const Account = () => {
     preferredDate: '',
     preferredTime: ''
   });
+
+  // Simulate data loading
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Load service bookings data
+      setServiceBookings([
+        {
+          id: 'SRV001',
+          laptopModel: 'Dell Inspiron 15',
+          serviceType: 'Screen Replacement',
+          bookingDate: '2024-01-15',
+          status: 'completed',
+          estimatedCost: '₹3,500',
+          finalCost: '₹3,200',
+          technician: 'Raj Kumar',
+          completionDate: '2024-01-18'
+        },
+        {
+          id: 'SRV002',
+          laptopModel: 'Lenovo ThinkPad T480',
+          serviceType: 'Motherboard Repair',
+          bookingDate: '2024-01-20',
+          status: 'in-progress',
+          estimatedCost: '₹8,000',
+          finalCost: null,
+          technician: 'Suresh Patel',
+          completionDate: null
+        },
+        {
+          id: 'SRV003',
+          laptopModel: 'HP Pavilion',
+          serviceType: 'Battery Replacement',
+          bookingDate: '2024-01-25',
+          status: 'pending',
+          estimatedCost: '₹4,500',
+          finalCost: null,
+          technician: null,
+          completionDate: null
+        }
+      ]);
+
+      // Load order history data
+      setOrders([
+        {
+          id: 'ORD001',
+          product: 'Refurbished Dell Latitude E7440',
+          orderDate: '2024-01-10',
+          status: 'delivered',
+          price: '₹24,999',
+          quantity: 1,
+          deliveryDate: '2024-01-15'
+        },
+        {
+          id: 'ORD002',
+          product: 'Laptop Bag & Accessories Kit',
+          orderDate: '2024-01-18',
+          status: 'shipped',
+          price: '₹2,499',
+          quantity: 1,
+          deliveryDate: '2024-01-22'
+        },
+        {
+          id: 'ORD003',
+          product: 'Wireless Mouse',
+          orderDate: '2024-01-25',
+          status: 'pending',
+          price: '₹899',
+          quantity: 2,
+          deliveryDate: '2024-01-30'
+        }
+      ]);
+
+      setLoading(false);
+    };
+
+    loadData();
+  }, []);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -179,6 +200,32 @@ const Account = () => {
         return 'Pending';
     }
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="account-dashboard">
+        <div className="dashboard-container">
+          <div className="dashboard-header">
+            <div className="user-greeting">
+              <h1>Welcome!</h1>
+            </div>
+            <div className="user-avatar">
+              <FaUser className="avatar-icon" />
+            </div>
+          </div>
+          <div className="loading-section">
+            <Loading 
+              type="spinner" 
+              text="Loading your account..." 
+              fullScreen={false}
+              size="large"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Order History Component with improved responsive design
   const OrderHistory = () => {
@@ -288,8 +335,8 @@ const Account = () => {
         {/* Header */}
         <div className="dashboard-header">
           <div className="user-greeting">
-            <h1>{userData.name}!</h1>
-            {/* <p>Manage your services, orders, and account details</p> */}
+            <h1>Welcome back, {userData.name}!</h1>
+            <p>Manage your services, orders, and account details</p>
           </div>
           <div className="user-avatar">
             <FaUser className="avatar-icon" />

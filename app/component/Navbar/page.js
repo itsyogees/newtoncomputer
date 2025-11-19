@@ -134,7 +134,7 @@ export default function Navbar() {
             </Link>
 
             {/* Cart - Always visible */}
-            <Link href="/cart" className="cart">
+            <Link href="/pages/Cart" className="cart">
               <FaShoppingCart className="cart-icon" />
               <span className="cart-text">Cart</span>
             </Link>
@@ -357,7 +357,7 @@ export default function Navbar() {
               </Link>
 
               {/* Cart - Always visible */}
-              <Link href="/cart" className="cart-mobile" onClick={closeMenu}>
+              <Link href="/pages/Cart" className="cart-mobile" onClick={closeMenu}>
                 <FaShoppingCart className="cart-icon" />
                 <span>Cart</span>
               </Link>

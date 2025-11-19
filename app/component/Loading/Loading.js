@@ -1,4 +1,3 @@
-// app/components/Loading/Loading.jsx
 "use client";
 import './Loading.scss';
 
