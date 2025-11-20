@@ -226,7 +226,7 @@ export default function Navbar() {
               </span>
               <div className="dropdown-menu">
                 <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
-                <Link href="/it-services/network-security" onClick={closeMenu}>Network Security Solutions</Link>
+                <Link href="/pages/NetworkSecurity" onClick={closeMenu}>Network Security Solutions</Link>
                 <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
                 <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
                 <Link href="/it-services/cctv" onClick={closeMenu}>CCTV Solution</Link>
@@ -327,7 +327,7 @@ export default function Navbar() {
                 <summary>IT Services</summary>
                 <div className="mobile-dropdown-content">
                   <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
-                  <Link href="/it-services/network-security" onClick={closeMenu}>Network Security Solutions</Link>
+                  <Link href="/pages/NetworkSecurity" onClick={closeMenu}>Network Security Solutions</Link>
                   <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
                   <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
                   <Link href="/it-services/cctv" onClick={closeMenu}>CCTV Solution</Link>

@@ -1,3 +1,4 @@
+// Cart Page Styles - Mobile First & Professional
 // Variables
 $primary-color: #2563eb;
 $primary-dark: #1d4ed8;
@@ -25,13 +26,11 @@ $border-radius: 0.5rem;
 $border-radius-lg: 0.75rem;
 $border-radius-xl: 1rem;
 
-// Breakpoints - Updated for better responsiveness
-$mobile-sm: 360px;
+// Breakpoints
 $mobile: 480px;
 $tablet: 768px;
 $laptop: 1024px;
 $desktop: 1200px;
-$desktop-lg: 1440px;
 
 // Mixins
 @mixin flex-center {
@@ -71,38 +70,7 @@ $desktop-lg: 1440px;
   }
 }
 
-// Responsive mixins
-@mixin mobile-sm {
-  @media (max-width: #{$mobile-sm}) {
-    @content;
-  }
-}
-
-@mixin mobile {
-  @media (max-width: #{$mobile}) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (min-width: #{$tablet}) {
-    @content;
-  }
-}
-
-@mixin laptop {
-  @media (min-width: #{$laptop}) {
-    @content;
-  }
-}
-
-@mixin desktop {
-  @media (min-width: #{$desktop}) {
-    @content;
-  }
-}
-
-// Animations
+// Mobile-First Animations
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -130,67 +98,52 @@ $desktop-lg: 1440px;
   100% { transform: rotate(360deg); }
 }
 
-// Base Mobile-First Styles
+// Base Mobile Styles
 .cart-page {
   min-height: 100vh;
   background: $bg-light;
-  padding: 0.75rem 0;
+  padding: 1rem 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  line-height: 1.5;
-
-  @include tablet {
-    padding: 1rem 0;
-  }
-
-  @include laptop {
-    padding: 1.5rem 0;
-  }
 
   .container {
     width: 100%;
     margin: 0 auto;
-    padding: 0 0.75rem;
+    padding: 0 1rem;
     
-    @include mobile {
-      padding: 0 1rem;
-      max-width: 100%;
-    }
-    
-    @include tablet {
+    // Tablet
+    @media (min-width: $tablet) {
       max-width: 720px;
       padding: 0 1.5rem;
     }
     
-    @include laptop {
+    // Laptop
+    @media (min-width: $laptop) {
       max-width: 960px;
     }
     
-    @include desktop {
+    // Desktop
+    @media (min-width: $desktop) {
       max-width: 1200px;
     }
   }
 }
 
-// Enhanced Mobile Header
+// Mobile Header
 .cart-header {
   @include flex-column;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid $border-color;
   animation: fadeIn 0.6s ease-out;
 
-  @include mobile-sm {
-    gap: 0.5rem;
-  }
-
-  @include tablet {
+  // Tablet and up
+  @media (min-width: $tablet) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    gap: 1rem;
   }
 
   .back-to-shop {
@@ -199,7 +152,7 @@ $desktop-lg: 1440px;
     color: $primary-color;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     padding: 0.75rem 1rem;
     border-radius: $border-radius;
     background: $bg-white;
@@ -207,22 +160,14 @@ $desktop-lg: 1440px;
     transition: all 0.3s ease;
     order: 2;
     width: 100%;
-    min-height: 44px; // Better touch target
+    justify-content: center;
 
-    @include mobile-sm {
-      font-size: 0.85rem;
-      padding: 0.675rem 0.875rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       order: 1;
       width: auto;
-      font-size: 0.9rem;
-      padding: 0.75rem 1.25rem;
-    }
-
-    @include laptop {
+      justify-content: flex-start;
       font-size: 1rem;
+      padding: 0.75rem 1.25rem;
     }
 
     &:active {
@@ -232,119 +177,88 @@ $desktop-lg: 1440px;
   }
 
   .cart-title {
-    font-size: 1.375rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: $text-dark;
     margin: 0;
     text-align: center;
     order: 1;
-    line-height: 1.2;
 
-    @include mobile-sm {
-      font-size: 1.25rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       order: 2;
-      font-size: 1.75rem;
+      font-size: 2rem;
     }
 
-    @include laptop {
-      font-size: 2.25rem;
+    @media (min-width: $laptop) {
+      font-size: 2.5rem;
     }
   }
 
   .cart-summary-header {
     background: $bg-white;
     padding: 0.75rem 1rem;
-    border-radius: $border-radius;
+    border-radius: $border-radius-lg;
     border: 1px solid $primary-color;
     font-weight: 700;
     color: $primary-color;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     text-align: center;
     order: 3;
-    min-height: 44px;
-    @include flex-center;
 
-    @include mobile-sm {
-      font-size: 0.85rem;
-      padding: 0.675rem 0.875rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       order: 3;
       padding: 0.875rem 1.5rem;
-      font-size: 0.9rem;
-      border-radius: $border-radius-lg;
-    }
-
-    @include laptop {
       font-size: 1rem;
     }
   }
 }
 
-// Enhanced Empty Cart
+// Empty Cart - Mobile First
 .empty-cart {
   text-align: center;
-  padding: 1.5rem 0.75rem;
+  padding: 2rem 1rem;
   background: $bg-white;
-  border-radius: $border-radius;
+  border-radius: $border-radius-lg;
   @include card-shadow;
   animation: fadeIn 0.8s ease-out;
   margin: 1rem 0;
 
-  @include mobile {
-    padding: 2rem 1rem;
-    border-radius: $border-radius-lg;
-  }
-
-  @include tablet {
+  @media (min-width: $tablet) {
     padding: 3rem 2rem;
     border-radius: $border-radius-xl;
   }
 
-  @include laptop {
+  @media (min-width: $laptop) {
     padding: 4rem 2rem;
   }
 
   .empty-cart-icon {
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: $text-muted;
     margin-bottom: 1rem;
 
-    @include mobile {
-      font-size: 3rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 4rem;
       margin-bottom: 1.5rem;
     }
 
-    @include laptop {
+    @media (min-width: $laptop) {
       font-size: 5rem;
     }
   }
 
   h2 {
-    font-size: 1.375rem;
+    font-size: 1.5rem;
     color: $text-dark;
     margin-bottom: 0.75rem;
     font-weight: 700;
-    line-height: 1.2;
 
-    @include mobile {
-      font-size: 1.5rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 1.75rem;
       margin-bottom: 1rem;
     }
 
-    @include laptop {
+    @media (min-width: $laptop) {
       font-size: 2.25rem;
     }
   }
@@ -352,16 +266,11 @@ $desktop-lg: 1440px;
   p {
     color: $text-light;
     margin-bottom: 1.5rem;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     max-width: 100%;
-    padding: 0 0.5rem;
 
-    @include mobile {
-      font-size: 0.95rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 1.125rem;
       margin-bottom: 2rem;
       max-width: 400px;
@@ -383,10 +292,8 @@ $desktop-lg: 1440px;
     transition: all 0.3s ease;
     width: 100%;
     max-width: 280px;
-    min-height: 44px;
-    @include flex-center;
 
-    @include tablet {
+    @media (min-width: $tablet) {
       width: auto;
       padding: 1.125rem 2rem;
       font-size: 1.125rem;
@@ -398,34 +305,25 @@ $desktop-lg: 1440px;
   }
 }
 
-// Enhanced Loading State
+// Loading State
 .loading-cart {
   text-align: center;
-  padding: 2rem 0.75rem;
+  padding: 3rem 1rem;
 
-  @include tablet {
-    padding: 3rem 2rem;
-  }
-
-  @include laptop {
+  @media (min-width: $tablet) {
     padding: 4rem 2rem;
   }
 
   .loading-spinner {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border: 3px solid $border-light;
     border-top: 3px solid $primary-color;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 1rem;
 
-    @include tablet {
-      width: 50px;
-      height: 50px;
-    }
-
-    @include laptop {
+    @media (min-width: $tablet) {
       width: 60px;
       height: 60px;
       border-width: 4px;
@@ -434,81 +332,62 @@ $desktop-lg: 1440px;
 
   p {
     color: $text-light;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 500;
 
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 1.125rem;
     }
   }
 }
 
-// Enhanced Cart Layout
+// Cart Layout - Mobile First
 .cart-content {
   animation: fadeIn 0.6s ease-out;
 }
 
 .cart-layout {
   @include flex-column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 
-  @include tablet {
-    gap: 1.5rem;
-  }
-
-  @include laptop {
+  @media (min-width: $laptop) {
     display: grid;
-    grid-template-columns: 1fr 380px;
+    grid-template-columns: 1fr 400px;
     gap: 2rem;
     align-items: start;
   }
-
-  @include desktop {
-    grid-template-columns: 1fr 420px;
-    gap: 2.5rem;
-  }
 }
 
-// Enhanced Cart Items Section
+// Cart Items Section - Mobile Optimized
 .cart-items-section {
   background: $bg-white;
-  border-radius: $border-radius;
-  padding: 1rem;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
   @include card-shadow;
   order: 2;
 
-  @include mobile {
-    padding: 1.25rem;
-    border-radius: $border-radius-lg;
-  }
-
-  @include tablet {
+  @media (min-width: $tablet) {
     padding: 1.5rem;
+    border-radius: $border-radius-xl;
   }
 
-  @include laptop {
+  @media (min-width: $laptop) {
     padding: 2rem;
     order: 1;
-    border-radius: $border-radius-xl;
   }
 }
 
 .cart-items-header {
   @include flex-column;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid $border-color;
 
-  @include tablet {
+  @media (min-width: $tablet) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-    gap: 1rem;
-  }
-
-  @include laptop {
     margin-bottom: 2rem;
   }
 
@@ -519,13 +398,9 @@ $desktop-lg: 1440px;
     font-weight: 700;
     text-align: center;
 
-    @include tablet {
-      font-size: 1.375rem;
-      text-align: left;
-    }
-
-    @include laptop {
+    @media (min-width: $tablet) {
       font-size: 1.5rem;
+      text-align: left;
     }
   }
 
@@ -540,18 +415,12 @@ $desktop-lg: 1440px;
     transition: all 0.3s ease;
     padding: 0.75rem 1rem;
     border-radius: $border-radius;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     width: 100%;
-    min-height: 44px;
 
-    @include tablet {
+    @media (min-width: $tablet) {
       width: auto;
       padding: 0.75rem 1.25rem;
-      font-size: 0.9rem;
-    }
-
-    @include laptop {
-      font-size: 1rem;
     }
 
     &:active {
@@ -564,56 +433,43 @@ $desktop-lg: 1440px;
 
 .cart-items {
   @include flex-column;
-  gap: 0.875rem;
+  gap: 1rem;
 
-  @include mobile {
-    gap: 1rem;
-  }
-
-  @include tablet {
+  @media (min-width: $tablet) {
     gap: 1.25rem;
   }
 }
 
-// Enhanced Cart Item with Better Mobile Layout
+// Cart Item - Mobile Optimized Layout
 .cart-item {
   @include flex-column;
-  gap: 0.875rem;
-  padding: 1rem;
+  gap: 1rem;
+  padding: 1.25rem;
   background: $bg-light;
-  border-radius: $border-radius-sm;
+  border-radius: $border-radius;
   border: 1px solid $border-color;
   transition: all 0.3s ease;
   animation: slideIn 0.4s ease-out;
   position: relative;
 
-  @include mobile {
-    padding: 1.125rem;
-    border-radius: $border-radius;
-    gap: 1rem;
-  }
-
-  @include tablet {
+  @media (min-width: $tablet) {
     display: grid;
     grid-template-columns: auto 1fr auto auto;
     grid-template-areas: 
       "image details quantity remove"
       "image details pricing pricing";
-    gap: 1rem;
+    gap: 1.25rem;
     align-items: start;
-    padding: 1.25rem;
   }
 
-  @include laptop {
+  @media (min-width: $laptop) {
     grid-template-columns: auto 1fr auto auto auto;
     grid-template-areas: "image details quantity pricing remove";
     align-items: center;
-    gap: 1.25rem;
-    padding: 1.5rem;
   }
 
   &:active {
-    transform: scale(0.995);
+    transform: scale(0.99);
   }
 
   .item-image {
@@ -624,27 +480,17 @@ $desktop-lg: 1440px;
       border-radius: $border-radius-sm;
       object-fit: cover;
       width: 100%;
-      max-width: 120px;
-      height: 80px;
+      max-width: 200px;
+      height: 120px;
       margin: 0 auto;
       
-      @include mobile {
-        max-width: 140px;
-        height: 90px;
-      }
-      
-      @include tablet {
-        width: 90px;
-        height: 60px;
+      @media (min-width: $tablet) {
+        width: 100px;
+        height: 70px;
         margin: 0;
       }
       
-      @include laptop {
-        width: 100px;
-        height: 70px;
-      }
-
-      @include desktop {
+      @media (min-width: $laptop) {
         width: 120px;
         height: 80px;
       }
@@ -655,69 +501,53 @@ $desktop-lg: 1440px;
     grid-area: details;
     text-align: center;
     
-    @include tablet {
+    @media (min-width: $tablet) {
       text-align: left;
     }
     
     .item-name {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: $text-dark;
-      margin: 0 0 0.375rem 0;
+      margin: 0 0 0.5rem 0;
       line-height: 1.3;
       
-      @include mobile {
-        font-size: 1.1rem;
-      }
-
-      @include tablet {
+      @media (min-width: $tablet) {
         font-size: 1.125rem;
-        margin-bottom: 0.5rem;
       }
     }
 
     .item-specs {
       color: $text-light;
-      margin: 0 0 0.5rem 0;
-      font-size: 0.8rem;
+      margin: 0 0 0.75rem 0;
+      font-size: 0.85rem;
       line-height: 1.4;
 
-      @include mobile {
-        font-size: 0.85rem;
-      }
-
-      @include tablet {
+      @media (min-width: $tablet) {
         font-size: 0.9rem;
-        margin-bottom: 0.75rem;
       }
     }
 
     .item-meta {
       @include flex-center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
       justify-content: center;
 
-      @include tablet {
+      @media (min-width: $tablet) {
         justify-content: flex-start;
-        gap: 0.75rem;
       }
 
       .item-category {
         background: $primary-color;
         color: $bg-white;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.875rem;
-        font-size: 0.7rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
         font-weight: 600;
         white-space: nowrap;
 
-        @include mobile {
-          font-size: 0.75rem;
-          padding: 0.375rem 0.75rem;
-        }
-
-        @include tablet {
+        @media (min-width: $tablet) {
           font-size: 0.8rem;
           padding: 0.375rem 0.875rem;
         }
@@ -727,15 +557,11 @@ $desktop-lg: 1440px;
         @include flex-center;
         gap: 0.25rem;
         color: $success-color;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         font-weight: 600;
         white-space: nowrap;
 
-        @include mobile {
-          font-size: 0.75rem;
-        }
-
-        @include tablet {
+        @media (min-width: $tablet) {
           font-size: 0.8rem;
         }
       }
@@ -745,20 +571,15 @@ $desktop-lg: 1440px;
   .item-quantity {
     grid-area: quantity;
     @include flex-center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     background: $bg-white;
-    padding: 0.375rem;
-    border-radius: $border-radius-sm;
+    padding: 0.5rem;
+    border-radius: $border-radius;
     border: 1px solid $border-color;
     width: fit-content;
     margin: 0 auto;
 
-    @include mobile {
-      gap: 0.75rem;
-      padding: 0.5rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       margin: 0;
     }
 
@@ -766,24 +587,14 @@ $desktop-lg: 1440px;
       @include flex-center;
       background: none;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       cursor: pointer;
       transition: all 0.3s ease;
       color: $primary-color;
       background: $bg-light;
-      font-size: 0.75rem;
-      min-width: 32px;
-      min-height: 32px;
-
-      @include mobile {
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
-        min-height: 36px;
-        font-size: 0.8rem;
-      }
+      font-size: 0.8rem;
 
       &:active:not(:disabled) {
         background: $primary-color;
@@ -801,69 +612,46 @@ $desktop-lg: 1440px;
     .quantity-display {
       font-weight: 700;
       color: $text-dark;
-      min-width: 24px;
+      min-width: 30px;
       text-align: center;
-      font-size: 0.9rem;
-
-      @include mobile {
-        font-size: 1rem;
-        min-width: 30px;
-      }
+      font-size: 1rem;
     }
   }
 
   .item-pricing {
     grid-area: pricing;
     text-align: center;
-    padding: 0.5rem 0;
+    padding: 0.75rem 0;
     border-top: 1px solid $border-color;
 
-    @include tablet {
+    @media (min-width: $tablet) {
       text-align: right;
       border-top: none;
       padding: 0;
     }
 
     .price-current {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       font-weight: 800;
       color: $text-dark;
-      margin-bottom: 0.125rem;
+      margin-bottom: 0.25rem;
 
-      @include mobile {
-        font-size: 1.25rem;
-      }
-
-      @include tablet {
+      @media (min-width: $tablet) {
         font-size: 1.375rem;
-        margin-bottom: 0.25rem;
       }
     }
 
     .price-original {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: $text-muted;
       text-decoration: line-through;
-      margin-bottom: 0.125rem;
-
-      @include mobile {
-        font-size: 0.85rem;
-      }
-
-      @include tablet {
-        font-size: 0.9rem;
-        margin-bottom: 0.25rem;
-      }
+      margin-bottom: 0.25rem;
     }
 
     .price-savings {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: $success-color;
       font-weight: 700;
-
-      @include mobile {
-        font-size: 0.8rem;
-      }
     }
   }
 
@@ -877,18 +665,10 @@ $desktop-lg: 1440px;
     border-radius: $border-radius-sm;
     transition: all 0.3s ease;
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 36px;
-    height: 36px;
-    @include flex-center;
+    top: 0.75rem;
+    right: 0.75rem;
 
-    @include mobile {
-      top: 0.75rem;
-      right: 0.75rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       position: static;
       justify-self: end;
     }
@@ -901,27 +681,21 @@ $desktop-lg: 1440px;
   }
 }
 
-// Enhanced Trust Badges
+// Trust Badges - Mobile Optimized
 .trust-badges {
   @include flex-column;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
   border-top: 1px solid $border-color;
 
-  @include mobile {
-    gap: 0.75rem;
-  }
-
-  @include tablet {
+  @media (min-width: $tablet) {
     flex-direction: row;
     justify-content: space-around;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    gap: 1rem;
   }
 
-  @include laptop {
+  @media (min-width: $laptop) {
     margin-top: 2rem;
     padding-top: 2rem;
   }
@@ -933,42 +707,28 @@ $desktop-lg: 1440px;
     font-weight: 600;
     padding: 0.75rem;
     background: rgba($success-color, 0.05);
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius;
     border: 1px solid rgba($success-color, 0.1);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
 
-    @include mobile {
-      font-size: 0.85rem;
-      padding: 0.875rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       flex: 1;
       font-size: 0.9rem;
-      border-radius: $border-radius;
     }
 
     svg {
-      font-size: 1rem;
-
-      @include mobile {
-        font-size: 1.125rem;
-      }
+      font-size: 1.125rem;
     }
   }
 }
 
-// Enhanced Order Summary Section
+// Order Summary - Mobile Optimized
 .order-summary-section {
   @include flex-column;
-  gap: 1rem;
+  gap: 1.25rem;
   order: 1;
 
-  @include tablet {
-    gap: 1.25rem;
-  }
-
-  @include laptop {
+  @media (min-width: $laptop) {
     position: sticky;
     top: 1rem;
     order: 2;
@@ -977,20 +737,11 @@ $desktop-lg: 1440px;
 
 .order-summary {
   background: $bg-white;
-  border-radius: $border-radius;
-  padding: 1.25rem;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
   @include card-shadow;
 
-  @include mobile {
-    padding: 1.5rem;
-    border-radius: $border-radius-lg;
-  }
-
-  @include tablet {
-    padding: 1.75rem;
-  }
-
-  @include laptop {
+  @media (min-width: $tablet) {
     padding: 2rem;
     border-radius: $border-radius-xl;
   }
@@ -998,32 +749,22 @@ $desktop-lg: 1440px;
   h3 {
     font-size: 1.25rem;
     color: $text-dark;
-    margin: 0 0 1.25rem 0;
+    margin: 0 0 1.5rem 0;
     text-align: center;
     font-weight: 700;
 
-    @include tablet {
-      font-size: 1.375rem;
-      margin-bottom: 1.5rem;
-    }
-
-    @include laptop {
+    @media (min-width: $tablet) {
       font-size: 1.5rem;
     }
   }
 
   .summary-row {
     @include flex-between;
-    padding: 0.675rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid $border-light;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 
-    @include mobile {
-      font-size: 0.95rem;
-      padding: 0.75rem 0;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 1rem;
       padding: 1rem 0;
     }
@@ -1036,21 +777,13 @@ $desktop-lg: 1440px;
     &.total {
       border-bottom: none;
       border-top: 2px solid $border-color;
-      font-size: 1.05rem;
+      font-size: 1.125rem;
       font-weight: 800;
       color: $text-dark;
       padding-top: 1rem;
       margin-top: 0.5rem;
 
-      @include mobile {
-        font-size: 1.125rem;
-      }
-
-      @include tablet {
-        font-size: 1.25rem;
-      }
-
-      @include laptop {
+      @media (min-width: $tablet) {
         font-size: 1.375rem;
       }
     }
@@ -1058,13 +791,9 @@ $desktop-lg: 1440px;
     .free-shipping {
       color: $success-color;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
 
-      @include mobile {
-        font-size: 0.85rem;
-      }
-
-      @include tablet {
+      @media (min-width: $tablet) {
         font-size: 0.9rem;
       }
     }
@@ -1076,25 +805,20 @@ $desktop-lg: 1440px;
     gap: 0.5rem;
     color: $bg-white;
     border: none;
-    padding: 1.125rem 1.25rem;
+    padding: 1.25rem 1.5rem;
     border-radius: $border-radius;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
-    margin: 1.25rem 0;
-    min-height: 44px;
+    margin: 1.5rem 0;
+    font-size: 1rem;
 
-    @include mobile {
-      padding: 1.25rem 1.5rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       padding: 1.375rem 2rem;
       font-size: 1.125rem;
       border-radius: $border-radius-lg;
-      margin: 1.5rem 0;
     }
 
     &:active {
@@ -1104,38 +828,25 @@ $desktop-lg: 1440px;
 
   .payment-methods {
     text-align: center;
-    margin: 1.25rem 0;
-
-    @include tablet {
-      margin: 1.5rem 0;
-    }
+    margin: 1.5rem 0;
 
     p {
       color: $text-light;
       margin-bottom: 0.75rem;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 500;
 
-      @include mobile {
-        font-size: 0.85rem;
-      }
-
-      @include tablet {
+      @media (min-width: $tablet) {
         font-size: 0.9rem;
       }
     }
 
     .payment-icons {
       @include flex-center;
-      gap: 0.875rem;
-      font-size: 1.375rem;
+      gap: 1rem;
+      font-size: 1.5rem;
       
-      @include mobile {
-        font-size: 1.5rem;
-        gap: 1rem;
-      }
-
-      @include tablet {
+      @media (min-width: $tablet) {
         font-size: 1.75rem;
         gap: 1.25rem;
       }
@@ -1146,55 +857,40 @@ $desktop-lg: 1440px;
     @include flex-center;
     gap: 0.5rem;
     color: $success-color;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
     padding: 0.75rem;
     background: rgba($success-color, 0.05);
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius;
     border: 1px solid rgba($success-color, 0.1);
 
-    @include mobile {
-      font-size: 0.8rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 0.875rem;
       padding: 1rem;
-      border-radius: $border-radius;
     }
   }
 }
 
-// Enhanced Promo Section
+// Promo Section - Mobile Optimized
 .promo-section {
   background: $bg-white;
-  border-radius: $border-radius;
-  padding: 1.125rem;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
   @include card-shadow;
 
-  @include mobile {
-    padding: 1.25rem;
-    border-radius: $border-radius-lg;
-  }
-
-  @include tablet {
+  @media (min-width: $tablet) {
     padding: 1.5rem;
     border-radius: $border-radius-xl;
   }
 
   h4 {
-    margin: 0 0 0.875rem 0;
+    margin: 0 0 1rem 0;
     color: $text-dark;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 600;
     text-align: center;
 
-    @include mobile {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 1.2rem;
       text-align: left;
     }
@@ -1204,7 +900,7 @@ $desktop-lg: 1440px;
     @include flex-column;
     gap: 0.75rem;
 
-    @include tablet {
+    @media (min-width: $tablet) {
       flex-direction: row;
     }
 
@@ -1212,15 +908,10 @@ $desktop-lg: 1440px;
       flex: 1;
       padding: 0.875rem 1rem;
       border: 1px solid $border-color;
-      border-radius: $border-radius-sm;
-      font-size: 0.95rem;
+      border-radius: $border-radius;
+      font-size: 1rem;
       transition: all 0.3s ease;
       background: $bg-light;
-      min-height: 44px;
-
-      @include mobile {
-        border-radius: $border-radius;
-      }
 
       &:focus {
         outline: none;
@@ -1238,21 +929,14 @@ $desktop-lg: 1440px;
       background: $primary-color;
       color: $bg-white;
       border: none;
-      padding: 0.875rem 1.25rem;
-      border-radius: $border-radius-sm;
+      padding: 0.875rem 1.5rem;
+      border-radius: $border-radius;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 0.9rem;
-      min-height: 44px;
+      font-size: 0.95rem;
 
-      @include mobile {
-        border-radius: $border-radius;
-        font-size: 0.95rem;
-        padding: 0.875rem 1.5rem;
-      }
-
-      @include tablet {
+      @media (min-width: $tablet) {
         font-size: 1rem;
       }
 
@@ -1264,36 +948,26 @@ $desktop-lg: 1440px;
   }
 }
 
-// Enhanced Recently Viewed
+// Recently Viewed - Mobile Optimized
 .recently-viewed {
   background: $bg-white;
-  border-radius: $border-radius;
-  padding: 1.125rem;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
   @include card-shadow;
 
-  @include mobile {
-    padding: 1.25rem;
-    border-radius: $border-radius-lg;
-  }
-
-  @include tablet {
+  @media (min-width: $tablet) {
     padding: 1.5rem;
     border-radius: $border-radius-xl;
   }
 
   h4 {
-    margin: 0 0 0.875rem 0;
+    margin: 0 0 1rem 0;
     color: $text-dark;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 600;
     text-align: center;
 
-    @include mobile {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    @include tablet {
+    @media (min-width: $tablet) {
       font-size: 1.2rem;
       text-align: left;
     }
@@ -1303,26 +977,20 @@ $desktop-lg: 1440px;
     @include flex-column;
     gap: 0.75rem;
 
-    @include tablet {
+    @media (min-width: $tablet) {
       flex-direction: row;
     }
 
     .suggested-product {
       @include flex-center;
       gap: 0.75rem;
-      padding: 0.875rem;
+      padding: 1rem;
       border: 1px solid $border-color;
-      border-radius: $border-radius-sm;
+      border-radius: $border-radius;
       transition: all 0.3s ease;
       cursor: pointer;
       background: $bg-light;
       text-align: left;
-      min-height: 60px;
-
-      @include mobile {
-        padding: 1rem;
-        border-radius: $border-radius;
-      }
 
       &:active {
         border-color: $primary-color;
@@ -1332,21 +1000,11 @@ $desktop-lg: 1440px;
 
       img {
         border-radius: $border-radius-sm;
-        width: 45px;
-        height: 32px;
+        width: 50px;
+        height: 35px;
         object-fit: cover;
 
-        @include mobile {
-          width: 50px;
-          height: 35px;
-        }
-
-        @include tablet {
-          width: 55px;
-          height: 38px;
-        }
-
-        @include laptop {
+        @media (min-width: $tablet) {
           width: 60px;
           height: 40px;
         }
@@ -1355,12 +1013,8 @@ $desktop-lg: 1440px;
       span {
         font-weight: 600;
         color: $text-dark;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         flex: 1;
-
-        @include mobile {
-          font-size: 0.9rem;
-        }
       }
     }
   }
@@ -1387,21 +1041,6 @@ $desktop-lg: 1440px;
   // Smooth scrolling for mobile
   .cart-page {
     -webkit-overflow-scrolling: touch;
-  }
-
-  // Better spacing for very small screens
-  @media (max-width: $mobile-sm) {
-    .cart-page {
-      padding: 0.5rem 0;
-    }
-
-    .container {
-      padding: 0 0.5rem;
-    }
-
-    .cart-item {
-      padding: 0.875rem;
-    }
   }
 }
 

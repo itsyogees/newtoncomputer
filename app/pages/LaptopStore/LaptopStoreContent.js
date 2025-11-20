@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { 
@@ -7,7 +7,7 @@ import {
   FaHeart, 
   FaStar, 
   FaSearch, 
-  FaFilter, 
+  FaFilter,
   FaTimes,
   FaShieldAlt,
   FaTruck,
@@ -22,6 +22,7 @@ const LaptopStoreContent = () => {
   const searchParams = useSearchParams();
   const brand = searchParams.get('brand');
   const router = useRouter();
+  const sidebarRef = useRef(null);
   
   const [laptops, setLaptops] = useState([]);
   const [filteredLaptops, setFilteredLaptops] = useState([]);
@@ -30,9 +31,16 @@ const LaptopStoreContent = () => {
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [sortBy, setSortBy] = useState('featured');
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedOS, setSelectedOS] = useState([]);
+  const [selectedRAM, setSelectedRAM] = useState([]);
+  const [selectedProcessors, setSelectedProcessors] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(typeof window !== 'undefined' && window.innerWidth > 768);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedStorage, setSelectedStorage] = useState([]);
+  const [selectedProcessor, setSelectedProcessor] = useState([]);
+  const [selectedCondition, setSelectedCondition] = useState([]);
 
-  // Sample laptop data
+  // Enhanced laptop data with more specifications
   const laptopData = [
     {
       id: 1,
@@ -42,28 +50,19 @@ const LaptopStoreContent = () => {
       originalPrice: 21470,
       currentPrice: 19470,
       image: '/assets/lenovo-image1.jpeg',
-      sideImages: [
-        '/assets/lenovo-image1-side1.jpeg',
-        '/assets/lenovo-image1-side2.jpeg',
-        '/assets/lenovo-image1-side3.jpeg'
-      ],
-      category: 'Business',
+      category: 'business',
       rating: 4.5,
       reviews: 128,
       inStock: true,
-      features: ['8GB RAM', '256GB SSD', '14" Display', 'Windows 10 Pro'],
-      description: 'The Lenovo ThinkPad T460 is a reliable business laptop with excellent build quality and performance.',
-      fullDescription: 'The Lenovo ThinkPad T460 combines powerful processing with legendary ThinkPad reliability. Featuring a robust chassis, excellent keyboard, and comprehensive security features, this laptop is perfect for business professionals who need dependable performance on the go.',
-      warranty: '6 Months Warranty',
       specifications: {
         processor: 'Intel Core i5-6300U',
-        ram: '8GB DDR4',
+        processorBrand: 'intel',
+        ram: '8GB',
+        ramCapacity: 8,
         storage: '256GB SSD',
         display: '14" HD (1366x768)',
-        graphics: 'Intel HD Graphics 520',
-        battery: '6-cell Li-ion',
-        weight: '1.78 kg',
-        os: 'Windows 10 Pro'
+        os: 'Windows 10 Pro',
+        operatingSystem: 'windows'
       }
     },
     {
@@ -74,27 +73,19 @@ const LaptopStoreContent = () => {
       originalPrice: 35470,
       currentPrice: 29470,
       image: '/assets/placeholder-lap.png',
-      sideImages: [
-        '/assets/dell-laptop-side1.jpeg',
-        '/assets/dell-laptop-side2.jpeg'
-      ],
-      category: 'Business',
+      category: 'business',
       rating: 4.7,
       reviews: 95,
       inStock: true,
-      features: ['16GB RAM', '512GB SSD', '14" Display', 'Windows 11 Pro'],
-      description: 'High-performance Dell Latitude with 8th generation Intel processor.',
-      fullDescription: 'The Dell Latitude 5490 offers exceptional performance for demanding business applications with its 8th generation Intel Core i7 processor and fast SSD storage.',
-      warranty: '12 Months Warranty',
       specifications: {
         processor: 'Intel Core i7-8650U',
-        ram: '16GB DDR4',
+        processorBrand: 'intel',
+        ram: '16GB',
+        ramCapacity: 16,
         storage: '512GB SSD',
         display: '14" FHD (1920x1080)',
-        graphics: 'Intel UHD Graphics 620',
-        battery: '4-cell 60Wh',
-        weight: '1.65 kg',
-        os: 'Windows 11 Pro'
+        os: 'Windows 11 Pro',
+        operatingSystem: 'windows'
       }
     },
     {
@@ -105,24 +96,19 @@ const LaptopStoreContent = () => {
       originalPrice: 28470,
       currentPrice: 24470,
       image: '/assets/placeholder-lap.png',
-      sideImages: [],
-      category: 'Business',
+      category: 'business',
       rating: 4.3,
       reviews: 87,
       inStock: true,
-      features: ['8GB RAM', '256GB SSD', '14" Display', 'Windows 10 Pro'],
-      description: 'Reliable HP EliteBook for business professionals.',
-      fullDescription: 'The HP EliteBook 840 G5 offers excellent performance and security features for business users.',
-      warranty: '12 Months Warranty',
       specifications: {
         processor: 'Intel Core i5-8250U',
-        ram: '8GB DDR4',
+        processorBrand: 'intel',
+        ram: '8GB',
+        ramCapacity: 8,
         storage: '256GB SSD',
         display: '14" FHD (1920x1080)',
-        graphics: 'Intel UHD Graphics 620',
-        battery: '3-cell 50Wh',
-        weight: '1.48 kg',
-        os: 'Windows 10 Pro'
+        os: 'Windows 10 Pro',
+        operatingSystem: 'windows'
       }
     },
     {
@@ -133,24 +119,19 @@ const LaptopStoreContent = () => {
       originalPrice: 18470,
       currentPrice: 15470,
       image: '/assets/placeholder-lap.png',
-      sideImages: [],
-      category: 'Personal',
+      category: 'personal',
       rating: 4.0,
       reviews: 64,
       inStock: false,
-      features: ['4GB RAM', '1TB HDD', '15.6" Display', 'Windows 10'],
-      description: 'Affordable Acer Aspire for everyday computing.',
-      fullDescription: 'The Acer Aspire 5 provides reliable performance for daily computing tasks at an affordable price.',
-      warranty: '6 Months Warranty',
       specifications: {
         processor: 'Intel Core i3-10110U',
-        ram: '4GB DDR4',
+        processorBrand: 'intel',
+        ram: '4GB',
+        ramCapacity: 4,
         storage: '1TB HDD',
         display: '15.6" HD (1366x768)',
-        graphics: 'Intel UHD Graphics',
-        battery: '4-cell 48Wh',
-        weight: '1.9 kg',
-        os: 'Windows 10 Home'
+        os: 'Windows 10 Home',
+        operatingSystem: 'windows'
       }
     },
     {
@@ -161,57 +142,53 @@ const LaptopStoreContent = () => {
       originalPrice: 85470,
       currentPrice: 79470,
       image: '/assets/placeholder-lap.png',
-      sideImages: [],
-      category: 'Gaming',
+      category: 'gaming',
       rating: 4.8,
       reviews: 156,
       inStock: true,
-      features: ['16GB RAM', '1TB SSD', '15.6" FHD 144Hz', 'RTX 3050'],
-      description: 'Powerful gaming laptop for immersive gaming experience.',
-      fullDescription: 'The ASUS ROG Strix G15 delivers exceptional gaming performance with its high-refresh-rate display and powerful graphics card.',
-      warranty: '12 Months Warranty',
       specifications: {
         processor: 'Intel Core i7-11800H',
-        ram: '16GB DDR4',
+        processorBrand: 'intel',
+        ram: '16GB',
+        ramCapacity: 16,
         storage: '1TB SSD',
         display: '15.6" FHD 144Hz',
-        graphics: 'NVIDIA RTX 3050 4GB',
-        battery: '4-cell 90Wh',
-        weight: '2.3 kg',
-        os: 'Windows 11 Home'
+        os: 'Windows 11 Home',
+        operatingSystem: 'windows'
       }
     },
     {
       id: 6,
-      name: 'MSI Modern 14 – Ultrabook',
-      brand: 'msi',
-      specs: 'Intel® Core i5 – 11th Gen/ 8 GB/ 512 GB SSD',
-      originalPrice: 65470,
-      currentPrice: 59470,
+      name: 'Apple MacBook Air M1',
+      brand: 'apple',
+      specs: 'Apple M1/ 8 GB/ 256 GB SSD',
+      originalPrice: 92900,
+      currentPrice: 84900,
       image: '/assets/placeholder-lap.png',
-      sideImages: [],
-      category: 'Premium',
-      rating: 4.4,
-      reviews: 89,
+      category: 'premium',
+      rating: 4.9,
+      reviews: 234,
       inStock: true,
-      features: ['8GB RAM', '512GB SSD', '14" FHD', 'Ultra-thin'],
-      description: 'Sleek and powerful ultrabook for professionals.',
-      fullDescription: 'The MSI Modern 14 combines portability with performance in a sleek, lightweight design.',
-      warranty: '12 Months Warranty',
       specifications: {
-        processor: 'Intel Core i5-1135G7',
-        ram: '8GB DDR4',
-        storage: '512GB SSD',
-        display: '14" FHD IPS',
-        graphics: 'Intel Iris Xe',
-        battery: '3-cell 52Wh',
-        weight: '1.3 kg',
-        os: 'Windows 11 Home'
+        processor: 'Apple M1',
+        processorBrand: 'apple',
+        ram: '8GB',
+        ramCapacity: 8,
+        storage: '256GB SSD',
+        display: '13.3" Retina',
+        os: 'macOS Monterey',
+        operatingSystem: 'macos'
       }
     }
   ];
 
-  const brands = ['dell', 'lenovo', 'hp', 'acer', 'asus', 'msi'];
+  const brands = ['dell', 'lenovo', 'hp', 'acer', 'asus', 'apple'];
+  const operatingSystems = ['windows', 'macos', 'linux'];
+  const ramOptions = [4, 8, 16, 32];
+  const categories = ['business', 'gaming', 'personal', 'premium'];
+  const storageOptions = ['256GB SSD', '512GB SSD', '1TB SSD', '1TB HDD'];
+  const processorOptions = ['Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Apple M1'];
+  const conditionOptions = ['Refurbished', 'Like New'];
 
   // Initialize with brand from URL
   useEffect(() => {
@@ -223,37 +200,71 @@ const LaptopStoreContent = () => {
   // Data loading effect
   useEffect(() => {
     setLoading(true);
-    // Simulate API call
     setTimeout(() => {
       setLaptops(laptopData);
       setFilteredLaptops(laptopData);
       setLoading(false);
-    }, 1500);
+    }, 1000);
   }, []);
 
   // Filtering function
   const filterLaptops = useCallback(() => {
     let filtered = [...laptopData];
 
-    // Filter by selected brands
+    // Brand filter
     if (selectedBrands.length > 0) {
       filtered = filtered.filter(laptop => selectedBrands.includes(laptop.brand));
     }
 
-    // Filter by price range
+    // Operating System filter
+    if (selectedOS.length > 0) {
+      filtered = filtered.filter(laptop => selectedOS.includes(laptop.specifications.operatingSystem));
+    }
+
+    // RAM filter
+    if (selectedRAM.length > 0) {
+      filtered = filtered.filter(laptop => selectedRAM.includes(laptop.specifications.ramCapacity));
+    }
+
+    // Category filter
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(laptop => selectedCategories.includes(laptop.category));
+    }
+
+    // Storage filter
+    if (selectedStorage.length > 0) {
+      filtered = filtered.filter(laptop => selectedStorage.includes(laptop.specifications.storage));
+    }
+
+    // Processor filter
+    if (selectedProcessor.length > 0) {
+      filtered = filtered.filter(laptop => 
+        selectedProcessor.some(proc => laptop.specifications.processor.includes(proc))
+      );
+    }
+
+    // Condition filter
+    if (selectedCondition.length > 0) {
+      filtered = filtered.filter(laptop => 
+        selectedCondition.some(condition => laptop.name.toLowerCase().includes(condition.toLowerCase()))
+      );
+    }
+
+    // Price filter
     filtered = filtered.filter(laptop => 
       laptop.currentPrice >= priceRange[0] && laptop.currentPrice <= priceRange[1]
     );
 
-    // Filter by search term
+    // Search filter
     if (searchTerm) {
       filtered = filtered.filter(laptop =>
         laptop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        laptop.specs.toLowerCase().includes(searchTerm.toLowerCase())
+        laptop.specs.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        laptop.brand.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Sort laptops
+    // Sort
     switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => a.currentPrice - b.currentPrice);
@@ -268,17 +279,68 @@ const LaptopStoreContent = () => {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
       default:
-        // Featured - keep original order
         break;
     }
 
     setFilteredLaptops(filtered);
-  }, [selectedBrands, priceRange, searchTerm, sortBy]);
+  }, [
+    selectedBrands, 
+    selectedOS, 
+    selectedRAM, 
+    selectedCategories,
+    selectedStorage,
+    selectedProcessor,
+    selectedCondition,
+    priceRange, 
+    searchTerm, 
+    sortBy
+  ]);
 
-  // Apply filters when dependencies change
   useEffect(() => {
     filterLaptops();
   }, [filterLaptops]);
+
+  // Handle window resize for sidebar
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setShowSidebar(true);
+      } else {
+        setShowSidebar(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Handle click outside sidebar to close it on mobile
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (window.innerWidth <= 768 && 
+          showSidebar && 
+          sidebarRef.current && 
+          !sidebarRef.current.contains(event.target) &&
+          !event.target.closest('.sidebar-toggle')) {
+        setShowSidebar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSidebar]);
+
+  // Close sidebar when pressing escape key
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape' && window.innerWidth <= 768 && showSidebar) {
+        setShowSidebar(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, [showSidebar]);
 
   const handleBrandToggle = (brandItem) => {
     setSelectedBrands(prev =>
@@ -288,17 +350,58 @@ const LaptopStoreContent = () => {
     );
   };
 
+  const handleCategoryToggle = (category) => {
+    setSelectedCategories(prev =>
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const handleRAMToggle = (ram) => {
+    setSelectedRAM(prev =>
+      prev.includes(ram)
+        ? prev.filter(r => r !== ram)
+        : [...prev, ram]
+    );
+  };
+
+  const handleStorageToggle = (storage) => {
+    setSelectedStorage(prev =>
+      prev.includes(storage)
+        ? prev.filter(s => s !== storage)
+        : [...prev, storage]
+    );
+  };
+
+  const handleProcessorToggle = (processor) => {
+    setSelectedProcessor(prev =>
+      prev.includes(processor)
+        ? prev.filter(p => p !== processor)
+        : [...prev, processor]
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSelectedBrands([]);
+    setSelectedOS([]);
+    setSelectedRAM([]);
+    setSelectedCategories([]);
+    setSelectedStorage([]);
+    setSelectedProcessor([]);
+    setSelectedCondition([]);
+    setPriceRange([0, 200000]);
+    setSearchTerm('');
+  };
+
   const handleAddToCart = (laptop) => {
     console.log('Added to cart:', laptop);
-    // Add your cart logic here
   };
 
   const handleAddToWishlist = (laptop) => {
     console.log('Added to wishlist:', laptop);
-    // Add your wishlist logic here
   };
 
-  // Navigate to laptop details page
   const handleViewDetails = (laptopId) => {
     router.push(`/pages/LaptopProductDetails/${laptopId}`);
   };
@@ -319,7 +422,6 @@ const LaptopStoreContent = () => {
     return brand ? `${getBrandDisplayName(brand)} Laptops` : 'All Laptops';
   };
 
-  // Handle image error and show placeholder
   const handleImageError = (e) => {
     e.target.src = '/assets/placeholder-lap.png';
   };
@@ -333,7 +435,7 @@ const LaptopStoreContent = () => {
             type="spinner" 
             text="Loading laptops..." 
             fullScreen={false}
-            size="large"
+            size="medium"
           />
         </div>
       </div>
@@ -342,31 +444,31 @@ const LaptopStoreContent = () => {
 
   return (
     <div className="laptop-store">
-      {/* Simple Banner Section */}
       <CommonBanner title={getBannerTitle()}/>
 
-      {/* Filters and Search Section */}
-      <section className="laptop-store-filters">
+      <section className="laptop-store-main">
         <div className="container">
-          <div className="filters-header">
+          {/* Top Controls */}
+          <div className="store-controls">
             <div className="search-box">
               <FaSearch className="search-icon" />
               <input
                 type="text"
-                placeholder="Search laptops by name or specs..."
+                placeholder="Search laptops..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
               />
             </div>
             
-            <div className="filter-controls">
+            <div className="controls-right">
               <button 
-                className={`filter-toggle ${showFilters ? 'active' : ''}`}
-                onClick={() => setShowFilters(!showFilters)}
+                className={`sidebar-toggle mobile-only ${showSidebar ? 'active' : ''}`}
+                onClick={() => setShowSidebar(!showSidebar)}
               >
                 <FaFilter />
                 Filters
+                {showSidebar && <FaTimes className="close-icon" />}
               </button>
               
               <select 
@@ -383,167 +485,218 @@ const LaptopStoreContent = () => {
             </div>
           </div>
 
-          {/* Expandable Filters */}
-          {showFilters && (
-            <div className="filters-expanded">
-              <div className="filter-group">
-                <h4>Brands</h4>
-                <div className="brand-filters">
-                  {brands.map(brandItem => (
-                    <label key={brandItem} className="brand-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={selectedBrands.includes(brandItem)}
-                        onChange={() => handleBrandToggle(brandItem)}
-                      />
-                      <span className="checkmark"></span>
-                      {getBrandDisplayName(brandItem)}
-                    </label>
+          <div className="store-content">
+            {/* Mobile Overlay */}
+            {showSidebar && typeof window !== 'undefined' && window.innerWidth <= 768 && (
+              <div 
+                className="sidebar-overlay active"
+                onClick={() => setShowSidebar(false)}
+              />
+            )}
+
+            {/* Sidebar Filters */}
+            <div 
+              ref={sidebarRef}
+              className={`filters-sidebar ${showSidebar ? 'sidebar-open' : 'sidebar-closed'}`}
+            >
+              <div className="sidebar-content">
+                <div className="sidebar-header">
+                  <h3>Filters</h3>
+                  <div className="header-actions">
+                    <button 
+                      className="clear-filters"
+                      onClick={clearAllFilters}
+                    >
+                      Clear All
+                    </button>
+                    <button 
+                      className="close-sidebar mobile-only"
+                      onClick={() => setShowSidebar(false)}
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Brands Filter */}
+                <div className="filter-section">
+                  <h4>Brands</h4>
+                  <div className="filter-options">
+                    {brands.map(brandItem => (
+                      <label key={brandItem} className="filter-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedBrands.includes(brandItem)}
+                          onChange={() => handleBrandToggle(brandItem)}
+                        />
+                        <span className="checkmark"></span>
+                        {getBrandDisplayName(brandItem)}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Price Range Filter */}
+                <div className="filter-section">
+                  <h4>Price Range</h4>
+                  <div className="price-controls">
+                    <div className="price-display">
+                      Up to {formatPrice(priceRange[1])}
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="200000"
+                      step="1000"
+                      value={priceRange[1]}
+                      onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                      className="price-slider"
+                    />
+                    <div className="price-limits">
+                      <span>{formatPrice(0)}</span>
+                      <span>{formatPrice(200000)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Category Filter */}
+                <div className="filter-section">
+                  <h4>Category</h4>
+                  <div className="filter-options">
+                    {categories.map(category => (
+                      <label key={category} className="filter-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedCategories.includes(category)}
+                          onChange={() => handleCategoryToggle(category)}
+                        />
+                        <span className="checkmark"></span>
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* RAM Filter */}
+                <div className="filter-section">
+                  <h4>RAM</h4>
+                  <div className="filter-options">
+                    {ramOptions.map(ram => (
+                      <label key={ram} className="filter-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedRAM.includes(ram)}
+                          onChange={() => handleRAMToggle(ram)}
+                        />
+                        <span className="checkmark"></span>
+                        {ram}GB
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            <div className={`products-section ${showSidebar ? 'with-sidebar' : 'full-width'}`}>
+              <div className="results-info">
+                <span className="results-count">
+                  {filteredLaptops.length} {filteredLaptops.length === 1 ? 'product' : 'products'} found
+                </span>
+              </div>
+
+              {filteredLaptops.length === 0 ? (
+                <div className="no-results">
+                  <h3>No laptops found</h3>
+                  <p>Try adjusting your filters or search terms</p>
+                  <button className="clear-filters-btn" onClick={clearAllFilters}>
+                    Clear All Filters
+                  </button>
+                </div>
+              ) : (
+                <div className="products-grid">
+                  {filteredLaptops.map(laptop => (
+                    <div key={laptop.id} className="product-card">
+                      <div className="product-image">
+                        <Image 
+                          src={laptop.image} 
+                          alt={laptop.name}
+                          width={200}
+                          height={140}
+                          className="product-img"
+                          onError={handleImageError}
+                        />
+                        
+                        {!laptop.inStock && (
+                          <div className="stock-badge">Out of Stock</div>
+                        )}
+                        
+                        <button 
+                          className="wishlist-btn"
+                          onClick={() => handleAddToWishlist(laptop)}
+                        >
+                          <FaHeart />
+                        </button>
+
+                        <div className="product-badges">
+                          <span className={`badge ${laptop.category.toLowerCase()}`}>
+                            {laptop.category.charAt(0).toUpperCase() + laptop.category.slice(1)}
+                          </span>
+                          {laptop.currentPrice < laptop.originalPrice && (
+                            <span className="badge discount">
+                              Save {formatPrice(laptop.originalPrice - laptop.currentPrice)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="product-info">
+                        <div className="product-brand">{getBrandDisplayName(laptop.brand)}</div>
+                        <h3 className="product-title">{laptop.name}</h3>
+                        <p className="product-specs">{laptop.specs}</p>
+                        
+                        <div className="product-rating">
+                          <div className="stars">
+                            {[...Array(5)].map((_, i) => (
+                              <FaStar 
+                                key={i} 
+                                className={i < Math.floor(laptop.rating) ? 'star filled' : 'star'}
+                              />
+                            ))}
+                          </div>
+                          <span className="rating-text">({laptop.reviews})</span>
+                        </div>
+
+                        <div className="product-pricing">
+                          <span className="current-price">{formatPrice(laptop.currentPrice)}</span>
+                          {laptop.originalPrice > laptop.currentPrice && (
+                            <span className="original-price">{formatPrice(laptop.originalPrice)}</span>
+                          )}
+                        </div>
+
+                        <div className="product-actions">
+                          <button 
+                            className={`cart-btn ${!laptop.inStock ? 'disabled' : ''}`}
+                            onClick={() => handleAddToCart(laptop)}
+                            disabled={!laptop.inStock}
+                          >
+                            <FaShoppingCart />
+                            {laptop.inStock ? 'Add to Cart' : 'Out of Stock'}
+                          </button>
+                          <button 
+                            className="details-btn"
+                            onClick={() => handleViewDetails(laptop.id)}
+                          >
+                            Details
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
-              </div>
-
-              <div className="filter-group">
-                <h4>Price Range</h4>
-                <div className="price-range">
-                  <span className="price-label">
-                    {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
-                  </span>
-                  <input
-                    type="range"
-                    min="0"
-                    max="200000"
-                    step="1000"
-                    value={priceRange[1]}
-                    onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                    className="price-slider"
-                  />
-                </div>
-              </div>
-
-              <button 
-                className="clear-filters"
-                onClick={() => {
-                  setSelectedBrands([]);
-                  setPriceRange([0, 200000]);
-                  setSearchTerm('');
-                }}
-              >
-                <FaTimes />
-                Clear All Filters
-              </button>
+              )}
             </div>
-          )}
-        </div>
-      </section>
-
-      {/* Laptops Grid Section */}
-      <section className="laptop-store-grid">
-        <div className="container">
-          <div className="grid-header">
-            <h2 className="grid-title">
-              {filteredLaptops.length} Laptops Found
-              {brand && ` in ${getBrandDisplayName(brand)}`}
-            </h2>
           </div>
-
-          {filteredLaptops.length === 0 ? (
-            <div className="no-results">
-              <h3>No laptops found</h3>
-              <p>Try adjusting your filters or search terms</p>
-            </div>
-          ) : (
-            <div className="laptops-grid">
-              {filteredLaptops.map(laptop => (
-                <div key={laptop.id} className="laptop-card">
-                  <div className="laptop-image">
-                    <Image 
-                      src={laptop.image} 
-                      alt={laptop.name}
-                      width={300}
-                      height={200}
-                      className="product-image"
-                      onError={handleImageError}
-                    />
-                    
-                    {!laptop.inStock && (
-                      <div className="out-of-stock-badge">Out of Stock</div>
-                    )}
-                    
-                    <div className="laptop-actions">
-                      <button 
-                        className="action-btn wishlist-btn"
-                        onClick={() => handleAddToWishlist(laptop)}
-                      >
-                        <FaHeart />
-                      </button>
-                    </div>
-
-                    <div className="laptop-badges">
-                      <span className={`badge ${laptop.category.toLowerCase()}`}>
-                        {laptop.category}
-                      </span>
-                      {laptop.currentPrice < laptop.originalPrice && (
-                        <span className="badge discount">
-                          Save {formatPrice(laptop.originalPrice - laptop.currentPrice)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="laptop-content">
-                    <div className="laptop-brand">{getBrandDisplayName(laptop.brand)}</div>
-                    <h3 className="laptop-name">{laptop.name}</h3>
-                    <p className="laptop-specs">{laptop.specs}</p>
-                    
-                    <div className="laptop-rating">
-                      <div className="stars">
-                        {[...Array(5)].map((_, i) => (
-                          <FaStar 
-                            key={i} 
-                            className={i < Math.floor(laptop.rating) ? 'star filled' : 'star'}
-                          />
-                        ))}
-                      </div>
-                      <span className="rating-text">({laptop.reviews})</span>
-                    </div>
-
-                    <div className="laptop-features">
-                      {laptop.features.slice(0, 3).map((feature, index) => (
-                        <span key={index} className="feature-tag">{feature}</span>
-                      ))}
-                    </div>
-
-                    <div className="laptop-pricing">
-                      <div className="price-container">
-                        <span className="current-price">{formatPrice(laptop.currentPrice)}</span>
-                        {laptop.originalPrice > laptop.currentPrice && (
-                          <span className="original-price">{formatPrice(laptop.originalPrice)}</span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="laptop-actions-bottom">
-                      <button 
-                        className={`add-to-cart-btn ${!laptop.inStock ? 'disabled' : ''}`}
-                        onClick={() => handleAddToCart(laptop)}
-                        disabled={!laptop.inStock}
-                      >
-                        <FaShoppingCart />
-                        {laptop.inStock ? 'Add to Cart' : 'Out of Stock'}
-                      </button>
-                      <button 
-                        className="view-details-btn"
-                        onClick={() => handleViewDetails(laptop.id)}
-                      >
-                        View Details
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </section>
 
@@ -551,33 +704,33 @@ const LaptopStoreContent = () => {
       <section className="store-features">
         <div className="container">
           <div className="features-grid">
-            <div className="feature-item">
+            <div className="feature">
               <div className="feature-icon">
                 <FaShieldAlt />
               </div>
               <h3>12 Months Warranty</h3>
-              <p>Every laptop comes with comprehensive warranty coverage</p>
+              <p>Comprehensive warranty coverage</p>
             </div>
-            <div className="feature-item">
+            <div className="feature">
               <div className="feature-icon">
                 <FaTruck />
               </div>
               <h3>Free Shipping</h3>
-              <p>Free delivery across Chennai with safe packaging</p>
+              <p>Free delivery across Chennai</p>
             </div>
-            <div className="feature-item">
+            <div className="feature">
               <div className="feature-icon">
                 <FaCheckCircle />
               </div>
               <h3>Quality Tested</h3>
-              <p>Rigorous 25-point quality check for every device</p>
+              <p>25-point quality check</p>
             </div>
-            <div className="feature-item">
+            <div className="feature">
               <div className="feature-icon">
                 <FaSyncAlt />
               </div>
               <h3>7-Day Return</h3>
-              <p>Easy return policy if not satisfied</p>
+              <p>Easy return policy</p>
             </div>
           </div>
         </div>
