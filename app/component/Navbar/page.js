@@ -1,60 +1,96 @@
-"use client";
-import Link from "next/link";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { FaShoppingCart, FaPhone, FaEnvelope, FaChevronDown, FaMapMarkerAlt, FaSearch, FaUser, FaSignInAlt } from "react-icons/fa";
+"use client"
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { 
+  FaShoppingCart, 
+  FaPhone, 
+  FaEnvelope, 
+  FaChevronDown, 
+  FaMapMarkerAlt, 
+  FaSearch, 
+  FaUser, 
+  FaSignInAlt 
+} from "react-icons/fa";
+import Link from "next/link"; 
+import Image from "next/image"; // Fixed import - removed curly braces
 import BookServiceModal from "../BookServiceModal/page";
-import "./Navbar.scss";
+import "./Navbar.scss"; // Changed to SCSS
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // You can manage this state with your auth logic
 
+  // Location data
+  const locations = useMemo(() => [
+    { name: "T.Nagar", phone: "9840604073", badge: "T.Nagar" },
+    { name: "Thoraipakkam", phone: "9940185417", badge: "Thoraipakkam" }
+  ], []);
+
+  // Scroll handler with debounce
   useEffect(() => {
+    let timeoutId;
+    
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsScrolled(window.scrollY > 50);
+      }, 10);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const handleLaptopStoreClick = (brand = '') => {
-    closeMenu();
-    if (brand) {
-      window.location.href = `/pages/LaptopStore?brand=${brand}`;
+  // Body scroll lock for mobile menu
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add("mobile-menu-open");
     } else {
-      window.location.href = '/pages/LaptopStore';
+      document.body.classList.remove("mobile-menu-open");
     }
-  };
+    return () => document.body.classList.remove("mobile-menu-open");
+  }, [isMenuOpen]);
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      console.log("Searching for:", searchQuery);
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen(prev => !prev);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
+
+  const handleSearch = useCallback(() => {
+    const query = searchQuery.trim();
+    if (query) {
+      console.log("Searching for:", query);
+      // Implement actual search logic here
     }
-  };
+  }, [searchQuery]);
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
-  };
+  }, [handleSearch]);
 
-  const handleBookService = () => {
+  const handleBookService = useCallback(() => {
     closeMenu();
     setIsBookServiceModalOpen(true);
-  };
+  }, [closeMenu]);
+
+  // Render phone item
+  const renderPhoneItem = (location) => (
+    <span key={location.phone} className="phone-item">
+      <FaMapMarkerAlt className="info-bar__icon" aria-hidden="true" />
+      <span className="location-badge">{location.badge}</span>
+      <FaPhone className="info-bar__icon" aria-hidden="true" />
+      <a href={`tel:${location.phone}`}>{location.phone}</a>
+    </span>
+  );
 
   return (
     <>
@@ -62,30 +98,24 @@ export default function Navbar() {
       <div className={`info-bar ${isScrolled ? 'info-bar--hidden' : ''}`}>
         <div className="info-bar__container">
           <div className="info-bar__contact">
-            <FaEnvelope className="info-bar__icon" />
+            <FaEnvelope className="info-bar__icon" aria-hidden="true" />
             <a href="mailto:info@newtoncomputers.in">info@newtoncomputers.in</a>
           </div>
           
           <div className="info-bar__status">
+            <span className="status-indicator" aria-hidden="true" />
             Open Today: 9:30 AM - 8:00 PM
           </div>
 
           <div className="info-bar__phones">
-            <span className="phone-item">
-              <FaMapMarkerAlt className="info-bar__icon" />
-              <span className="location-badge">T.Nagar</span>
-              <FaPhone className="info-bar__icon" />
-              <a href="tel:9840604073">9840604073</a>
-            </span>
-            
-            <span className="divider">|</span>
-            
-            <span className="phone-item">
-              <FaMapMarkerAlt className="info-bar__icon" />
-              <span className="location-badge">Thoraipakkam</span>
-              <FaPhone className="info-bar__icon" />
-              <a href="tel:9940185417">9940185417</a>
-            </span>
+            {locations.map((location, index) => (
+              <React.Fragment key={location.phone}>
+                {renderPhoneItem(location)}
+                {index < locations.length - 1 && (
+                  <span className="divider" aria-hidden="true">|</span>
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>
@@ -95,60 +125,62 @@ export default function Navbar() {
         <div className="navbar__container">
           {/* Logo */}
           <div className="navbar__logo">
-            <Link href="/">
+            <Link href="/" aria-label="Newton Computers Home">
               <Image 
                 src="/new-logo.png" 
                 alt="Newton Computers" 
                 width={150} 
                 height={50} 
                 priority
+                className="navbar__logo-image"
               />
             </Link>
           </div>
 
-          {/* Search Bar - First Row */}
+          {/* Search Bar - Desktop */}
           <div className="navbar__search-container">
+            <label htmlFor="desktop-search" className="sr-only">Search products</label>
             <input
-              type="text"
+              id="desktop-search"
+              type="search"
               placeholder="Search Your Product..."
               className="navbar__search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
+              aria-label="Search products"
             />
             <button 
               className="navbar__search-btn"
               onClick={handleSearch}
               aria-label="Search"
+              type="button"
             >
-              <FaSearch className="search-icon" />
+              <FaSearch className="search-icon" aria-hidden="true" />
             </button>
           </div>
 
-          {/* Desktop Actions - All buttons displayed together */}
+          {/* Desktop Actions */}
           <div className="navbar__actions">
-            {/* My Account - Always visible */}
-            <Link href="/pages/Account" className="account-btn">
-              <FaUser className="account-icon" />
-              <span className="account-text">My Account</span>
+            <Link href="/pages/Account" className="action-btn account-btn">
+              <FaUser className="action-icon" aria-hidden="true" />
+              <span className="action-text">My Account</span>
             </Link>
 
-            {/* Cart - Always visible */}
-            <Link href="/pages/Cart" className="cart">
-              <FaShoppingCart className="cart-icon" />
-              <span className="cart-text">Cart</span>
+            <Link href="/pages/Cart" className="action-btn cart">
+              <FaShoppingCart className="action-icon" aria-hidden="true" />
+              <span className="action-text">Cart</span>
             </Link>
 
-            {/* Login - Always visible */}
-            <Link href="/component/Login" className="login-btn">
-              <FaSignInAlt className="login-icon" />
-              <span className="login-text">Login</span>
+            <Link href="/component/Login" className="action-btn login-btn">
+              <FaSignInAlt className="action-icon" aria-hidden="true" />
+              <span className="action-text">Login</span>
             </Link>
             
-            {/* Book Service - Always visible */}
             <button 
               className="book-btn"
               onClick={handleBookService}
+              type="button"
             >
               BOOK SERVICE
             </button>
@@ -158,7 +190,9 @@ export default function Navbar() {
           <button 
             className="navbar__toggle"
             onClick={toggleMenu}
-            aria-label="Toggle menu"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+            type="button"
           >
             <span className={`hamburger ${isMenuOpen ? 'hamburger--active' : ''}`}>
               <span></span>
@@ -169,93 +203,83 @@ export default function Navbar() {
         </div>
 
         {/* Second Row - Navigation Links */}
-        <div className="navbar__secondary">
-          <nav className="navbar__links">
-            <Link href="/" className="nav-item" onClick={closeMenu}>
+        <nav className="navbar__secondary" aria-label="Main navigation">
+          <div className="navbar__links">
+            <Link href="/" className="nav-item">
               Home
             </Link>
             
             {/* Shop Dropdown */}
             <div className="nav-dropdown">
-              <span className="nav-item">
-                Shop <FaChevronDown className="dropdown-arrow" />
-              </span>
+              <button className="nav-item dropdown-trigger" type="button">
+                Shop <FaChevronDown className="dropdown-arrow" aria-hidden="true" />
+              </button>
               <div className="dropdown-menu">
-                <Link href="/pages/LaptopStore" onClick={() => handleLaptopStoreClick('')}>
-                  All Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=dell" onClick={() => handleLaptopStoreClick('dell')}>
-                  Dell Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=lenovo" onClick={() => handleLaptopStoreClick('lenovo')}>
-                  Lenovo Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=hp" onClick={() => handleLaptopStoreClick('hp')}>
-                  HP Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=acer" onClick={() => handleLaptopStoreClick('acer')}>
-                  Acer Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=asus" onClick={() => handleLaptopStoreClick('asus')}>
-                  ASUS Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=msi" onClick={() => handleLaptopStoreClick('msi')}>
-                  MSI Laptops
-                </Link>
+                <Link href="/pages/LaptopStore">All Laptops</Link>
+                {['dell', 'lenovo', 'hp', 'acer', 'asus', 'msi'].map(brand => (
+                  <Link 
+                    key={brand}
+                    href={`/pages/LaptopStore?brand=${brand}`}
+                  >
+                    {brand.toUpperCase()} Laptops
+                  </Link>
+                ))}
               </div>
             </div>
 
             {/* Laptop Services Dropdown */}
             <div className="nav-dropdown">
-              <span className="nav-item">
-                Laptop Services <FaChevronDown className="dropdown-arrow" />
-              </span>
+              <button className="nav-item dropdown-trigger" type="button">
+                Laptop Services <FaChevronDown className="dropdown-arrow" aria-hidden="true" />
+              </button>
               <div className="dropdown-menu">
-                <Link href="/pages/LaptopDamage" onClick={closeMenu}>Laptop Damage</Link>
-                <Link href="/pages/ChipLevelServicePage" onClick={closeMenu}>Chip Level Service</Link>
-                <Link href="/pages/UpgradePage" onClick={closeMenu}>Laptop Upgrade</Link>
-                <Link href="/pages/DataRecoveryPage" onClick={closeMenu}>Data Recovery</Link>
-                <Link href="/pages/LaptopAccessories" onClick={closeMenu}>Laptop Accessories</Link>
+                <Link href="/pages/LaptopDamage">Laptop Damage</Link>
+                <Link href="/pages/ChipLevelServicePage">Chip Level Service</Link>
+                <Link href="/pages/UpgradePage">Laptop Upgrade</Link>
+                <Link href="/pages/DataRecoveryPage">Data Recovery</Link>
+                <Link href="/pages/LaptopAccessories">Laptop Accessories</Link>
               </div>
             </div>
 
             {/* IT Services Dropdown */}
             <div className="nav-dropdown">
-              <span className="nav-item">
-                IT Services <FaChevronDown className="dropdown-arrow" />
-              </span>
+              <button className="nav-item dropdown-trigger" type="button">
+                IT Services <FaChevronDown className="dropdown-arrow" aria-hidden="true" />
+              </button>
               <div className="dropdown-menu">
-                <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
-                <Link href="/pages/NetworkSecurity" onClick={closeMenu}>Network Security Solutions</Link>
-                <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
-                <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
-                <Link href="/it-services/cctv" onClick={closeMenu}>CCTV Solution</Link>
-                <Link href="/it-services/cloud-hosting" onClick={closeMenu}>Cloud hosting services</Link>
+                <Link href="/pages/BusinessMail">Business Mail Services</Link>
+                <Link href="/pages/NetworkSecurity">Network Security Solutions</Link>
+                <Link href="/it-services/server-storage">Server and Storage Solutions</Link>
+                <Link href="/it-services/wifi-networking">Wi-Fi and Networking Solutions</Link>
+                <Link href="/it-services/cctv">CCTV Solution</Link>
+                <Link href="/it-services/cloud-hosting">Cloud hosting services</Link>
               </div>
             </div>
 
             {/* Contact Us Dropdown */}
             <div className="nav-dropdown">
-              <span className="nav-item">
-                Contact Us <FaChevronDown className="dropdown-arrow" />
-              </span>
+              <button className="nav-item dropdown-trigger" type="button">
+                Contact Us <FaChevronDown className="dropdown-arrow" aria-hidden="true" />
+              </button>
               <div className="dropdown-menu">
-                <Link href="/about" onClick={closeMenu}>About Us</Link>
-                <Link href="/branches" onClick={closeMenu}>Branches</Link>
-                <Link href="/contact" onClick={closeMenu}>Contact Form</Link>
+                <Link href="/about">About Us</Link>
+                <Link href="/branches">Branches</Link>
+                <Link href="/contact">Contact Form</Link>
               </div>
             </div>
-          </nav>
-        </div>
+          </div>
+        </nav>
 
         {/* Mobile Navigation */}
         <div className={`navbar__mobile ${isMenuOpen ? 'navbar__mobile--active' : ''}`}>
           {/* Mobile Search */}
           <div className="navbar__mobile-search">
+            <label htmlFor="mobile-search" className="sr-only">Search products</label>
             <div className="search-container">
-              <FaSearch className="search-icon" />
+              <FaSearch className="search-icon" aria-hidden="true" />
               <input
-                type="text"
+                id="mobile-search"
+                type="search"
                 placeholder="Search Your Product..."
                 className="mobile-search-input"
                 value={searchQuery}
@@ -266,112 +290,99 @@ export default function Navbar() {
                 className="mobile-search-btn"
                 onClick={handleSearch}
                 aria-label="Search"
+                type="button"
               >
-                <FaSearch/>
+                <FaSearch aria-hidden="true" />
               </button>
             </div>
           </div>
 
-          <nav className="navbar__mobile-links">
+          <nav className="navbar__mobile-links" aria-label="Mobile navigation">
             <Link href="/" className="nav-item" onClick={closeMenu}>
               Home
             </Link>
             
-            {/* Mobile Shop Dropdown */}
-            <div className="mobile-dropdown">
-              <details>
-                <summary>Shop</summary>
-                <div className="mobile-dropdown-content">
-                  <Link href="/pages/LaptopStore" onClick={() => handleLaptopStoreClick('')}>
-                    All Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=dell" onClick={() => handleLaptopStoreClick('dell')}>
-                    Dell Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=lenovo" onClick={() => handleLaptopStoreClick('lenovo')}>
-                    Lenovo Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=hp" onClick={() => handleLaptopStoreClick('hp')}>
-                    HP Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=acer" onClick={() => handleLaptopStoreClick('acer')}>
-                    Acer Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=asus" onClick={() => handleLaptopStoreClick('asus')}>
-                    ASUS Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=msi" onClick={() => handleLaptopStoreClick('msi')}>
-                    MSI Laptops
-                  </Link>
-                </div>
-              </details>
-            </div>
+            {/* Mobile Dropdowns */}
+            {[
+              { 
+                title: 'Shop', 
+                items: [
+                  { label: 'All Laptops', href: '/pages/LaptopStore' },
+                  ...['dell', 'lenovo', 'hp', 'acer', 'asus', 'msi'].map(brand => ({
+                    label: `${brand.toUpperCase()} Laptops`,
+                    href: `/pages/LaptopStore?brand=${brand}`
+                  }))
+                ]
+              },
+              { 
+                title: 'Laptop Services', 
+                items: [
+                  { label: 'Laptop Damage', href: '/pages/LaptopDamage' },
+                  { label: 'Chip Level Service', href: '/pages/ChipLevelServicePage' },
+                  { label: 'Laptop Upgrade', href: '/pages/UpgradePage' },
+                  { label: 'Data Recovery', href: '/pages/DataRecoveryPage' },
+                  { label: 'Laptop Accessories', href: '/pages/LaptopAccessories' }
+                ]
+              },
+              { 
+                title: 'IT Services', 
+                items: [
+                  { label: 'Business Mail Services', href: '/pages/BusinessMail' },
+                  { label: 'Network Security Solutions', href: '/pages/NetworkSecurity' },
+                  { label: 'Server and Storage Solutions', href: '/it-services/server-storage' },
+                  { label: 'Wi-Fi and Networking Solutions', href: '/it-services/wifi-networking' },
+                  { label: 'CCTV Solution', href: '/it-services/cctv' },
+                  { label: 'Cloud hosting services', href: '/it-services/cloud-hosting' }
+                ]
+              },
+              { 
+                title: 'Contact Us', 
+                items: [
+                  { label: 'About Us', href: '/about' },
+                  { label: 'Branches', href: '/branches' },
+                  { label: 'Contact Form', href: '/contact' }
+                ]
+              }
+            ].map((dropdown) => (
+              <div key={dropdown.title} className="mobile-dropdown">
+                <details>
+                  <summary>{dropdown.title}</summary>
+                  <div className="mobile-dropdown-content">
+                    {dropdown.items.map((item) => (
+                      <Link 
+                        key={item.href}
+                        href={item.href} 
+                        onClick={closeMenu}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </details>
+              </div>
+            ))}
 
-            {/* Mobile Laptop Services Dropdown */}
-            <div className="mobile-dropdown">
-              <details>
-                <summary>Laptop Services</summary>
-                <div className="mobile-dropdown-content">
-                  <Link href="/pages/LaptopDamage" onClick={closeMenu}>Laptop Damage</Link>
-                  <Link href="/pages/ChipLevelServicePage" onClick={closeMenu}>Chip Level Service</Link>
-                  <Link href="/pages/UpgradePage" onClick={closeMenu}>Laptop Upgrade</Link>
-                  <Link href="/pages/DataRecoveryPage" onClick={closeMenu}>Data Recovery</Link>
-                  <Link href="/pages/LaptopAccessories" onClick={closeMenu}>Laptop Accessories</Link>
-                </div>
-              </details>
-            </div>
-
-            {/* Mobile IT Services Dropdown */}
-            <div className="mobile-dropdown">
-              <details>
-                <summary>IT Services</summary>
-                <div className="mobile-dropdown-content">
-                  <Link href="/pages/BusinessMail" onClick={closeMenu}>Business Mail Services</Link>
-                  <Link href="/pages/NetworkSecurity" onClick={closeMenu}>Network Security Solutions</Link>
-                  <Link href="/it-services/server-storage" onClick={closeMenu}>Server and Storage Solutions</Link>
-                  <Link href="/it-services/wifi-networking" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
-                  <Link href="/it-services/cctv" onClick={closeMenu}>CCTV Solution</Link>
-                  <Link href="/it-services/cloud-hosting" onClick={closeMenu}>Cloud hosting services</Link>
-                </div>
-              </details>
-            </div>
-
-            {/* Mobile Contact Us Dropdown */}
-            <div className="mobile-dropdown">
-              <details>
-                <summary>Contact Us</summary>
-                <div className="mobile-dropdown-content">
-                  <Link href="/about" onClick={closeMenu}>About Us</Link>
-                  <Link href="/branches" onClick={closeMenu}>Branches</Link>
-                  <Link href="/contact" onClick={closeMenu}>Contact Form</Link>
-                </div>
-              </details>
-            </div>
-
-            {/* Mobile Actions - All buttons displayed together */}
+            {/* Mobile Actions */}
             <div className="navbar__mobile-actions">
-              {/* My Account - Always visible */}
-              <Link href="/pages/Account" className="account-mobile" onClick={closeMenu}>
-                <FaUser className="account-icon" />
+              <Link href="/pages/Account" className="mobile-action-btn" onClick={closeMenu}>
+                <FaUser className="action-icon" aria-hidden="true" />
                 <span>My Account</span>
               </Link>
 
-              {/* Cart - Always visible */}
-              <Link href="/pages/Cart" className="cart-mobile" onClick={closeMenu}>
-                <FaShoppingCart className="cart-icon" />
+              <Link href="/pages/Cart" className="mobile-action-btn" onClick={closeMenu}>
+                <FaShoppingCart className="action-icon" aria-hidden="true" />
                 <span>Cart</span>
               </Link>
 
-              {/* Login - Always visible */}
-              <Link href="/component/Login" className="login-btn-mobile" onClick={closeMenu}>
-                <FaSignInAlt className="login-icon" />
+              <Link href="/component/Login" className="mobile-action-btn" onClick={closeMenu}>
+                <FaSignInAlt className="action-icon" aria-hidden="true" />
                 <span>Login</span>
               </Link>
               
-              {/* Book Service - Always visible */}
               <button 
                 className="book-btn-mobile"
                 onClick={handleBookService}
+                type="button"
               >
                 BOOK SERVICE
               </button>
@@ -383,7 +394,11 @@ export default function Navbar() {
           <div 
             className="navbar__overlay"
             onClick={closeMenu}
-          ></div>
+            role="button"
+            tabIndex={0}
+            aria-label="Close menu"
+            onKeyDown={(e) => e.key === 'Enter' && closeMenu()}
+          />
         )}
       </header>
 
