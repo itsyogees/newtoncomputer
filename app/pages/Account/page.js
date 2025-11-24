@@ -58,6 +58,7 @@ const Account = () => {
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
   const [isAddQuotationModalOpen, setIsAddQuotationModalOpen] = useState(false);
   const [isAddBranchModalOpen, setIsAddBranchModalOpen] = useState(false);
+  // const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
   // Branch states
@@ -108,6 +109,20 @@ const Account = () => {
     status: 'active'
   });
 
+  // const [newProject, setNewProject] = useState({
+  //   name: '',
+  //   description: '',
+  //   customerId: '',
+  //   customerName: '',
+  //   startDate: '',
+  //   endDate: '',
+  //   status: 'planning',
+  //   budget: '',
+  //   assignedTo: '',
+  //   priority: 'medium',
+  //   notes: ''
+  // });
+
   const [newQuotation, setNewQuotation] = useState({
     customerId: '',
     customerName: '',
@@ -140,6 +155,7 @@ const Account = () => {
   const [customers, setCustomers] = useState([]);
   const [quotations, setQuotations] = useState([]);
   const [users, setUsers] = useState([]);
+  // const [projects, setProjects] = useState([]);
 
   // Search and filter states
   const [searchTerm, setSearchTerm] = useState('');
@@ -158,7 +174,9 @@ const Account = () => {
     totalQuotations: 0,
     totalBranches: 0,
     totalUsers: 0,
-    totalRevenue: 0
+    totalRevenue: 0,
+    // totalProjects: 0,
+    // activeProjects: 0
   });
 
   // Quick branch stats
@@ -170,50 +188,50 @@ const Account = () => {
   });
 
   // Role configurations
-  const roleConfig = {
-    'super admin': {
-      name: 'Super Admin',
-      icon: FaUserShield,
-      color: '#8B5CF6',
-      permissions: ['all'],
-      tabs: ['dashboard', 'services', 'orders', 'products', 'customers', 'quotations', 'branches', 'users', 'profile']
-    },
-    'admin': {
-      name: 'Admin',
-      icon: FaUserCog,
-      color: '#3B82F6',
-      permissions: ['manage_branches', 'manage_products', 'manage_customers', 'view_reports'],
-      tabs: ['dashboard', 'services', 'orders', 'products', 'customers', 'quotations', 'branches', 'profile']
-    },
-    'manager': {
-      name: 'Manager',
-      icon: FaUserTie,
-      color: '#059669',
-      permissions: ['manage_team', 'view_reports', 'approve_quotations'],
-      tabs: ['dashboard', 'services', 'orders', 'quotations', 'profile']
-    },
-    'branch': {
-      name: 'Branch Manager',
-      icon: FaBuilding,
-      color: '#F59E0B',
-      permissions: ['manage_branch_operations', 'view_branch_reports'],
-      tabs: ['dashboard', 'services', 'orders', 'quotations', 'profile']
-    },
-    'engineer': {
-      name: 'Engineer',
-      icon: FaTools,
-      color: '#DC2626',
-      permissions: ['manage_services', 'update_service_status'],
-      tabs: ['dashboard', 'services', 'profile']
-    },
-    'user': {
-      name: 'Customer',
-      icon: FaUser,
-      color: '#6B7280',
-      permissions: ['view_services', 'view_orders'],
-      tabs: ['services', 'orders', 'profile']
-    }
-  };
+const roleConfig = {
+  'super admin': {
+    name: 'Super Admin',
+    icon: FaUserShield,
+    color: '#8B5CF6',
+    permissions: ['all'],
+    tabs: ['dashboard', 'services', 'orders', 'products', 'customers', 'quotations', 'branches', 'users', 'profile']
+  },
+  'admin': {
+    name: 'Admin',
+    icon: FaUserCog,
+    color: '#3B82F6',
+    permissions: ['manage_branches', 'manage_products', 'manage_customers', 'view_reports'],
+    tabs: ['dashboard', 'services', 'orders', 'products', 'customers', 'quotations', 'branches', 'profile']
+  },
+  'manager': {
+    name: 'Manager',
+    icon: FaUserTie,
+    color: '#059669',
+    permissions: ['manage_team', 'view_reports', 'approve_quotations'],
+    tabs: ['dashboard', 'services', 'orders', 'quotations', 'profile']
+  },
+  'branch': {
+    name: 'Branch Manager',
+    icon: FaBuilding,
+    color: '#F59E0B',
+    permissions: ['manage_branch_operations', 'view_reports', 'view_branch_reports'],
+    tabs: ['dashboard', 'services', 'orders', 'quotations', 'profile']
+  },
+  'engineer': {
+    name: 'Engineer',
+    icon: FaTools,
+    color: '#DC2626',
+    permissions: ['manage_services', 'update_service_status', 'view_reports'],
+    tabs: ['dashboard', 'services', 'profile']
+  },
+  'user': {
+    name: 'Customer',
+    icon: FaUser,
+    color: '#6B7280',
+    permissions: ['view_services', 'view_orders'],
+    tabs: ['services', 'orders', 'profile']
+  }
+};
 
   // Calculate quotation totals
   const calculateQuotationTotals = (items, discount = 0, taxRate = 18) => {
@@ -310,32 +328,22 @@ const Account = () => {
   };
 
 const updateDashboardStats = () => {
-  let filteredServices = serviceBookings;
-  let filteredOrders = orders;
-  let filteredProducts = products;
-  let filteredCustomers = customers;
-  let filteredQuotations = quotations;
-
-  // Apply branch filtering for branch manager and engineer
-  if (userRole === 'branch' || userRole === 'engineer') {
-    filteredServices = serviceBookings.filter(s => s.branchId === selectedBranch);
-    filteredOrders = orders.filter(o => o.branchId === selectedBranch);
-    
-    // Branch manager can see products and customers for their branch
-    if (userRole === 'branch') {
-      filteredProducts = products.filter(p => p.branchId === selectedBranch);
-      filteredCustomers = customers.filter(c => c.branchId === selectedBranch);
-      filteredQuotations = quotations.filter(q => q.branchId === selectedBranch);
-    }
-    
-    // Engineer only sees services assigned to them
-    if (userRole === 'engineer') {
-      filteredServices = filteredServices.filter(s => s.technician === userData.name);
-    }
-  }
+  // Use the actual data instead of filtered data for calculations
+  let totalServices = serviceBookings.length;
+  let pendingServices = serviceBookings.filter(s => s.status === 'pending').length;
+  let completedServices = serviceBookings.filter(s => s.status === 'completed').length;
+  
+  let totalOrders = orders.length;
+  let pendingOrders = orders.filter(o => o.status === 'pending').length;
+  let completedOrders = orders.filter(o => o.status === 'delivered').length;
+  
+  let totalProducts = products.length;
+  let totalCustomers = customers.length;
+  let totalQuotations = quotations.length;
+  let totalBranches = branches.length;
 
   // Calculate revenue properly
-  const totalRevenue = filteredOrders.reduce((sum, order) => {
+  const totalRevenue = orders.reduce((sum, order) => {
     if (order.price && typeof order.price === 'string') {
       const priceValue = parseFloat(order.price.replace('₹', '').replace(/,/g, '') || 0);
       return sum + priceValue;
@@ -343,17 +351,70 @@ const updateDashboardStats = () => {
     return sum;
   }, 0);
 
+  // For branch manager, show data only for their branch
+  if (userRole === 'branch') {
+    const branchId = userBranch;
+    
+    totalServices = serviceBookings.filter(s => s.branchId === branchId).length;
+    pendingServices = serviceBookings.filter(s => s.status === 'pending' && s.branchId === branchId).length;
+    completedServices = serviceBookings.filter(s => s.status === 'completed' && s.branchId === branchId).length;
+    
+    totalOrders = orders.filter(o => o.branchId === branchId).length;
+    pendingOrders = orders.filter(o => o.status === 'pending' && o.branchId === branchId).length;
+    completedOrders = orders.filter(o => o.status === 'delivered' && o.branchId === branchId).length;
+    
+    totalProducts = products.filter(p => p.branchId === branchId).length;
+    totalCustomers = customers.filter(c => c.branchId === branchId).length;
+    totalQuotations = quotations.filter(q => q.branchId === branchId).length;
+    totalBranches = 1; // Only their branch
+  }
+
+  // For engineer, only show their assigned services
+  if (userRole === 'engineer') {
+    const branchId = userBranch;
+    
+    totalServices = serviceBookings.filter(s => s.branchId === branchId && s.technician === userData.name).length;
+    pendingServices = serviceBookings.filter(s => s.status === 'pending' && s.branchId === branchId && s.technician === userData.name).length;
+    completedServices = serviceBookings.filter(s => s.status === 'completed' && s.branchId === branchId && s.technician === userData.name).length;
+    
+    // Engineer doesn't see orders, products, customers, quotations stats
+    totalOrders = 0;
+    pendingOrders = 0;
+    completedOrders = 0;
+    totalProducts = 0;
+    totalCustomers = 0;
+    totalQuotations = 0;
+    totalBranches = 1;
+  }
+
+  // For customer role, show only their data
+  if (userRole === 'user') {
+    totalServices = serviceBookings.filter(s => s.userId === 'user123').length;
+    pendingServices = serviceBookings.filter(s => s.status === 'pending' && s.userId === 'user123').length;
+    completedServices = serviceBookings.filter(s => s.status === 'completed' && s.userId === 'user123').length;
+    
+    totalOrders = orders.filter(o => o.userId === 'user123').length;
+    pendingOrders = orders.filter(o => o.status === 'pending' && o.userId === 'user123').length;
+    completedOrders = orders.filter(o => o.status === 'delivered' && o.userId === 'user123').length;
+    
+    // Customer doesn't see these stats
+    totalProducts = 0;
+    totalCustomers = 0;
+    totalQuotations = 0;
+    totalBranches = 0;
+  }
+
   const stats = {
-    totalServices: filteredServices.length,
-    pendingServices: filteredServices.filter(s => s.status === 'pending').length,
-    completedServices: filteredServices.filter(s => s.status === 'completed').length,
-    totalOrders: filteredOrders.length,
-    pendingOrders: filteredOrders.filter(o => o.status === 'pending').length,
-    completedOrders: filteredOrders.filter(o => o.status === 'delivered').length,
-    totalProducts: filteredProducts.length,
-    totalCustomers: filteredCustomers.length,
-    totalQuotations: filteredQuotations.length,
-    totalBranches: userRole === 'branch' || userRole === 'engineer' ? 1 : branches.length,
+    totalServices,
+    pendingServices,
+    completedServices,
+    totalOrders,
+    pendingOrders,
+    completedOrders,
+    totalProducts,
+    totalCustomers,
+    totalQuotations,
+    totalBranches,
     totalUsers: userRole === 'super admin' ? users.length : 0,
     totalRevenue: totalRevenue
   };
@@ -395,7 +456,7 @@ const updateDashboardStats = () => {
   useEffect(() => {
     updateDashboardStats();
     updateQuickBranchStats();
-  }, [serviceBookings, orders, products, customers, quotations, branches, selectedBranch]);
+  }, [serviceBookings, orders, products, customers, quotations, branches, selectedBranch, userRole, userBranch, userData.name]);
 
   // Handle quick branch selection
   const handleQuickBranchSelect = (branchId) => {
@@ -497,79 +558,89 @@ const updateDashboardStats = () => {
     setQuickBranch('BR001');
   };
 
-const loadEngineerData = () => {
-  // Clear existing data first
-  setServiceBookings([]);
-  setOrders([]);
+  const loadEngineerData = () => {
+    const engineerServiceBookings = [
+      {
+        id: 'SRV001',
+        laptopModel: 'Dell Inspiron 15',
+        serviceType: 'Screen Replacement',
+        bookingDate: '2024-01-15',
+        status: 'completed',
+        estimatedCost: '₹3,500',
+        finalCost: '₹3,200',
+        technician: 'Raj Kumar',
+        completionDate: '2024-01-18',
+        userId: 'user123',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      },
+      {
+        id: 'SRV002',
+        laptopModel: 'Lenovo ThinkPad T480',
+        serviceType: 'Motherboard Repair',
+        bookingDate: '2024-01-20',
+        status: 'in-progress',
+        estimatedCost: '₹8,000',
+        finalCost: null,
+        technician: 'Raj Kumar',
+        completionDate: null,
+        userId: 'user456',
+        customerName: 'Jane Smith',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      },
+      {
+        id: 'SRV003',
+        laptopModel: 'HP Pavilion',
+        serviceType: 'Keyboard Replacement',
+        bookingDate: '2024-01-22',
+        status: 'pending',
+        estimatedCost: '₹2,500',
+        finalCost: null,
+        technician: 'Raj Kumar',
+        completionDate: null,
+        userId: 'user789',
+        customerName: 'Robert Brown',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      }
+    ];
 
-  const engineerServiceBookings = [
-    {
-      id: 'SRV001',
-      laptopModel: 'Dell Inspiron 15',
-      serviceType: 'Screen Replacement',
-      bookingDate: '2024-01-15',
-      status: 'completed',
-      estimatedCost: '₹3,500',
-      finalCost: '₹3,200',
-      technician: 'Raj Kumar',
-      completionDate: '2024-01-18',
-      userId: 'user123',
-      customerName: 'John Doe',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'SRV002',
-      laptopModel: 'Lenovo ThinkPad T480',
-      serviceType: 'Motherboard Repair',
-      bookingDate: '2024-01-20',
-      status: 'in-progress',
-      estimatedCost: '₹8,000',
-      finalCost: null,
-      technician: 'Raj Kumar',
-      completionDate: null,
-      userId: 'user456',
-      customerName: 'Jane Smith',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'SRV003',
-      laptopModel: 'HP Pavilion',
-      serviceType: 'Keyboard Replacement',
-      bookingDate: '2024-01-22',
-      status: 'pending',
-      estimatedCost: '₹2,500',
-      finalCost: null,
-      technician: 'Raj Kumar',
-      completionDate: null,
-      userId: 'user789',
-      customerName: 'Robert Brown',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    }
-  ];
+    const engineerOrders = [
+      {
+        id: 'ORD001',
+        product: 'Laptop Repair Tools Kit',
+        orderDate: '2024-01-10',
+        status: 'delivered',
+        price: '₹5,999',
+        quantity: 1,
+        deliveryDate: '2024-01-15',
+        userId: 'engineer001',
+        customerName: 'Raj Kumar',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      }
+    ];
 
-  const engineerOrders = [
-    {
-      id: 'ORD001',
-      product: 'Laptop Repair Tools Kit',
-      orderDate: '2024-01-10',
-      status: 'delivered',
-      price: '₹5,999',
-      quantity: 1,
-      deliveryDate: '2024-01-15',
-      userId: 'engineer001',
-      customerName: 'Raj Kumar',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    }
-  ];
+    // const engineerProjects = [
+    //   {
+    //     id: 'PROJ001',
+    //     name: 'Corporate Laptop Maintenance',
+    //     description: 'Quarterly maintenance for corporate client laptops',
+    //     customerName: 'ABC Corporation',
+    //     startDate: '2024-01-15',
+    //     endDate: '2024-03-15',
+    //     status: 'in-progress',
+    //     budget: '₹75,000',
+    //     assignedTo: 'Raj Kumar',
+    //     priority: 'high'
+    //   }
+    // ];
 
-  // Set data with a small delay to ensure state updates
-  setTimeout(() => {
     setServiceBookings(engineerServiceBookings);
     setOrders(engineerOrders);
+    // setProjects(engineerProjects);
     
     setUserData(prev => ({
       ...prev,
@@ -579,133 +650,141 @@ const loadEngineerData = () => {
     setUserBranch('BR001');
     setSelectedBranch('BR001');
     setQuickBranch('BR001');
-  }, 100);
-};
-const loadBranchData = () => {
-  // Clear existing data first
-  setServiceBookings([]);
-  setOrders([]);
-  setProducts([]);
-  setCustomers([]);
-  setQuotations([]);
+  };
 
-  const branchServiceBookings = [
-    {
-      id: 'SRV001',
-      laptopModel: 'Dell Inspiron 15',
-      serviceType: 'Screen Replacement',
-      bookingDate: '2024-01-15',
-      status: 'completed',
-      estimatedCost: '₹3,500',
-      finalCost: '₹3,200',
-      technician: 'Raj Kumar',
-      completionDate: '2024-01-18',
-      userId: 'user123',
-      customerName: 'John Doe',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'SRV002',
-      laptopModel: 'Lenovo ThinkPad T480',
-      serviceType: 'Motherboard Repair',
-      bookingDate: '2024-01-20',
-      status: 'in-progress',
-      estimatedCost: '₹8,000',
-      finalCost: null,
-      technician: 'Suresh Patel',
-      completionDate: null,
-      userId: 'user456',
-      customerName: 'Jane Smith',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'SRV003',
-      laptopModel: 'HP Pavilion',
-      serviceType: 'Keyboard Replacement',
-      bookingDate: '2024-01-22',
-      status: 'pending',
-      estimatedCost: '₹2,500',
-      finalCost: null,
-      technician: 'Anita Desai',
-      completionDate: null,
-      userId: 'user789',
-      customerName: 'Robert Brown',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    }
-  ];
+  const loadBranchData = () => {
+    const branchServiceBookings = [
+      {
+        id: 'SRV001',
+        laptopModel: 'Dell Inspiron 15',
+        serviceType: 'Screen Replacement',
+        bookingDate: '2024-01-15',
+        status: 'completed',
+        estimatedCost: '₹3,500',
+        finalCost: '₹3,200',
+        technician: 'Raj Kumar',
+        completionDate: '2024-01-18',
+        userId: 'user123',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      },
+      {
+        id: 'SRV002',
+        laptopModel: 'Lenovo ThinkPad T480',
+        serviceType: 'Motherboard Repair',
+        bookingDate: '2024-01-20',
+        status: 'in-progress',
+        estimatedCost: '₹8,000',
+        finalCost: null,
+        technician: 'Suresh Patel',
+        completionDate: null,
+        userId: 'user456',
+        customerName: 'Jane Smith',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      },
+      {
+        id: 'SRV003',
+        laptopModel: 'HP Pavilion',
+        serviceType: 'Keyboard Replacement',
+        bookingDate: '2024-01-22',
+        status: 'pending',
+        estimatedCost: '₹2,500',
+        finalCost: null,
+        technician: 'Anita Desai',
+        completionDate: null,
+        userId: 'user789',
+        customerName: 'Robert Brown',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      }
+    ];
 
-  const branchOrders = [
-    {
-      id: 'ORD001',
-      product: 'Refurbished Dell Latitude E7440',
-      orderDate: '2024-01-10',
-      status: 'delivered',
-      price: '₹24,999',
-      quantity: 1,
-      deliveryDate: '2024-01-15',
-      userId: 'user123',
-      customerName: 'John Doe',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'ORD002',
-      product: 'Laptop Bag & Accessories Kit',
-      orderDate: '2024-01-18',
-      status: 'shipped',
-      price: '₹2,499',
-      quantity: 1,
-      deliveryDate: '2024-01-22',
-      userId: 'user456',
-      customerName: 'Jane Smith',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    }
-  ];
+    const branchOrders = [
+      {
+        id: 'ORD001',
+        product: 'Refurbished Dell Latitude E7440',
+        orderDate: '2024-01-10',
+        status: 'delivered',
+        price: '₹24,999',
+        quantity: 1,
+        deliveryDate: '2024-01-15',
+        userId: 'user123',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      },
+      {
+        id: 'ORD002',
+        product: 'Laptop Bag & Accessories Kit',
+        orderDate: '2024-01-18',
+        status: 'shipped',
+        price: '₹2,499',
+        quantity: 1,
+        deliveryDate: '2024-01-22',
+        userId: 'user456',
+        customerName: 'Jane Smith',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      }
+    ];
 
-  const branchProducts = [
-    {
-      id: 'PROD001',
-      name: 'Refurbished Dell Latitude E7440',
-      category: 'Business Laptop',
-      price: '₹24,999',
-      stock: 8,
-      status: 'active',
-      branchId: 'BR001'
-    }
-  ];
+    const branchProducts = [
+      {
+        id: 'PROD001',
+        name: 'Refurbished Dell Latitude E7440',
+        category: 'Business Laptop',
+        price: '₹24,999',
+        stock: 8,
+        status: 'active',
+        branchId: 'BR001'
+      }
+    ];
 
-  const branchCustomers = [
-    {
-      id: 'CUST001',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+91 98765 43210',
-      type: 'individual',
-      branchId: 'BR001'
-    }
-  ];
+    const branchCustomers = [
+      {
+        id: 'CUST001',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        phone: '+91 98765 43210',
+        type: 'individual',
+        branchId: 'BR001'
+      }
+    ];
 
-  const branchQuotations = [
-    {
-      id: 'QUOTE001',
-      customerName: 'John Doe',
-      branchId: 'BR001',
-      total: '₹32,447',
-      status: 'sent'
-    }
-  ];
+    const branchQuotations = [
+      {
+        id: 'QUOTE001',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        total: '₹32,447',
+        status: 'sent'
+      }
+    ];
 
-  // Set data with a small delay to ensure state updates
-  setTimeout(() => {
+    // const branchProjects = [
+    //   {
+    //     id: 'PROJ001',
+    //     name: 'Office IT Setup',
+    //     description: 'Complete IT infrastructure setup for new office',
+    //     customerName: 'Tech Solutions Inc.',
+    //     startDate: '2024-01-10',
+    //     endDate: '2024-02-28',
+    //     status: 'in-progress',
+    //     budget: '₹2,50,000',
+    //     assignedTo: 'Team A',
+    //     priority: 'high',
+    //     branchId: 'BR001'
+    //   }
+    // ];
+
     setServiceBookings(branchServiceBookings);
     setOrders(branchOrders);
     setProducts(branchProducts);
     setCustomers(branchCustomers);
     setQuotations(branchQuotations);
+    // setProjects(branchProjects);
     
     setUserData(prev => ({
       ...prev,
@@ -715,8 +794,7 @@ const loadBranchData = () => {
     setUserBranch('BR001');
     setSelectedBranch('BR001');
     setQuickBranch('BR001');
-  }, 100);
-};
+  };
 
   const loadManagerData = () => {
     const managerServiceBookings = [
@@ -773,9 +851,25 @@ const loadBranchData = () => {
       }
     ];
 
+    // const managerProjects = [
+    //   {
+    //     id: 'PROJ001',
+    //     name: 'Client Infrastructure Upgrade',
+    //     description: 'Upgrade IT infrastructure for major client',
+    //     customerName: 'Global Solutions Ltd.',
+    //     startDate: '2024-01-01',
+    //     endDate: '2024-06-30',
+    //     status: 'planning',
+    //     budget: '₹15,00,000',
+    //     assignedTo: 'Multiple Teams',
+    //     priority: 'high'
+    //   }
+    // ];
+
     setServiceBookings(managerServiceBookings);
     setOrders(managerOrders);
     setQuotations(managerQuotations);
+    // setProjects(managerProjects);
     setUserData(prev => ({
       ...prev,
       branch: 'all',
@@ -787,7 +881,6 @@ const loadBranchData = () => {
   };
 
   const loadAdminData = () => {
-    // Same as your existing admin data
     const adminBranches = [
       {
         id: 'BR001',
@@ -895,12 +988,28 @@ const loadBranchData = () => {
       }
     ];
 
+    // const adminProjects = [
+    //   {
+    //     id: 'PROJ001',
+    //     name: 'System Wide Implementation',
+    //     description: 'Implement new CRM system across all branches',
+    //     customerName: 'Internal',
+    //     startDate: '2024-02-01',
+    //     endDate: '2024-08-31',
+    //     status: 'planning',
+    //     budget: '₹25,00,000',
+    //     assignedTo: 'IT Department',
+    //     priority: 'medium'
+    //   }
+    // ];
+
     setServiceBookings(adminServiceBookings);
     setOrders(adminOrders);
     setProducts(adminProducts);
     setCustomers(adminCustomers);
     setQuotations(adminQuotations);
     setBranches(adminBranches);
+    // setProjects(adminProjects);
     setUserData(prev => ({
       ...prev,
       branch: 'all',
@@ -911,283 +1020,195 @@ const loadBranchData = () => {
     setQuickBranch('all');
   };
 
-const loadSuperAdminData = () => {
-  // Load all data for super admin
-  const superAdminBranches = [
-    {
-      id: 'BR001',
-      name: 'T.Nagar Branch',
-      address: '28-B/16, Murugesan Street, North Usman Road, T.Nagar, Chennai-600017',
-      phone: '+91 98406 04073',
-      manager: 'Raj Kumar',
-      status: 'active'
-    },
-    {
-      id: 'BR002',
-      name: 'Thoraipakkam Branch',
-      address: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
-      phone: '+91 99401 85417',
-      manager: 'Suresh Patel',
-      status: 'active'
-    }
-  ];
+  const loadSuperAdminData = () => {
+    const superAdminBranches = [
+      {
+        id: 'BR001',
+        name: 'T.Nagar Branch',
+        address: '28-B/16, Murugesan Street, North Usman Road, T.Nagar, Chennai-600017',
+        phone: '+91 98406 04073',
+        manager: 'Raj Kumar',
+        status: 'active'
+      },
+      {
+        id: 'BR002',
+        name: 'Thoraipakkam Branch',
+        address: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
+        phone: '+91 99401 85417',
+        manager: 'Suresh Patel',
+        status: 'active'
+      }
+    ];
 
-  const superAdminUsers = [
-    {
-      id: 'USR001',
-      name: 'Super Admin',
-      email: 'superadmin@company.com',
-      role: 'super admin',
+    const superAdminUsers = [
+      {
+        id: 'USR001',
+        name: 'Super Admin',
+        email: 'superadmin@company.com',
+        role: 'super admin',
+        branch: 'all',
+        status: 'active',
+        createdAt: '2024-01-01'
+      },
+      {
+        id: 'USR002',
+        name: 'Admin User',
+        email: 'admin@company.com',
+        role: 'admin',
+        branch: 'all',
+        status: 'active',
+        createdAt: '2024-01-02'
+      }
+    ];
+
+    const superAdminServiceBookings = [
+      {
+        id: 'SRV001',
+        laptopModel: 'Dell Inspiron 15',
+        serviceType: 'Screen Replacement',
+        bookingDate: '2024-01-15',
+        status: 'completed',
+        estimatedCost: '₹3,500',
+        finalCost: '₹3,200',
+        technician: 'Raj Kumar',
+        completionDate: '2024-01-18',
+        userId: 'user123',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      },
+      {
+        id: 'SRV002',
+        laptopModel: 'Lenovo ThinkPad T480',
+        serviceType: 'Motherboard Repair',
+        bookingDate: '2024-01-20',
+        status: 'in-progress',
+        estimatedCost: '₹8,000',
+        finalCost: null,
+        technician: 'Suresh Patel',
+        completionDate: null,
+        userId: 'user456',
+        customerName: 'Jane Smith',
+        branchId: 'BR002',
+        branchName: 'Thoraipakkam Branch'
+      }
+    ];
+
+    const superAdminOrders = [
+      {
+        id: 'ORD001',
+        product: 'Refurbished Dell Latitude E7440',
+        orderDate: '2024-01-10',
+        status: 'delivered',
+        price: '₹24,999',
+        quantity: 1,
+        deliveryDate: '2024-01-15',
+        userId: 'user123',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch'
+      },
+      {
+        id: 'ORD002',
+        product: 'Laptop Bag & Accessories Kit',
+        orderDate: '2024-01-18',
+        status: 'shipped',
+        price: '₹2,499',
+        quantity: 1,
+        deliveryDate: '2024-01-22',
+        userId: 'user456',
+        customerName: 'Jane Smith',
+        branchId: 'BR002',
+        branchName: 'Thoraipakkam Branch'
+      }
+    ];
+
+    const superAdminProducts = [
+      {
+        id: 'PROD001',
+        name: 'Refurbished Dell Latitude E7440',
+        category: 'Business Laptop',
+        price: '₹24,999',
+        stock: 15,
+        status: 'active',
+        description: 'Professional business laptop with excellent performance, perfect for corporate use.',
+        specifications: 'Intel Core i5-6300U, 8GB RAM, 256GB SSD, 14" HD Display, Windows 10 Pro',
+        warranty: '1 year',
+        createdAt: '2024-01-01'
+      }
+    ];
+
+    const superAdminCustomers = [
+      {
+        id: 'CUST001',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        phone: '+91 98765 43210',
+        type: 'individual',
+        companyName: '',
+        gstNumber: '',
+        billingAddress: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
+        shippingAddress: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
+        notes: 'Regular customer, prefers email communication',
+        createdAt: '2024-01-01'
+      }
+    ];
+
+    const superAdminQuotations = [
+      {
+        id: 'QUOTE001',
+        customerId: 'CUST001',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch',
+        items: [
+          { productId: 'PROD001', productName: 'Refurbished Dell Latitude E7440', quantity: 1, price: '₹24,999', total: '₹24,999' }
+        ],
+        subtotal: '₹27,498',
+        discount: 5,
+        discountAmount: '₹1,375',
+        taxRate: 18,
+        taxAmount: '₹4,949',
+        total: '₹32,447',
+        status: 'sent',
+        createdDate: '2024-01-20',
+        validUntil: '2024-02-20',
+        notes: 'Includes 1-year warranty and free shipping'
+      }
+    ];
+
+    // const superAdminProjects = [
+    //   {
+    //     id: 'PROJ001',
+    //     name: 'Digital Transformation Initiative',
+    //     description: 'Complete digital transformation across all business units',
+    //     customerName: 'Internal',
+    //     startDate: '2024-01-01',
+    //     endDate: '2024-12-31',
+    //     status: 'in-progress',
+    //     budget: '₹50,00,000',
+    //     assignedTo: 'All Teams',
+    //     priority: 'high'
+    //   }
+    // ];
+
+    setServiceBookings(superAdminServiceBookings);
+    setOrders(superAdminOrders);
+    setProducts(superAdminProducts);
+    setCustomers(superAdminCustomers);
+    setQuotations(superAdminQuotations);
+    setBranches(superAdminBranches);
+    setUsers(superAdminUsers);
+    // setProjects(superAdminProjects);
+    setUserData(prev => ({
+      ...prev,
       branch: 'all',
-      status: 'active',
-      createdAt: '2024-01-01'
-    },
-    {
-      id: 'USR002',
-      name: 'Admin User',
-      email: 'admin@company.com',
-      role: 'admin',
-      branch: 'all',
-      status: 'active',
-      createdAt: '2024-01-02'
-    }
-  ];
-
-  // Enhanced data for both branches
-  const superAdminServiceBookings = [
-    {
-      id: 'SRV001',
-      laptopModel: 'Dell Inspiron 15',
-      serviceType: 'Screen Replacement',
-      bookingDate: '2024-01-15',
-      status: 'completed',
-      estimatedCost: '₹3,500',
-      finalCost: '₹3,200',
-      technician: 'Raj Kumar',
-      completionDate: '2024-01-18',
-      userId: 'user123',
-      customerName: 'John Doe',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'SRV002',
-      laptopModel: 'Lenovo ThinkPad T480',
-      serviceType: 'Motherboard Repair',
-      bookingDate: '2024-01-20',
-      status: 'in-progress',
-      estimatedCost: '₹8,000',
-      finalCost: null,
-      technician: 'Suresh Patel',
-      completionDate: null,
-      userId: 'user456',
-      customerName: 'Jane Smith',
-      branchId: 'BR002',
-      branchName: 'Thoraipakkam Branch'
-    },
-    {
-      id: 'SRV003',
-      laptopModel: 'HP Pavilion',
-      serviceType: 'Keyboard Replacement',
-      bookingDate: '2024-01-22',
-      status: 'pending',
-      estimatedCost: '₹2,500',
-      finalCost: null,
-      technician: 'Anita Desai',
-      completionDate: null,
-      userId: 'user789',
-      customerName: 'Robert Brown',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'SRV004',
-      laptopModel: 'Apple MacBook Pro',
-      serviceType: 'Battery Replacement',
-      bookingDate: '2024-01-25',
-      status: 'completed',
-      estimatedCost: '₹12,000',
-      finalCost: '₹11,500',
-      technician: 'Suresh Patel',
-      completionDate: '2024-01-28',
-      userId: 'user101',
-      customerName: 'Mike Johnson',
-      branchId: 'BR002',
-      branchName: 'Thoraipakkam Branch'
-    }
-  ];
-
-  const superAdminOrders = [
-    {
-      id: 'ORD001',
-      product: 'Refurbished Dell Latitude E7440',
-      orderDate: '2024-01-10',
-      status: 'delivered',
-      price: '₹24,999',
-      quantity: 1,
-      deliveryDate: '2024-01-15',
-      userId: 'user123',
-      customerName: 'John Doe',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'ORD002',
-      product: 'Laptop Bag & Accessories Kit',
-      orderDate: '2024-01-18',
-      status: 'shipped',
-      price: '₹2,499',
-      quantity: 1,
-      deliveryDate: '2024-01-22',
-      userId: 'user456',
-      customerName: 'Jane Smith',
-      branchId: 'BR002',
-      branchName: 'Thoraipakkam Branch'
-    },
-    {
-      id: 'ORD003',
-      product: 'Lenovo ThinkPad T480',
-      orderDate: '2024-01-24',
-      status: 'pending',
-      price: '₹32,999',
-      quantity: 1,
-      deliveryDate: '2024-01-30',
-      userId: 'user789',
-      customerName: 'Robert Brown',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch'
-    },
-    {
-      id: 'ORD004',
-      product: 'Gaming Laptop ASUS ROG',
-      orderDate: '2024-01-26',
-      status: 'delivered',
-      price: '₹89,999',
-      quantity: 1,
-      deliveryDate: '2024-01-29',
-      userId: 'user102',
-      customerName: 'David Wilson',
-      branchId: 'BR002',
-      branchName: 'Thoraipakkam Branch'
-    }
-  ];
-
-  const superAdminProducts = [
-    {
-      id: 'PROD001',
-      name: 'Refurbished Dell Latitude E7440',
-      category: 'Business Laptop',
-      price: '₹24,999',
-      stock: 15,
-      status: 'active',
-      description: 'Professional business laptop with excellent performance, perfect for corporate use.',
-      specifications: 'Intel Core i5-6300U, 8GB RAM, 256GB SSD, 14" HD Display, Windows 10 Pro',
-      warranty: '1 year',
-      createdAt: '2024-01-01'
-    },
-    {
-      id: 'PROD002',
-      name: 'Lenovo ThinkPad T480',
-      category: 'Business Laptop',
-      price: '₹32,999',
-      stock: 8,
-      status: 'active',
-      description: 'Durable and reliable business laptop with military-grade durability.',
-      specifications: 'Intel Core i7-8650U, 16GB RAM, 512GB SSD, 14" FHD Display, Windows 11 Pro',
-      warranty: '2 years',
-      createdAt: '2024-01-05'
-    }
-  ];
-
-  const superAdminCustomers = [
-    {
-      id: 'CUST001',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+91 98765 43210',
-      type: 'individual',
-      companyName: '',
-      gstNumber: '',
-      billingAddress: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
-      shippingAddress: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
-      notes: 'Regular customer, prefers email communication',
-      createdAt: '2024-01-01'
-    },
-    {
-      id: 'CUST002',
-      name: 'ABC Corporation',
-      email: 'contact@abccorp.com',
-      phone: '+91 98765 43211',
-      type: 'business',
-      companyName: 'ABC Corporation Pvt Ltd',
-      gstNumber: '27ABCCT1234A1Z5',
-      billingAddress: 'Tech Park, Whitefield, Bangalore, Karnataka - 560001',
-      shippingAddress: 'Tech Park, Whitefield, Bangalore, Karnataka - 560001',
-      notes: 'Corporate client with bulk orders',
-      createdAt: '2024-01-05'
-    }
-  ];
-
-  const superAdminQuotations = [
-    {
-      id: 'QUOTE001',
-      customerId: 'CUST001',
-      customerName: 'John Doe',
-      branchId: 'BR001',
-      branchName: 'T.Nagar Branch',
-      items: [
-        { productId: 'PROD001', productName: 'Refurbished Dell Latitude E7440', quantity: 1, price: '₹24,999', total: '₹24,999' },
-        { productId: 'PROD002', productName: 'Laptop Bag & Accessories Kit', quantity: 1, price: '₹2,499', total: '₹2,499' }
-      ],
-      subtotal: '₹27,498',
-      discount: 5,
-      discountAmount: '₹1,375',
-      taxRate: 18,
-      taxAmount: '₹4,949',
-      total: '₹32,447',
-      status: 'sent',
-      createdDate: '2024-01-20',
-      validUntil: '2024-02-20',
-      notes: 'Includes 1-year warranty and free shipping'
-    },
-    {
-      id: 'QUOTE002',
-      customerId: 'CUST002',
-      customerName: 'ABC Corporation',
-      branchId: 'BR002',
-      branchName: 'Thoraipakkam Branch',
-      items: [
-        { productId: 'PROD002', productName: 'Lenovo ThinkPad T480', quantity: 5, price: '₹32,999', total: '₹164,995' }
-      ],
-      subtotal: '₹164,995',
-      discount: 12,
-      discountAmount: '₹19,799',
-      taxRate: 18,
-      taxAmount: '₹26,135',
-      total: '₹171,331',
-      status: 'accepted',
-      createdDate: '2024-01-22',
-      validUntil: '2024-02-22',
-      notes: 'Corporate bulk order - approved by management'
-    }
-  ];
-
-  setServiceBookings(superAdminServiceBookings);
-  setOrders(superAdminOrders);
-  setProducts(superAdminProducts);
-  setCustomers(superAdminCustomers);
-  setQuotations(superAdminQuotations);
-  setBranches(superAdminBranches);
-  setUsers(superAdminUsers);
-  setUserData(prev => ({
-    ...prev,
-    branch: 'all',
-    branchName: 'All Branches'
-  }));
-  setUserBranch('all');
-  setSelectedBranch('all');
-  setQuickBranch('all');
-};
+      branchName: 'All Branches'
+    }));
+    setUserBranch('all');
+    setSelectedBranch('all');
+    setQuickBranch('all');
+  };
 
   // CRUD operations
   const handleAddProduct = (e) => {
@@ -1306,6 +1327,52 @@ const loadSuperAdminData = () => {
     setBranches(prev => prev.filter(branch => branch.id !== branchId));
   };
 
+  // const handleAddProject = (e) => {
+  //   e.preventDefault();
+  //   const project = {
+  //     id: `PROJ00${projects.length + 1}`,
+  //     ...newProject,
+  //     createdAt: new Date().toISOString().split('T')[0]
+  //   };
+  //   setProjects(prev => [...prev, project]);
+  //   setNewProject({
+  //     name: '',
+  //     description: '',
+  //     customerId: '',
+  //     customerName: '',
+  //     startDate: '',
+  //     endDate: '',
+  //     status: 'planning',
+  //     budget: '',
+  //     assignedTo: '',
+  //     priority: 'medium',
+  //     notes: ''
+  //   });
+  //   setIsAddProjectModalOpen(false);
+  // };
+
+  // const handleEditProject = (project) => {
+  //   setEditingItem(project);
+  //   setNewProject({
+  //     name: project.name,
+  //     description: project.description,
+  //     customerId: project.customerId,
+  //     customerName: project.customerName,
+  //     startDate: project.startDate,
+  //     endDate: project.endDate,
+  //     status: project.status,
+  //     budget: project.budget,
+  //     assignedTo: project.assignedTo,
+  //     priority: project.priority,
+  //     notes: project.notes
+  //   });
+  //   setIsAddProjectModalOpen(true);
+  // };
+
+  // const handleDeleteProject = (projectId) => {
+  //   setProjects(prev => prev.filter(project => project.id !== projectId));
+  // };
+
   const handleDeleteQuotation = (quotationId) => {
     setQuotations(prev => prev.filter(quotation => quotation.id !== quotationId));
   };
@@ -1388,14 +1455,22 @@ const loadSuperAdminData = () => {
     quotation.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // const filteredProjects = projects.filter(project =>
+  //   project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //   project.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //   project.status.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
   const filteredServices = filterDataByBranch(serviceBookings);
   const filteredOrders = filterDataByBranch(orders);
 
-  // Role-based access check
-  const hasAccess = (permission) => {
-    const role = roleConfig[userRole];
-    return role.permissions.includes('all') || role.permissions.includes(permission);
-  };
+// Role-based access check - Add this if missing
+const hasAccess = (permission) => {
+  const role = roleConfig[userRole];
+  if (!role) return false;
+  
+  return role.permissions.includes('all') || role.permissions.includes(permission);
+};
 
   // Modal Components
   const AddProductModal = () => {
@@ -1686,6 +1761,129 @@ const loadSuperAdminData = () => {
     );
   };
 
+  // const AddProjectModal = () => {
+  //   if (!isAddProjectModalOpen) return null;
+    
+  //   return (
+  //     <div className="modal active">
+  //       <div className="modal-content">
+  //         <div className="modal-header">
+  //           <h3>{editingItem ? 'Edit Project' : 'Add New Project'}</h3>
+  //           <button className="close-btn" onClick={() => setIsAddProjectModalOpen(false)}>
+  //             <FaTimes />
+  //           </button>
+  //         </div>
+  //         <form onSubmit={handleAddProject}>
+  //           <div className="form-grid">
+  //             <div className="form-field">
+  //               <label>Project Name *</label>
+  //               <input
+  //                 type="text"
+  //                 value={newProject.name}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, name: e.target.value}))}
+  //                 required
+  //               />
+  //             </div>
+  //             <div className="form-field">
+  //               <label>Customer Name *</label>
+  //               <input
+  //                 type="text"
+  //                 value={newProject.customerName}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, customerName: e.target.value}))}
+  //                 required
+  //               />
+  //             </div>
+  //             <div className="form-field full-width">
+  //               <label>Description</label>
+  //               <textarea
+  //                 value={newProject.description}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, description: e.target.value}))}
+  //                 rows="3"
+  //               />
+  //             </div>
+  //             <div className="form-field">
+  //               <label>Start Date *</label>
+  //               <input
+  //                 type="date"
+  //                 value={newProject.startDate}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, startDate: e.target.value}))}
+  //                 required
+  //               />
+  //             </div>
+  //             <div className="form-field">
+  //               <label>End Date *</label>
+  //               <input
+  //                 type="date"
+  //                 value={newProject.endDate}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, endDate: e.target.value}))}
+  //                 required
+  //               />
+  //             </div>
+  //             <div className="form-field">
+  //               <label>Budget (₹)</label>
+  //               <input
+  //                 type="text"
+  //                 value={newProject.budget}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, budget: e.target.value}))}
+  //                 placeholder="₹0.00"
+  //               />
+  //             </div>
+  //             <div className="form-field">
+  //               <label>Assigned To</label>
+  //               <input
+  //                 type="text"
+  //                 value={newProject.assignedTo}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, assignedTo: e.target.value}))}
+  //               />
+  //             </div>
+  //             <div className="form-field">
+  //               <label>Status</label>
+  //               <select
+  //                 value={newProject.status}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, status: e.target.value}))}
+  //               >
+  //                 <option value="planning">Planning</option>
+  //                 <option value="in-progress">In Progress</option>
+  //                 <option value="on-hold">On Hold</option>
+  //                 <option value="completed">Completed</option>
+  //                 <option value="cancelled">Cancelled</option>
+  //               </select>
+  //             </div>
+  //             <div className="form-field">
+  //               <label>Priority</label>
+  //               <select
+  //                 value={newProject.priority}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, priority: e.target.value}))}
+  //               >
+  //                 <option value="low">Low</option>
+  //                 <option value="medium">Medium</option>
+  //                 <option value="high">High</option>
+  //                 <option value="urgent">Urgent</option>
+  //               </select>
+  //             </div>
+  //             <div className="form-field full-width">
+  //               <label>Notes</label>
+  //               <textarea
+  //                 value={newProject.notes}
+  //                 onChange={(e) => setNewProject(prev => ({...prev, notes: e.target.value}))}
+  //                 rows="2"
+  //               />
+  //             </div>
+  //           </div>
+  //           <div className="modal-actions">
+  //             <button type="button" className="secondary-button" onClick={() => setIsAddProjectModalOpen(false)}>
+  //               Cancel
+  //             </button>
+  //             <button type="submit" className="primary-button">
+  //               {editingItem ? 'Update Project' : 'Add Project'}
+  //             </button>
+  //           </div>
+  //         </form>
+  //       </div>
+  //     </div>
+  //   );
+  // };
+
   const AddQuotationModal = () => {
     if (!isAddQuotationModalOpen) return null;
     
@@ -1849,7 +2047,7 @@ const loadSuperAdminData = () => {
               </div>
             </div>
 
-            <div className="form-section">
+            {/* <div className="form-section">
               <h4>Additional Information</h4>
               <div className="form-field full-width">
                 <label>Notes</label>
@@ -1867,7 +2065,7 @@ const loadSuperAdminData = () => {
                   rows="3"
                 />
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="modal-actions">
@@ -1898,69 +2096,50 @@ const loadSuperAdminData = () => {
                 onClick={() => handleRoleChange(roleKey)}
                 style={{ '--role-color': role.color }}
               >
-                <div className="role-icon">
-                  <IconComponent />
-                </div>
+              
                 <div className="role-info">
                   <span className="role-name">{role.name}</span>
-                  {/* <span className="role-desc">View</span> */}
                 </div>
-                {userRole === roleKey && (
-                  <div className="active-indicator">
-                    <FaCheck />
-                  </div>
-                )}
+               
               </button>
             );
           })}
         </div>
       </div>
-      
-      {/* {(userRole === 'super admin' || userRole === 'admin' || userRole === 'manager' || userRole === 'branch') && (
-        <div className="branch-quick-selector">
-          <h3>Quick Branch View</h3>
-          <div className="branch-buttons">
-            <button 
-              className={`branch-btn ${quickBranch === 'all' ? 'active' : ''}`}
-              onClick={() => handleQuickBranchSelect('all')}
-            >
-              <FaNetworkWired />
-              <span>All Branches</span>
-              <div className="branch-stats">
-                <span className="stat">{quickBranchStats.all.services} Services</span>
-                <span className="stat">{quickBranchStats.all.orders} Orders</span>
-                <span className="stat">₹{quickBranchStats.all.revenue.toLocaleString()}</span>
-              </div>
-            </button>
-            
-            {branches.map(branch => (
-              <button 
-                key={branch.id}
-                className={`branch-btn ${quickBranch === branch.id ? 'active' : ''}`}
-                onClick={() => handleQuickBranchSelect(branch.id)}
-              >
-                <FaBuilding />
-                <span>{branch.name}</span>
-                <div className="branch-stats">
-                  <span className="stat">{quickBranchStats[branch.id]?.services || 0} Services</span>
-                  <span className="stat">{quickBranchStats[branch.id]?.orders || 0} Orders</span>
-                  <span className="stat">₹{quickBranchStats[branch.id]?.revenue?.toLocaleString() || 0}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )} */}
     </div>
   );
 
-// Dashboard Component for Branch Manager and Engineer
+  // Dashboard Component
 const Dashboard = () => {
-  if (!hasAccess('view_reports') && userRole !== 'user') {
-    return null;
+  // First, check if user has access to view dashboard
+  const canViewDashboard = userRole !== 'user' && hasAccess('view_reports');
+
+  if (userRole === 'user') {
+    return (
+      <div className="tab-content">
+        <div className="section-header">
+          <h2>My Dashboard</h2>
+        </div>
+        {/* ... user dashboard content ... */}
+      </div>
+    );
   }
 
-  if (loading) {
+  // If no access and not user role, don't show anything
+  if (!canViewDashboard) {
+    return (
+      <div className="tab-content">
+        <div className="empty-state">
+          <FaExclamationTriangle className="empty-icon" />
+          <h3>Access Denied</h3>
+          <p>You don't have permission to view the dashboard.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading only when there's no data
+  if (loading && serviceBookings.length === 0 && orders.length === 0) {
     return (
       <div className="tab-content">
         <div className="loading-section">
@@ -1974,7 +2153,7 @@ const Dashboard = () => {
   return (
     <div className="tab-content">
       <div className="section-header">
-        <h2>Dashboard Overview - {roleConfig[userRole].name}</h2>
+        <h2>Dashboard Overview - {roleConfig[userRole]?.name || userRole}</h2>
         <div className="header-actions">
           {(userRole === 'branch' || userRole === 'engineer') && (
             <div className="branch-selector">
@@ -1996,53 +2175,55 @@ const Dashboard = () => {
       </div>
 
       <div className="dashboard-stats">
-        {/* Services Card - For both Branch Manager and Engineer */}
+        {/* Services Card - For ALL professional roles */}
         <div className="stat-card">
           <div className="stat-icon services">
             <FaTools />
           </div>
           <div className="stat-content">
             <h3>Total Services</h3>
-            <div className="stat-number">{dashboardStats.totalServices || 0}</div>
+            <div className="stat-number">{dashboardStats.totalServices}</div>
             <div className="stat-details">
               <span className="stat-detail pending">
-                {dashboardStats.pendingServices || 0} Pending
+                {dashboardStats.pendingServices} Pending
               </span>
               <span className="stat-detail completed">
-                {dashboardStats.completedServices || 0} Completed
+                {dashboardStats.completedServices} Completed
               </span>
             </div>
           </div>
         </div>
 
-        {/* Orders Card - For both Branch Manager and Engineer */}
-        <div className="stat-card">
-          <div className="stat-icon orders">
-            <FaShoppingCart />
-          </div>
-          <div className="stat-content">
-            <h3>Total Orders</h3>
-            <div className="stat-number">{dashboardStats.totalOrders || 0}</div>
-            <div className="stat-details">
-              <span className="stat-detail pending">
-                {dashboardStats.pendingOrders || 0} Pending
-              </span>
-              <span className="stat-detail completed">
-                {dashboardStats.completedOrders || 0} Delivered
-              </span>
+        {/* Orders Card - For roles that can see orders */}
+        {(userRole === 'super admin' || userRole === 'admin' || userRole === 'branch') && (
+          <div className="stat-card">
+            <div className="stat-icon orders">
+              <FaShoppingCart />
+            </div>
+            <div className="stat-content">
+              <h3>Total Orders</h3>
+              <div className="stat-number">{dashboardStats.totalOrders}</div>
+              <div className="stat-details">
+                <span className="stat-detail pending">
+                  {dashboardStats.pendingOrders} Pending
+                </span>
+                <span className="stat-detail completed">
+                  {dashboardStats.completedOrders} Delivered
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Products Card - Only for Branch Manager */}
-        {userRole === 'branch' && (
+        {/* Products Card - For admin and branch manager */}
+        {(userRole === 'super admin' || userRole === 'admin' || userRole === 'branch') && (
           <div className="stat-card">
             <div className="stat-icon products">
               <FaBox />
             </div>
             <div className="stat-content">
               <h3>Total Products</h3>
-              <div className="stat-number">{dashboardStats.totalProducts || 0}</div>
+              <div className="stat-number">{dashboardStats.totalProducts}</div>
               <div className="stat-details">
                 <span className="stat-detail">Active Products</span>
               </div>
@@ -2050,15 +2231,15 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Customers Card - Only for Branch Manager */}
-        {userRole === 'branch' && (
+        {/* Customers Card - For admin and branch manager */}
+        {(userRole === 'super admin' || userRole === 'admin' || userRole === 'branch') && (
           <div className="stat-card">
             <div className="stat-icon customers">
               <FaUsers />
             </div>
             <div className="stat-content">
               <h3>Total Customers</h3>
-              <div className="stat-number">{dashboardStats.totalCustomers || 0}</div>
+              <div className="stat-number">{dashboardStats.totalCustomers}</div>
               <div className="stat-details">
                 <span className="stat-detail">Registered Customers</span>
               </div>
@@ -2066,15 +2247,15 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Revenue Card - Only for Branch Manager */}
-        {userRole === 'branch' && (
+        {/* Revenue Card - For admin and branch manager */}
+        {(userRole === 'super admin' || userRole === 'admin' || userRole === 'branch') && (
           <div className="stat-card revenue">
             <div className="stat-icon revenue">
               <FaRupeeSign />
             </div>
             <div className="stat-content">
               <h3>Total Revenue</h3>
-              <div className="stat-number">₹{(dashboardStats.totalRevenue || 0).toLocaleString()}</div>
+              <div className="stat-number">₹{dashboardStats.totalRevenue.toLocaleString()}</div>
               <div className="stat-details">
                 <span className="stat-detail positive">This Month</span>
               </div>
@@ -2109,7 +2290,7 @@ const Dashboard = () => {
               <div className="stat-content">
                 <h3>In Progress</h3>
                 <div className="stat-number">
-                  {dashboardStats.totalServices - dashboardStats.completedServices - dashboardStats.pendingServices || 0}
+                  {dashboardStats.totalServices - dashboardStats.completedServices - dashboardStats.pendingServices}
                 </div>
                 <div className="stat-details">
                   <span className="stat-detail">Active Services</span>
@@ -2119,17 +2300,49 @@ const Dashboard = () => {
           </>
         )}
 
-        {/* Quotations Card - Only for Branch Manager */}
-        {userRole === 'branch' && (
+        {/* Quotations Card - For admin and branch manager */}
+        {(userRole === 'super admin' || userRole === 'admin' || userRole === 'branch') && (
           <div className="stat-card">
             <div className="stat-icon quotations">
               <FaFileInvoice />
             </div>
             <div className="stat-content">
               <h3>Total Quotations</h3>
-              <div className="stat-number">{dashboardStats.totalQuotations || 0}</div>
+              <div className="stat-number">{dashboardStats.totalQuotations}</div>
               <div className="stat-details">
                 <span className="stat-detail">Active Quotes</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Branches Card - For super admin and admin */}
+        {(userRole === 'super admin' || userRole === 'admin') && (
+          <div className="stat-card">
+            <div className="stat-icon branches">
+              <FaBuilding />
+            </div>
+            <div className="stat-content">
+              <h3>Total Branches</h3>
+              <div className="stat-number">{dashboardStats.totalBranches}</div>
+              <div className="stat-details">
+                <span className="stat-detail">Active Branches</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Users Card - For super admin only */}
+        {userRole === 'super admin' && (
+          <div className="stat-card">
+            <div className="stat-icon users">
+              <FaUserShield />
+            </div>
+            <div className="stat-content">
+              <h3>Total Users</h3>
+              <div className="stat-number">{dashboardStats.totalUsers}</div>
+              <div className="stat-details">
+                <span className="stat-detail">System Users</span>
               </div>
             </div>
           </div>
@@ -2140,11 +2353,11 @@ const Dashboard = () => {
       <div className="recent-activities">
         <h3>Recent Activities</h3>
         <div className="activities-grid">
-          {/* Recent Services */}
+          {/* Recent Services - For all professional roles */}
           <div className="activity-section">
             <h4>Recent Services</h4>
             <div className="activity-list">
-              {filteredServices.slice(0, 5).map(service => (
+              {serviceBookings.slice(0, 5).map(service => (
                 <div key={service.id} className="activity-item">
                   <div className="activity-icon">
                     <FaTools />
@@ -2162,12 +2375,12 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Recent Orders - Only for Branch Manager */}
-          {userRole === 'branch' && (
+          {/* Recent Orders - For roles that can see orders */}
+          {(userRole === 'super admin' || userRole === 'admin' || userRole === 'branch') && (
             <div className="activity-section">
               <h4>Recent Orders</h4>
               <div className="activity-list">
-                {filteredOrders.slice(0, 5).map(order => (
+                {orders.slice(0, 5).map(order => (
                   <div key={order.id} className="activity-item">
                     <div className="activity-icon">
                       <FaShoppingCart />
@@ -2191,7 +2404,7 @@ const Dashboard = () => {
             <div className="activity-section">
               <h4>My Assigned Services</h4>
               <div className="activity-list">
-                {filteredServices
+                {serviceBookings
                   .filter(service => service.technician === userData.name)
                   .slice(0, 5)
                   .map(service => (
@@ -2217,6 +2430,7 @@ const Dashboard = () => {
     </div>
   );
 };
+
   // Users Component (Super Admin only)
   const Users = () => {
     if (userRole !== 'super admin') return null;
@@ -2224,7 +2438,7 @@ const Dashboard = () => {
     return (
       <div className="tab-content">
         <div className="section-header">
-          <h2>User Management</h2>
+          <h2>User </h2>
           <div className="header-actions">
             <div className="search-box">
               <FaSearch className="search-icon" />
@@ -2298,6 +2512,127 @@ const Dashboard = () => {
       </div>
     );
   };
+
+  // Projects Component
+  // const Projects = () => {
+  //   if (!hasAccess('manage_projects') && userRole !== 'engineer') return null;
+
+  //   return (
+  //     <div className="tab-content">
+  //       <div className="section-header">
+  //         <h2>Project </h2>
+  //         <div className="header-actions">
+  //           <div className="search-box">
+  //             <FaSearch className="search-icon" />
+  //             <input
+  //               type="text"
+  //               placeholder="Search projects..."
+  //               value={searchTerm}
+  //               onChange={(e) => setSearchTerm(e.target.value)}
+  //               className="search-input"
+  //             />
+  //           </div>
+  //           <button 
+  //             className="primary-button"
+  //             onClick={() => {
+  //               setEditingItem(null);
+  //               setNewProject({
+  //                 name: '',
+  //                 description: '',
+  //                 customerId: '',
+  //                 customerName: '',
+  //                 startDate: '',
+  //                 endDate: '',
+  //                 status: 'planning',
+  //                 budget: '',
+  //                 assignedTo: '',
+  //                 priority: 'medium',
+  //                 notes: ''
+  //               });
+  //               setIsAddProjectModalOpen(true);
+  //             }}
+  //           >
+  //             <FaPlus />
+  //             Add Project
+  //           </button>
+  //         </div>
+  //       </div>
+
+  //       <div className="houseState-content" style={{ overflowX: "auto" }}>
+  //         <div className="table-container">
+  //           <table className="custom-table">
+  //             <thead>
+  //               <tr>
+  //                 <th className="w-5">S.NO</th>
+  //                 <th>Project ID</th>
+  //                 <th>Project Name</th>
+  //                 <th>Customer</th>
+  //                 <th>Start Date</th>
+  //                 <th>End Date</th>
+  //                 <th>Status</th>
+  //                 <th>Priority</th>
+  //                 <th>Budget</th>
+  //                 <th>Actions</th>
+  //               </tr>
+  //             </thead>
+  //             <tbody>
+  //               {filteredProjects.length > 0 ? (
+  //                 filteredProjects.map((project, index) => (
+  //                   <tr key={project.id}>
+  //                     <td className="text-center w-5">{index + 1}</td>
+  //                     <td className="text-left">{project.id}</td>
+  //                     <td className="text-left">{project.name}</td>
+  //                     <td className="text-left">{project.customerName}</td>
+  //                     <td className="text-left">{project.startDate}</td>
+  //                     <td className="text-left">{project.endDate}</td>
+  //                     <td className="text-center">
+  //                       <span className={`status-badge ${project.status}`}>
+  //                         {project.status}
+  //                       </span>
+  //                     </td>
+  //                     <td className="text-center">
+  //                       <span className={`priority-badge ${project.priority}`}>
+  //                         {project.priority}
+  //                       </span>
+  //                     </td>
+  //                     <td className="text-left">{project.budget}</td>
+  //                     <td className="text-center">
+  //                       <div className="action-buttons">
+  //                         <button 
+  //                           className="icon-btn edit"
+  //                           onClick={() => handleEditProject(project)}
+  //                           title="Edit"
+  //                         >
+  //                           <FaEdit />
+  //                         </button>
+  //                         <button className="icon-btn view" title="View">
+  //                           <FaEye />
+  //                         </button>
+  //                         <button 
+  //                           className="icon-btn delete"
+  //                           onClick={() => handleDeleteProject(project.id)}
+  //                           title="Delete"
+  //                         >
+  //                           <FaTrash />
+  //                         </button>
+  //                       </div>
+  //                     </td>
+  //                   </tr>
+  //                 ))
+  //               ) : (
+  //                 <tr>
+  //                   <td colSpan="10" className="text-center">
+  //                     No projects found
+  //                   </td>
+  //                 </tr>
+  //               )}
+  //             </tbody>
+  //           </table>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   // Services Component
   const Services = () => {
@@ -2858,8 +3193,8 @@ const Dashboard = () => {
                   {(userRole === 'admin' || userRole === 'engineer') && <th>Branch</th>}
                   <th>Amount</th>
                   <th>Status</th>
-                  <th>Created Date</th>
-                  <th>Valid Until</th>
+                  {/* <th>Created Date</th>
+                  <th>Valid Until</th> */}
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -2879,8 +3214,8 @@ const Dashboard = () => {
                           {quote.status}
                         </span>
                       </td>
-                      <td className="text-left">{quote.createdDate}</td>
-                      <td className="text-left">{quote.validUntil}</td>
+                      {/* <td className="text-left">{quote.createdDate}</td>
+                      <td className="text-left">{quote.validUntil}</td> */}
                       <td className="text-center">
                         <div className="action-buttons">
                           <button className="icon-btn edit" title="Edit">
@@ -3208,7 +3543,7 @@ const Dashboard = () => {
                     onClick={() => setActiveTab('branches')}
                   >
                     <FaBuilding className="nav-icon" />
-                    Branch Management
+                    Branch 
                   </li>
                 )}
 
@@ -3218,9 +3553,19 @@ const Dashboard = () => {
                     onClick={() => setActiveTab('users')}
                   >
                     <FaUserShield className="nav-icon" />
-                    User Management
+                    User 
                   </li>
                 )}
+
+                {/* {currentRole.tabs.includes('projects') && (
+                  <li 
+                    className={activeTab === 'projects' ? 'active' : ''}
+                    onClick={() => setActiveTab('projects')}
+                  >
+                    <FaLaptopCode className="nav-icon" />
+                    Projects
+                  </li>
+                )} */}
 
                 {currentRole.tabs.includes('profile') && (
                   <li 
@@ -3252,6 +3597,7 @@ const Dashboard = () => {
               {activeTab === 'quotations' && 'Quotations'}
               {activeTab === 'branches' && 'Branches'}
               {activeTab === 'users' && 'Users'}
+              {/* {activeTab === 'projects' && 'Projects'} */}
               {activeTab === 'profile' && 'Profile'}
             </h2>
           </div>
@@ -3295,6 +3641,7 @@ const Dashboard = () => {
             {activeTab === 'quotations' && <Quotations />}
             {activeTab === 'branches' && <Branch />}
             {activeTab === 'users' && <Users />}
+            {/* {activeTab === 'projects' && <Projects />} */}
             {activeTab === 'profile' && <Profile />}
           </div>
         </div>
@@ -3318,6 +3665,7 @@ const Dashboard = () => {
       <AddProductModal />
       <AddCustomerModal />
       <AddBranchModal />
+      {/* <AddProjectModal /> */}
       <AddQuotationModal />
     </div>
   );
@@ -3334,6 +3682,7 @@ const getTabIcon = (tab) => {
     case 'quotations': return <FaFileInvoice className="nav-icon" />;
     case 'branches': return <FaBuilding className="nav-icon" />;
     case 'users': return <FaUserShield className="nav-icon" />;
+    // case 'projects': return <FaLaptopCode className="nav-icon" />;
     case 'profile': return <FaUser className="nav-icon" />;
     default: return <FaTachometerAlt className="nav-icon" />;
   }
