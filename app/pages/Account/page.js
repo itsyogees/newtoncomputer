@@ -36,13 +36,18 @@ import {
   FaReceipt,
   FaBars,
   FaTimesCircle,
-  FaStore
+  FaStore,
+  FaUserShield,
+  FaUserTie,
+  FaUserCog,
+  FaLaptopCode,
+  FaNetworkWired
 } from 'react-icons/fa';
-import './Account.scss'
+import './Account.scss';
 
 const Account = () => {
-  const [userRole, setUserRole] = useState('user');
-  const [activeTab, setActiveTab] = useState('services');
+  const [userRole, setUserRole] = useState('super admin');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
@@ -134,6 +139,7 @@ const Account = () => {
   const [products, setProducts] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [quotations, setQuotations] = useState([]);
+  const [users, setUsers] = useState([]);
 
   // Search and filter states
   const [searchTerm, setSearchTerm] = useState('');
@@ -150,15 +156,64 @@ const Account = () => {
     totalProducts: 0,
     totalCustomers: 0,
     totalQuotations: 0,
-    totalBranches: 0
+    totalBranches: 0,
+    totalUsers: 0,
+    totalRevenue: 0
   });
 
   // Quick branch stats
   const [quickBranchStats, setQuickBranchStats] = useState({
-    all: { services: 0, orders: 0 },
-    BR001: { services: 0, orders: 0 },
-    BR002: { services: 0, orders: 0 }
+    all: { services: 0, orders: 0, revenue: 0 },
+    BR001: { services: 0, orders: 0, revenue: 0 },
+    BR002: { services: 0, orders: 0, revenue: 0 },
+    BR003: { services: 0, orders: 0, revenue: 0 }
   });
+
+  // Role configurations
+  const roleConfig = {
+    'super admin': {
+      name: 'Super Admin',
+      icon: FaUserShield,
+      color: '#8B5CF6',
+      permissions: ['all'],
+      tabs: ['dashboard', 'services', 'orders', 'products', 'customers', 'quotations', 'branches', 'users', 'profile']
+    },
+    'admin': {
+      name: 'Admin',
+      icon: FaUserCog,
+      color: '#3B82F6',
+      permissions: ['manage_branches', 'manage_products', 'manage_customers', 'view_reports'],
+      tabs: ['dashboard', 'services', 'orders', 'products', 'customers', 'quotations', 'branches', 'profile']
+    },
+    'manager': {
+      name: 'Manager',
+      icon: FaUserTie,
+      color: '#059669',
+      permissions: ['manage_team', 'view_reports', 'approve_quotations'],
+      tabs: ['dashboard', 'services', 'orders', 'quotations', 'profile']
+    },
+    'branch': {
+      name: 'Branch Manager',
+      icon: FaBuilding,
+      color: '#F59E0B',
+      permissions: ['manage_branch_operations', 'view_branch_reports'],
+      tabs: ['dashboard', 'services', 'orders', 'quotations', 'profile']
+    },
+    'engineer': {
+      name: 'Engineer',
+      icon: FaTools,
+      color: '#DC2626',
+      permissions: ['manage_services', 'update_service_status'],
+      tabs: ['dashboard', 'services', 'profile']
+    },
+    'user': {
+      name: 'Customer',
+      icon: FaUser,
+      color: '#6B7280',
+      permissions: ['view_services', 'view_orders'],
+      tabs: ['services', 'orders', 'profile']
+    }
+  };
 
   // Calculate quotation totals
   const calculateQuotationTotals = (items, discount = 0, taxRate = 18) => {
@@ -200,42 +255,140 @@ const Account = () => {
     }
   };
 
-  // Update dashboard stats function
-  const updateDashboardStats = () => {
-    const filteredServices = selectedBranch === 'all' ? serviceBookings : serviceBookings.filter(s => s.branchId === selectedBranch);
-    const filteredOrders = selectedBranch === 'all' ? orders : orders.filter(o => o.branchId === selectedBranch);
-    
-    const stats = {
-      totalServices: filteredServices.length,
-      pendingServices: filteredServices.filter(s => s.status === 'pending').length,
-      completedServices: filteredServices.filter(s => s.status === 'completed').length,
-      totalOrders: filteredOrders.length,
-      pendingOrders: filteredOrders.filter(o => o.status === 'pending').length,
-      completedOrders: filteredOrders.filter(o => o.status === 'delivered').length,
-      totalProducts: products.length,
-      totalCustomers: customers.length,
-      totalQuotations: quotations.length,
-      totalBranches: branches.length
-    };
-    setDashboardStats(stats);
+  // Quotation item handlers
+  const handleAddQuotationItem = () => {
+    if (newQuotationItem.productName && newQuotationItem.price > 0) {
+      const itemTotal = newQuotationItem.quantity * newQuotationItem.price;
+      const updatedItem = {
+        ...newQuotationItem,
+        total: itemTotal
+      };
+
+      const updatedItems = [...newQuotation.items, updatedItem];
+      const { subtotal, discountAmount, taxAmount, total } = calculateQuotationTotals(
+        updatedItems,
+        newQuotation.discount,
+        newQuotation.taxRate
+      );
+
+      setNewQuotation(prev => ({
+        ...prev,
+        items: updatedItems,
+        subtotal,
+        discountAmount,
+        taxAmount,
+        total
+      }));
+
+      // Reset item form
+      setNewQuotationItem({
+        productId: '',
+        productName: '',
+        quantity: 1,
+        price: 0,
+        total: 0
+      });
+    }
   };
+
+  const handleRemoveQuotationItem = (index) => {
+    const updatedItems = newQuotation.items.filter((_, i) => i !== index);
+    const { subtotal, discountAmount, taxAmount, total } = calculateQuotationTotals(
+      updatedItems,
+      newQuotation.discount,
+      newQuotation.taxRate
+    );
+
+    setNewQuotation(prev => ({
+      ...prev,
+      items: updatedItems,
+      subtotal,
+      discountAmount,
+      taxAmount,
+      total
+    }));
+  };
+
+const updateDashboardStats = () => {
+  let filteredServices = serviceBookings;
+  let filteredOrders = orders;
+  let filteredProducts = products;
+  let filteredCustomers = customers;
+  let filteredQuotations = quotations;
+
+  // Apply branch filtering for branch manager and engineer
+  if (userRole === 'branch' || userRole === 'engineer') {
+    filteredServices = serviceBookings.filter(s => s.branchId === selectedBranch);
+    filteredOrders = orders.filter(o => o.branchId === selectedBranch);
+    
+    // Branch manager can see products and customers for their branch
+    if (userRole === 'branch') {
+      filteredProducts = products.filter(p => p.branchId === selectedBranch);
+      filteredCustomers = customers.filter(c => c.branchId === selectedBranch);
+      filteredQuotations = quotations.filter(q => q.branchId === selectedBranch);
+    }
+    
+    // Engineer only sees services assigned to them
+    if (userRole === 'engineer') {
+      filteredServices = filteredServices.filter(s => s.technician === userData.name);
+    }
+  }
+
+  // Calculate revenue properly
+  const totalRevenue = filteredOrders.reduce((sum, order) => {
+    if (order.price && typeof order.price === 'string') {
+      const priceValue = parseFloat(order.price.replace('₹', '').replace(/,/g, '') || 0);
+      return sum + priceValue;
+    }
+    return sum;
+  }, 0);
+
+  const stats = {
+    totalServices: filteredServices.length,
+    pendingServices: filteredServices.filter(s => s.status === 'pending').length,
+    completedServices: filteredServices.filter(s => s.status === 'completed').length,
+    totalOrders: filteredOrders.length,
+    pendingOrders: filteredOrders.filter(o => o.status === 'pending').length,
+    completedOrders: filteredOrders.filter(o => o.status === 'delivered').length,
+    totalProducts: filteredProducts.length,
+    totalCustomers: filteredCustomers.length,
+    totalQuotations: filteredQuotations.length,
+    totalBranches: userRole === 'branch' || userRole === 'engineer' ? 1 : branches.length,
+    totalUsers: userRole === 'super admin' ? users.length : 0,
+    totalRevenue: totalRevenue
+  };
+  
+  setDashboardStats(stats);
+};
 
   // Update quick branch stats
   const updateQuickBranchStats = () => {
-    const allServices = serviceBookings.length;
-    const allOrders = orders.length;
-    
-    const br001Services = serviceBookings.filter(s => s.branchId === 'BR001').length;
-    const br001Orders = orders.filter(o => o.branchId === 'BR001').length;
-    
-    const br002Services = serviceBookings.filter(s => s.branchId === 'BR002').length;
-    const br002Orders = orders.filter(o => o.branchId === 'BR002').length;
+    const stats = {
+      all: { services: 0, orders: 0, revenue: 0 },
+      BR001: { services: 0, orders: 0, revenue: 0 },
+      BR002: { services: 0, orders: 0, revenue: 0 },
+      BR003: { services: 0, orders: 0, revenue: 0 }
+    };
 
-    setQuickBranchStats({
-      all: { services: allServices, orders: allOrders },
-      BR001: { services: br001Services, orders: br001Orders },
-      BR002: { services: br002Services, orders: br002Orders }
+    serviceBookings.forEach(service => {
+      stats.all.services++;
+      if (stats[service.branchId]) {
+        stats[service.branchId].services++;
+      }
     });
+
+    orders.forEach(order => {
+      const priceValue = parseFloat(order.price.replace('₹', '').replace(/,/g, '') || 0);
+      stats.all.orders++;
+      stats.all.revenue += priceValue;
+      
+      if (stats[order.branchId]) {
+        stats[order.branchId].orders++;
+        stats[order.branchId].revenue += priceValue;
+      }
+    });
+
+    setQuickBranchStats(stats);
   };
 
   // Update stats whenever data changes
@@ -249,8 +402,8 @@ const Account = () => {
     setQuickBranch(branchId);
     setSelectedBranch(branchId);
     
-    // Auto-switch to relevant tab based on branch selection
-    if (userRole === 'admin' || userRole === 'engineer') {
+    // Auto-switch to relevant tab based on role
+    if (['super admin', 'admin', 'manager', 'branch', 'engineer'].includes(userRole)) {
       setActiveTab('dashboard');
     } else {
       setActiveTab('services');
@@ -263,15 +416,34 @@ const Account = () => {
       setLoading(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (userRole === 'user') {
-        loadUserData();
-        setActiveTab('services');
-      } else if (userRole === 'engineer') {
-        loadEngineerData();
-        setActiveTab('dashboard');
-      } else if (userRole === 'admin') {
-        loadAdminData();
-        setActiveTab('dashboard');
+      switch (userRole) {
+        case 'user':
+          loadUserData();
+          setActiveTab('services');
+          break;
+        case 'engineer':
+          loadEngineerData();
+          setActiveTab('dashboard');
+          break;
+        case 'branch':
+          loadBranchData();
+          setActiveTab('dashboard');
+          break;
+        case 'manager':
+          loadManagerData();
+          setActiveTab('dashboard');
+          break;
+        case 'admin':
+          loadAdminData();
+          setActiveTab('dashboard');
+          break;
+        case 'super admin':
+          loadSuperAdminData();
+          setActiveTab('dashboard');
+          break;
+        default:
+          loadUserData();
+          setActiveTab('services');
       }
       
       setLoading(false);
@@ -292,20 +464,6 @@ const Account = () => {
         finalCost: '₹3,200',
         technician: 'Raj Kumar',
         completionDate: '2024-01-18',
-        userId: 'user123',
-        branchId: 'BR001',
-        branchName: 'T.Nagar Branch'
-      },
-      {
-        id: 'SRV002',
-        laptopModel: 'Lenovo ThinkPad T480',
-        serviceType: 'Motherboard Repair',
-        bookingDate: '2024-01-20',
-        status: 'in-progress',
-        estimatedCost: '₹8,000',
-        finalCost: null,
-        technician: 'Suresh Patel',
-        completionDate: null,
         userId: 'user123',
         branchId: 'BR001',
         branchName: 'T.Nagar Branch'
@@ -339,8 +497,229 @@ const Account = () => {
     setQuickBranch('BR001');
   };
 
-  const loadEngineerData = () => {
-    const engineerServiceBookings = [
+const loadEngineerData = () => {
+  // Clear existing data first
+  setServiceBookings([]);
+  setOrders([]);
+
+  const engineerServiceBookings = [
+    {
+      id: 'SRV001',
+      laptopModel: 'Dell Inspiron 15',
+      serviceType: 'Screen Replacement',
+      bookingDate: '2024-01-15',
+      status: 'completed',
+      estimatedCost: '₹3,500',
+      finalCost: '₹3,200',
+      technician: 'Raj Kumar',
+      completionDate: '2024-01-18',
+      userId: 'user123',
+      customerName: 'John Doe',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'SRV002',
+      laptopModel: 'Lenovo ThinkPad T480',
+      serviceType: 'Motherboard Repair',
+      bookingDate: '2024-01-20',
+      status: 'in-progress',
+      estimatedCost: '₹8,000',
+      finalCost: null,
+      technician: 'Raj Kumar',
+      completionDate: null,
+      userId: 'user456',
+      customerName: 'Jane Smith',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'SRV003',
+      laptopModel: 'HP Pavilion',
+      serviceType: 'Keyboard Replacement',
+      bookingDate: '2024-01-22',
+      status: 'pending',
+      estimatedCost: '₹2,500',
+      finalCost: null,
+      technician: 'Raj Kumar',
+      completionDate: null,
+      userId: 'user789',
+      customerName: 'Robert Brown',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    }
+  ];
+
+  const engineerOrders = [
+    {
+      id: 'ORD001',
+      product: 'Laptop Repair Tools Kit',
+      orderDate: '2024-01-10',
+      status: 'delivered',
+      price: '₹5,999',
+      quantity: 1,
+      deliveryDate: '2024-01-15',
+      userId: 'engineer001',
+      customerName: 'Raj Kumar',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    }
+  ];
+
+  // Set data with a small delay to ensure state updates
+  setTimeout(() => {
+    setServiceBookings(engineerServiceBookings);
+    setOrders(engineerOrders);
+    
+    setUserData(prev => ({
+      ...prev,
+      branch: 'BR001',
+      branchName: 'T.Nagar Branch'
+    }));
+    setUserBranch('BR001');
+    setSelectedBranch('BR001');
+    setQuickBranch('BR001');
+  }, 100);
+};
+const loadBranchData = () => {
+  // Clear existing data first
+  setServiceBookings([]);
+  setOrders([]);
+  setProducts([]);
+  setCustomers([]);
+  setQuotations([]);
+
+  const branchServiceBookings = [
+    {
+      id: 'SRV001',
+      laptopModel: 'Dell Inspiron 15',
+      serviceType: 'Screen Replacement',
+      bookingDate: '2024-01-15',
+      status: 'completed',
+      estimatedCost: '₹3,500',
+      finalCost: '₹3,200',
+      technician: 'Raj Kumar',
+      completionDate: '2024-01-18',
+      userId: 'user123',
+      customerName: 'John Doe',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'SRV002',
+      laptopModel: 'Lenovo ThinkPad T480',
+      serviceType: 'Motherboard Repair',
+      bookingDate: '2024-01-20',
+      status: 'in-progress',
+      estimatedCost: '₹8,000',
+      finalCost: null,
+      technician: 'Suresh Patel',
+      completionDate: null,
+      userId: 'user456',
+      customerName: 'Jane Smith',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'SRV003',
+      laptopModel: 'HP Pavilion',
+      serviceType: 'Keyboard Replacement',
+      bookingDate: '2024-01-22',
+      status: 'pending',
+      estimatedCost: '₹2,500',
+      finalCost: null,
+      technician: 'Anita Desai',
+      completionDate: null,
+      userId: 'user789',
+      customerName: 'Robert Brown',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    }
+  ];
+
+  const branchOrders = [
+    {
+      id: 'ORD001',
+      product: 'Refurbished Dell Latitude E7440',
+      orderDate: '2024-01-10',
+      status: 'delivered',
+      price: '₹24,999',
+      quantity: 1,
+      deliveryDate: '2024-01-15',
+      userId: 'user123',
+      customerName: 'John Doe',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'ORD002',
+      product: 'Laptop Bag & Accessories Kit',
+      orderDate: '2024-01-18',
+      status: 'shipped',
+      price: '₹2,499',
+      quantity: 1,
+      deliveryDate: '2024-01-22',
+      userId: 'user456',
+      customerName: 'Jane Smith',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    }
+  ];
+
+  const branchProducts = [
+    {
+      id: 'PROD001',
+      name: 'Refurbished Dell Latitude E7440',
+      category: 'Business Laptop',
+      price: '₹24,999',
+      stock: 8,
+      status: 'active',
+      branchId: 'BR001'
+    }
+  ];
+
+  const branchCustomers = [
+    {
+      id: 'CUST001',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phone: '+91 98765 43210',
+      type: 'individual',
+      branchId: 'BR001'
+    }
+  ];
+
+  const branchQuotations = [
+    {
+      id: 'QUOTE001',
+      customerName: 'John Doe',
+      branchId: 'BR001',
+      total: '₹32,447',
+      status: 'sent'
+    }
+  ];
+
+  // Set data with a small delay to ensure state updates
+  setTimeout(() => {
+    setServiceBookings(branchServiceBookings);
+    setOrders(branchOrders);
+    setProducts(branchProducts);
+    setCustomers(branchCustomers);
+    setQuotations(branchQuotations);
+    
+    setUserData(prev => ({
+      ...prev,
+      branch: 'BR001',
+      branchName: 'T.Nagar Branch'
+    }));
+    setUserBranch('BR001');
+    setSelectedBranch('BR001');
+    setQuickBranch('BR001');
+  }, 100);
+};
+
+  const loadManagerData = () => {
+    const managerServiceBookings = [
       {
         id: 'SRV001',
         laptopModel: 'Dell Inspiron 15',
@@ -355,40 +734,10 @@ const Account = () => {
         customerName: 'John Doe',
         branchId: 'BR001',
         branchName: 'T.Nagar Branch'
-      },
-      {
-        id: 'SRV002',
-        laptopModel: 'Lenovo ThinkPad T480',
-        serviceType: 'Motherboard Repair',
-        bookingDate: '2024-01-20',
-        status: 'in-progress',
-        estimatedCost: '₹8,000',
-        finalCost: null,
-        technician: 'Raj Kumar',
-        completionDate: null,
-        userId: 'user456',
-        customerName: 'Jane Smith',
-        branchId: 'BR001',
-        branchName: 'T.Nagar Branch'
-      },
-      {
-        id: 'SRV003',
-        laptopModel: 'HP Pavilion',
-        serviceType: 'Keyboard Replacement',
-        bookingDate: '2024-01-22',
-        status: 'pending',
-        estimatedCost: '₹2,500',
-        finalCost: null,
-        technician: 'Anita Desai',
-        completionDate: null,
-        userId: 'user789',
-        customerName: 'Robert Brown',
-        branchId: 'BR002',
-        branchName: 'Thoraipakkam Branch'
       }
     ];
 
-    const engineerOrders = [
+    const managerOrders = [
       {
         id: 'ORD001',
         product: 'Refurbished Dell Latitude E7440',
@@ -401,55 +750,44 @@ const Account = () => {
         customerName: 'John Doe',
         branchId: 'BR001',
         branchName: 'T.Nagar Branch'
-      },
-      {
-        id: 'ORD002',
-        product: 'Laptop Bag & Accessories Kit',
-        orderDate: '2024-01-18',
-        status: 'shipped',
-        price: '₹2,499',
-        quantity: 1,
-        deliveryDate: '2024-01-22',
-        userId: 'user456',
-        customerName: 'Jane Smith',
-        branchId: 'BR002',
-        branchName: 'Thoraipakkam Branch'
       }
     ];
 
-    const engineerBranches = [
+    const managerQuotations = [
       {
-        id: 'BR001',
-        name: 'T.Nagar Branch',
-        address: '28-B/16, Murugesan Street, North Usman Road, T.Nagar, Chennai-600017',
-        phone: '+91 98406 04073',
-        manager: 'Raj Kumar',
-        status: 'active'
-      },
-      {
-        id: 'BR002',
-        name: 'Thoraipakkam Branch',
-        address: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
-        phone: '+91 99401 85417',
-        manager: 'Suresh Patel',
-        status: 'active'
+        id: 'QUOTE001',
+        customerId: 'CUST001',
+        customerName: 'John Doe',
+        branchId: 'BR001',
+        branchName: 'T.Nagar Branch',
+        items: [],
+        subtotal: '₹27,498',
+        discount: 5,
+        discountAmount: '₹1,375',
+        taxRate: 18,
+        taxAmount: '₹4,949',
+        total: '₹32,447',
+        status: 'sent',
+        createdDate: '2024-01-20',
+        validUntil: '2024-02-20'
       }
     ];
 
-    setServiceBookings(engineerServiceBookings);
-    setOrders(engineerOrders);
-    setBranches(engineerBranches);
+    setServiceBookings(managerServiceBookings);
+    setOrders(managerOrders);
+    setQuotations(managerQuotations);
     setUserData(prev => ({
       ...prev,
-      branch: 'BR001',
-      branchName: 'T.Nagar Branch'
+      branch: 'all',
+      branchName: 'All Branches'
     }));
-    setUserBranch('BR001');
+    setUserBranch('all');
     setSelectedBranch('all');
     setQuickBranch('all');
   };
 
   const loadAdminData = () => {
+    // Same as your existing admin data
     const adminBranches = [
       {
         id: 'BR001',
@@ -484,51 +822,6 @@ const Account = () => {
         customerName: 'John Doe',
         branchId: 'BR001',
         branchName: 'T.Nagar Branch'
-      },
-      {
-        id: 'SRV002',
-        laptopModel: 'Lenovo ThinkPad T480',
-        serviceType: 'Motherboard Repair',
-        bookingDate: '2024-01-20',
-        status: 'in-progress',
-        estimatedCost: '₹8,000',
-        finalCost: null,
-        technician: 'Suresh Patel',
-        completionDate: null,
-        userId: 'user456',
-        customerName: 'Jane Smith',
-        branchId: 'BR002',
-        branchName: 'Thoraipakkam Branch'
-      },
-      {
-        id: 'SRV003',
-        laptopModel: 'HP Pavilion',
-        serviceType: 'Keyboard Replacement',
-        bookingDate: '2024-01-22',
-        status: 'pending',
-        estimatedCost: '₹2,500',
-        finalCost: null,
-        technician: 'Anita Desai',
-        completionDate: null,
-        userId: 'user789',
-        customerName: 'Robert Brown',
-        branchId: 'BR001',
-        branchName: 'T.Nagar Branch'
-      },
-      {
-        id: 'SRV004',
-        laptopModel: 'Apple MacBook Pro',
-        serviceType: 'Battery Replacement',
-        bookingDate: '2024-01-25',
-        status: 'completed',
-        estimatedCost: '₹12,000',
-        finalCost: '₹11,500',
-        technician: 'Suresh Patel',
-        completionDate: '2024-01-28',
-        userId: 'user101',
-        customerName: 'Mike Johnson',
-        branchId: 'BR002',
-        branchName: 'Thoraipakkam Branch'
       }
     ];
 
@@ -543,32 +836,6 @@ const Account = () => {
         deliveryDate: '2024-01-15',
         userId: 'user123',
         customerName: 'John Doe',
-        branchId: 'BR001',
-        branchName: 'T.Nagar Branch'
-      },
-      {
-        id: 'ORD002',
-        product: 'Laptop Bag & Accessories Kit',
-        orderDate: '2024-01-18',
-        status: 'shipped',
-        price: '₹2,499',
-        quantity: 1,
-        deliveryDate: '2024-01-22',
-        userId: 'user456',
-        customerName: 'Jane Smith',
-        branchId: 'BR002',
-        branchName: 'Thoraipakkam Branch'
-      },
-      {
-        id: 'ORD003',
-        product: 'Lenovo ThinkPad T480',
-        orderDate: '2024-01-24',
-        status: 'pending',
-        price: '₹32,999',
-        quantity: 1,
-        deliveryDate: '2024-01-30',
-        userId: 'user789',
-        customerName: 'Robert Brown',
         branchId: 'BR001',
         branchName: 'T.Nagar Branch'
       }
@@ -586,18 +853,6 @@ const Account = () => {
         specifications: 'Intel Core i5-6300U, 8GB RAM, 256GB SSD, 14" HD Display, Windows 10 Pro',
         warranty: '1 year',
         createdAt: '2024-01-01'
-      },
-      {
-        id: 'PROD002',
-        name: 'Lenovo ThinkPad T480',
-        category: 'Business Laptop',
-        price: '₹32,999',
-        stock: 8,
-        status: 'active',
-        description: 'Durable and reliable business laptop with military-grade durability.',
-        specifications: 'Intel Core i7-8650U, 16GB RAM, 512GB SSD, 14" FHD Display, Windows 11 Pro',
-        warranty: '2 years',
-        createdAt: '2024-01-05'
       }
     ];
 
@@ -614,19 +869,6 @@ const Account = () => {
         shippingAddress: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
         notes: 'Regular customer, prefers email communication',
         createdAt: '2024-01-01'
-      },
-      {
-        id: 'CUST002',
-        name: 'ABC Corporation',
-        email: 'contact@abccorp.com',
-        phone: '+91 98765 43211',
-        type: 'business',
-        companyName: 'ABC Corporation Pvt Ltd',
-        gstNumber: '27ABCCT1234A1Z5',
-        billingAddress: 'Tech Park, Whitefield, Bangalore, Karnataka - 560001',
-        shippingAddress: 'Tech Park, Whitefield, Bangalore, Karnataka - 560001',
-        notes: 'Corporate client with bulk orders',
-        createdAt: '2024-01-05'
       }
     ];
 
@@ -638,8 +880,7 @@ const Account = () => {
         branchId: 'BR001',
         branchName: 'T.Nagar Branch',
         items: [
-          { productId: 'PROD001', productName: 'Refurbished Dell Latitude E7440', quantity: 1, price: '₹24,999', total: '₹24,999' },
-          { productId: 'PROD002', productName: 'Laptop Bag & Accessories Kit', quantity: 1, price: '₹2,499', total: '₹2,499' }
+          { productId: 'PROD001', productName: 'Refurbished Dell Latitude E7440', quantity: 1, price: '₹24,999', total: '₹24,999' }
         ],
         subtotal: '₹27,498',
         discount: 5,
@@ -670,7 +911,285 @@ const Account = () => {
     setQuickBranch('all');
   };
 
-  // Product CRUD Operations
+const loadSuperAdminData = () => {
+  // Load all data for super admin
+  const superAdminBranches = [
+    {
+      id: 'BR001',
+      name: 'T.Nagar Branch',
+      address: '28-B/16, Murugesan Street, North Usman Road, T.Nagar, Chennai-600017',
+      phone: '+91 98406 04073',
+      manager: 'Raj Kumar',
+      status: 'active'
+    },
+    {
+      id: 'BR002',
+      name: 'Thoraipakkam Branch',
+      address: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
+      phone: '+91 99401 85417',
+      manager: 'Suresh Patel',
+      status: 'active'
+    }
+  ];
+
+  const superAdminUsers = [
+    {
+      id: 'USR001',
+      name: 'Super Admin',
+      email: 'superadmin@company.com',
+      role: 'super admin',
+      branch: 'all',
+      status: 'active',
+      createdAt: '2024-01-01'
+    },
+    {
+      id: 'USR002',
+      name: 'Admin User',
+      email: 'admin@company.com',
+      role: 'admin',
+      branch: 'all',
+      status: 'active',
+      createdAt: '2024-01-02'
+    }
+  ];
+
+  // Enhanced data for both branches
+  const superAdminServiceBookings = [
+    {
+      id: 'SRV001',
+      laptopModel: 'Dell Inspiron 15',
+      serviceType: 'Screen Replacement',
+      bookingDate: '2024-01-15',
+      status: 'completed',
+      estimatedCost: '₹3,500',
+      finalCost: '₹3,200',
+      technician: 'Raj Kumar',
+      completionDate: '2024-01-18',
+      userId: 'user123',
+      customerName: 'John Doe',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'SRV002',
+      laptopModel: 'Lenovo ThinkPad T480',
+      serviceType: 'Motherboard Repair',
+      bookingDate: '2024-01-20',
+      status: 'in-progress',
+      estimatedCost: '₹8,000',
+      finalCost: null,
+      technician: 'Suresh Patel',
+      completionDate: null,
+      userId: 'user456',
+      customerName: 'Jane Smith',
+      branchId: 'BR002',
+      branchName: 'Thoraipakkam Branch'
+    },
+    {
+      id: 'SRV003',
+      laptopModel: 'HP Pavilion',
+      serviceType: 'Keyboard Replacement',
+      bookingDate: '2024-01-22',
+      status: 'pending',
+      estimatedCost: '₹2,500',
+      finalCost: null,
+      technician: 'Anita Desai',
+      completionDate: null,
+      userId: 'user789',
+      customerName: 'Robert Brown',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'SRV004',
+      laptopModel: 'Apple MacBook Pro',
+      serviceType: 'Battery Replacement',
+      bookingDate: '2024-01-25',
+      status: 'completed',
+      estimatedCost: '₹12,000',
+      finalCost: '₹11,500',
+      technician: 'Suresh Patel',
+      completionDate: '2024-01-28',
+      userId: 'user101',
+      customerName: 'Mike Johnson',
+      branchId: 'BR002',
+      branchName: 'Thoraipakkam Branch'
+    }
+  ];
+
+  const superAdminOrders = [
+    {
+      id: 'ORD001',
+      product: 'Refurbished Dell Latitude E7440',
+      orderDate: '2024-01-10',
+      status: 'delivered',
+      price: '₹24,999',
+      quantity: 1,
+      deliveryDate: '2024-01-15',
+      userId: 'user123',
+      customerName: 'John Doe',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'ORD002',
+      product: 'Laptop Bag & Accessories Kit',
+      orderDate: '2024-01-18',
+      status: 'shipped',
+      price: '₹2,499',
+      quantity: 1,
+      deliveryDate: '2024-01-22',
+      userId: 'user456',
+      customerName: 'Jane Smith',
+      branchId: 'BR002',
+      branchName: 'Thoraipakkam Branch'
+    },
+    {
+      id: 'ORD003',
+      product: 'Lenovo ThinkPad T480',
+      orderDate: '2024-01-24',
+      status: 'pending',
+      price: '₹32,999',
+      quantity: 1,
+      deliveryDate: '2024-01-30',
+      userId: 'user789',
+      customerName: 'Robert Brown',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch'
+    },
+    {
+      id: 'ORD004',
+      product: 'Gaming Laptop ASUS ROG',
+      orderDate: '2024-01-26',
+      status: 'delivered',
+      price: '₹89,999',
+      quantity: 1,
+      deliveryDate: '2024-01-29',
+      userId: 'user102',
+      customerName: 'David Wilson',
+      branchId: 'BR002',
+      branchName: 'Thoraipakkam Branch'
+    }
+  ];
+
+  const superAdminProducts = [
+    {
+      id: 'PROD001',
+      name: 'Refurbished Dell Latitude E7440',
+      category: 'Business Laptop',
+      price: '₹24,999',
+      stock: 15,
+      status: 'active',
+      description: 'Professional business laptop with excellent performance, perfect for corporate use.',
+      specifications: 'Intel Core i5-6300U, 8GB RAM, 256GB SSD, 14" HD Display, Windows 10 Pro',
+      warranty: '1 year',
+      createdAt: '2024-01-01'
+    },
+    {
+      id: 'PROD002',
+      name: 'Lenovo ThinkPad T480',
+      category: 'Business Laptop',
+      price: '₹32,999',
+      stock: 8,
+      status: 'active',
+      description: 'Durable and reliable business laptop with military-grade durability.',
+      specifications: 'Intel Core i7-8650U, 16GB RAM, 512GB SSD, 14" FHD Display, Windows 11 Pro',
+      warranty: '2 years',
+      createdAt: '2024-01-05'
+    }
+  ];
+
+  const superAdminCustomers = [
+    {
+      id: 'CUST001',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phone: '+91 98765 43210',
+      type: 'individual',
+      companyName: '',
+      gstNumber: '',
+      billingAddress: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
+      shippingAddress: 'No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai, Thoraipakkam, Chennai - 600097',
+      notes: 'Regular customer, prefers email communication',
+      createdAt: '2024-01-01'
+    },
+    {
+      id: 'CUST002',
+      name: 'ABC Corporation',
+      email: 'contact@abccorp.com',
+      phone: '+91 98765 43211',
+      type: 'business',
+      companyName: 'ABC Corporation Pvt Ltd',
+      gstNumber: '27ABCCT1234A1Z5',
+      billingAddress: 'Tech Park, Whitefield, Bangalore, Karnataka - 560001',
+      shippingAddress: 'Tech Park, Whitefield, Bangalore, Karnataka - 560001',
+      notes: 'Corporate client with bulk orders',
+      createdAt: '2024-01-05'
+    }
+  ];
+
+  const superAdminQuotations = [
+    {
+      id: 'QUOTE001',
+      customerId: 'CUST001',
+      customerName: 'John Doe',
+      branchId: 'BR001',
+      branchName: 'T.Nagar Branch',
+      items: [
+        { productId: 'PROD001', productName: 'Refurbished Dell Latitude E7440', quantity: 1, price: '₹24,999', total: '₹24,999' },
+        { productId: 'PROD002', productName: 'Laptop Bag & Accessories Kit', quantity: 1, price: '₹2,499', total: '₹2,499' }
+      ],
+      subtotal: '₹27,498',
+      discount: 5,
+      discountAmount: '₹1,375',
+      taxRate: 18,
+      taxAmount: '₹4,949',
+      total: '₹32,447',
+      status: 'sent',
+      createdDate: '2024-01-20',
+      validUntil: '2024-02-20',
+      notes: 'Includes 1-year warranty and free shipping'
+    },
+    {
+      id: 'QUOTE002',
+      customerId: 'CUST002',
+      customerName: 'ABC Corporation',
+      branchId: 'BR002',
+      branchName: 'Thoraipakkam Branch',
+      items: [
+        { productId: 'PROD002', productName: 'Lenovo ThinkPad T480', quantity: 5, price: '₹32,999', total: '₹164,995' }
+      ],
+      subtotal: '₹164,995',
+      discount: 12,
+      discountAmount: '₹19,799',
+      taxRate: 18,
+      taxAmount: '₹26,135',
+      total: '₹171,331',
+      status: 'accepted',
+      createdDate: '2024-01-22',
+      validUntil: '2024-02-22',
+      notes: 'Corporate bulk order - approved by management'
+    }
+  ];
+
+  setServiceBookings(superAdminServiceBookings);
+  setOrders(superAdminOrders);
+  setProducts(superAdminProducts);
+  setCustomers(superAdminCustomers);
+  setQuotations(superAdminQuotations);
+  setBranches(superAdminBranches);
+  setUsers(superAdminUsers);
+  setUserData(prev => ({
+    ...prev,
+    branch: 'all',
+    branchName: 'All Branches'
+  }));
+  setUserBranch('all');
+  setSelectedBranch('all');
+  setQuickBranch('all');
+};
+
+  // CRUD operations
   const handleAddProduct = (e) => {
     e.preventDefault();
     const product = {
@@ -702,40 +1221,16 @@ const Account = () => {
       stock: product.stock,
       description: product.description,
       specifications: product.specifications,
-      warranty: product.warranty || '1 year',
+      warranty: product.warranty,
       status: product.status
     });
     setIsAddProductModalOpen(true);
   };
 
-  const handleUpdateProduct = (e) => {
-    e.preventDefault();
-    setProducts(prev => prev.map(p => 
-      p.id === editingItem.id 
-        ? { ...p, ...newProduct, price: `₹${newProduct.price}` }
-        : p
-    ));
-    setEditingItem(null);
-    setNewProduct({
-      name: '',
-      category: '',
-      price: '',
-      stock: '',
-      description: '',
-      specifications: '',
-      warranty: '1 year',
-      status: 'active'
-    });
-    setIsAddProductModalOpen(false);
-  };
-
   const handleDeleteProduct = (productId) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(prev => prev.filter(p => p.id !== productId));
-    }
+    setProducts(prev => prev.filter(product => product.id !== productId));
   };
 
-  // Customer CRUD Operations
   const handleAddCustomer = (e) => {
     e.preventDefault();
     const customer = {
@@ -774,33 +1269,10 @@ const Account = () => {
     setIsAddCustomerModalOpen(true);
   };
 
-  const handleUpdateCustomer = (e) => {
-    e.preventDefault();
-    setCustomers(prev => prev.map(c => 
-      c.id === editingItem.id ? { ...c, ...newCustomer } : c
-    ));
-    setEditingItem(null);
-    setNewCustomer({
-      name: '',
-      email: '',
-      phone: '',
-      type: 'individual',
-      companyName: '',
-      gstNumber: '',
-      billingAddress: '',
-      shippingAddress: '',
-      notes: ''
-    });
-    setIsAddCustomerModalOpen(false);
-  };
-
   const handleDeleteCustomer = (customerId) => {
-    if (window.confirm('Are you sure you want to delete this customer?')) {
-      setCustomers(prev => prev.filter(c => c.id !== customerId));
-    }
+    setCustomers(prev => prev.filter(customer => customer.id !== customerId));
   };
 
-  // Branch CRUD Operations
   const handleAddBranch = (e) => {
     e.preventDefault();
     const branch = {
@@ -830,121 +1302,12 @@ const Account = () => {
     setIsAddBranchModalOpen(true);
   };
 
-  const handleUpdateBranch = (e) => {
-    e.preventDefault();
-    setBranches(prev => prev.map(b => 
-      b.id === editingItem.id ? { ...b, ...newBranch } : b
-    ));
-    setEditingItem(null);
-    setNewBranch({
-      name: '',
-      address: '',
-      phone: '',
-      manager: '',
-      status: 'active'
-    });
-    setIsAddBranchModalOpen(false);
-  };
-
   const handleDeleteBranch = (branchId) => {
-    if (window.confirm('Are you sure you want to delete this branch?')) {
-      setBranches(prev => prev.filter(b => b.id !== branchId));
-    }
-  };
-
-  // Quotation CRUD Operations
-  const handleAddQuotation = (e) => {
-    e.preventDefault();
-    const quotation = {
-      id: `QUOTE00${quotations.length + 1}`,
-      ...newQuotation,
-      createdDate: new Date().toISOString().split('T')[0],
-      status: 'draft'
-    };
-    setQuotations(prev => [...prev, quotation]);
-    setNewQuotation({
-      customerId: '',
-      customerName: '',
-      branchId: userBranch === 'all' ? '' : userBranch,
-      items: [],
-      subtotal: 0,
-      discount: 0,
-      discountAmount: 0,
-      taxRate: 18,
-      taxAmount: 0,
-      total: 0,
-      validUntil: '',
-      notes: '',
-      terms: 'Payment due within 30 days. Warranty as per product terms.',
-      status: 'draft'
-    });
-    setIsAddQuotationModalOpen(false);
-  };
-
-  const handleAddQuotationItem = () => {
-    if (newQuotationItem.productId && newQuotationItem.quantity > 0) {
-      const product = products.find(p => p.id === newQuotationItem.productId);
-      const itemPrice = parseFloat(newQuotationItem.price);
-      const itemTotal = itemPrice * newQuotationItem.quantity;
-      
-      const newItem = {
-        productId: newQuotationItem.productId,
-        productName: product.name,
-        quantity: newQuotationItem.quantity,
-        price: itemPrice,
-        total: itemTotal,
-        description: product.description,
-        warranty: product.warranty || '1 year'
-      };
-
-      const updatedItems = [...newQuotation.items, newItem];
-      const { subtotal, discountAmount, taxAmount, total } = calculateQuotationTotals(
-        updatedItems,
-        newQuotation.discount,
-        newQuotation.taxRate
-      );
-
-      setNewQuotation(prev => ({
-        ...prev,
-        items: updatedItems,
-        subtotal,
-        discountAmount,
-        taxAmount,
-        total
-      }));
-      
-      setNewQuotationItem({
-        productId: '',
-        productName: '',
-        quantity: 1,
-        price: 0,
-        total: 0
-      });
-    }
-  };
-
-  const handleRemoveQuotationItem = (index) => {
-    const updatedItems = newQuotation.items.filter((_, i) => i !== index);
-    const { subtotal, discountAmount, taxAmount, total } = calculateQuotationTotals(
-      updatedItems,
-      newQuotation.discount,
-      newQuotation.taxRate
-    );
-
-    setNewQuotation(prev => ({
-      ...prev,
-      items: updatedItems,
-      subtotal,
-      discountAmount,
-      taxAmount,
-      total
-    }));
+    setBranches(prev => prev.filter(branch => branch.id !== branchId));
   };
 
   const handleDeleteQuotation = (quotationId) => {
-    if (window.confirm('Are you sure you want to delete this quotation?')) {
-      setQuotations(prev => prev.filter(q => q.id !== quotationId));
-    }
+    setQuotations(prev => prev.filter(quotation => quotation.id !== quotationId));
   };
 
   // Other handlers
@@ -1028,152 +1391,908 @@ const Account = () => {
   const filteredServices = filterDataByBranch(serviceBookings);
   const filteredOrders = filterDataByBranch(orders);
 
-  // Dashboard Component
-  const Dashboard = () => {
-    if (userRole === 'user') {
-      return null;
-    }
+  // Role-based access check
+  const hasAccess = (permission) => {
+    const role = roleConfig[userRole];
+    return role.permissions.includes('all') || role.permissions.includes(permission);
+  };
+
+  // Modal Components
+  const AddProductModal = () => {
+    if (!isAddProductModalOpen) return null;
+    
+    return (
+      <div className="modal active">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h3>{editingItem ? 'Edit Product' : 'Add New Product'}</h3>
+            <button className="close-btn" onClick={() => setIsAddProductModalOpen(false)}>
+              <FaTimes />
+            </button>
+          </div>
+          <form onSubmit={handleAddProduct}>
+            <div className="form-grid">
+              <div className="form-field">
+                <label>Product Name *</label>
+                <input
+                  type="text"
+                  value={newProduct.name}
+                  onChange={(e) => setNewProduct(prev => ({...prev, name: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Category *</label>
+                <input
+                  type="text"
+                  value={newProduct.category}
+                  onChange={(e) => setNewProduct(prev => ({...prev, category: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Price (₹) *</label>
+                <input
+                  type="number"
+                  value={newProduct.price}
+                  onChange={(e) => setNewProduct(prev => ({...prev, price: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Stock Quantity *</label>
+                <input
+                  type="number"
+                  value={newProduct.stock}
+                  onChange={(e) => setNewProduct(prev => ({...prev, stock: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field full-width">
+                <label>Description</label>
+                <textarea
+                  value={newProduct.description}
+                  onChange={(e) => setNewProduct(prev => ({...prev, description: e.target.value}))}
+                  rows="3"
+                />
+              </div>
+              <div className="form-field full-width">
+                <label>Specifications</label>
+                <textarea
+                  value={newProduct.specifications}
+                  onChange={(e) => setNewProduct(prev => ({...prev, specifications: e.target.value}))}
+                  rows="3"
+                />
+              </div>
+              <div className="form-field">
+                <label>Warranty</label>
+                <select
+                  value={newProduct.warranty}
+                  onChange={(e) => setNewProduct(prev => ({...prev, warranty: e.target.value}))}
+                >
+                  <option value="1 year">1 Year</option>
+                  <option value="2 years">2 Years</option>
+                  <option value="3 years">3 Years</option>
+                  <option value="No warranty">No Warranty</option>
+                </select>
+              </div>
+              <div className="form-field">
+                <label>Status</label>
+                <select
+                  value={newProduct.status}
+                  onChange={(e) => setNewProduct(prev => ({...prev, status: e.target.value}))}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="secondary-button" onClick={() => setIsAddProductModalOpen(false)}>
+                Cancel
+              </button>
+              <button type="submit" className="primary-button">
+                {editingItem ? 'Update Product' : 'Add Product'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  const AddCustomerModal = () => {
+    if (!isAddCustomerModalOpen) return null;
+    
+    return (
+      <div className="modal active">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h3>{editingItem ? 'Edit Customer' : 'Add New Customer'}</h3>
+            <button className="close-btn" onClick={() => setIsAddCustomerModalOpen(false)}>
+              <FaTimes />
+            </button>
+          </div>
+          <form onSubmit={handleAddCustomer}>
+            <div className="form-grid">
+              <div className="form-field">
+                <label>Full Name *</label>
+                <input
+                  type="text"
+                  value={newCustomer.name}
+                  onChange={(e) => setNewCustomer(prev => ({...prev, name: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Email *</label>
+                <input
+                  type="email"
+                  value={newCustomer.email}
+                  onChange={(e) => setNewCustomer(prev => ({...prev, email: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Phone *</label>
+                <input
+                  type="tel"
+                  value={newCustomer.phone}
+                  onChange={(e) => setNewCustomer(prev => ({...prev, phone: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Customer Type</label>
+                <select
+                  value={newCustomer.type}
+                  onChange={(e) => setNewCustomer(prev => ({...prev, type: e.target.value}))}
+                >
+                  <option value="individual">Individual</option>
+                  <option value="business">Business</option>
+                </select>
+              </div>
+              {newCustomer.type === 'business' && (
+                <>
+                  <div className="form-field">
+                    <label>Company Name</label>
+                    <input
+                      type="text"
+                      value={newCustomer.companyName}
+                      onChange={(e) => setNewCustomer(prev => ({...prev, companyName: e.target.value}))}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>GST Number</label>
+                    <input
+                      type="text"
+                      value={newCustomer.gstNumber}
+                      onChange={(e) => setNewCustomer(prev => ({...prev, gstNumber: e.target.value}))}
+                    />
+                  </div>
+                </>
+              )}
+              <div className="form-field full-width">
+                <label>Billing Address</label>
+                <textarea
+                  value={newCustomer.billingAddress}
+                  onChange={(e) => setNewCustomer(prev => ({...prev, billingAddress: e.target.value}))}
+                  rows="3"
+                />
+              </div>
+              <div className="form-field full-width">
+                <label>Shipping Address</label>
+                <textarea
+                  value={newCustomer.shippingAddress}
+                  onChange={(e) => setNewCustomer(prev => ({...prev, shippingAddress: e.target.value}))}
+                  rows="3"
+                />
+              </div>
+              <div className="form-field full-width">
+                <label>Notes</label>
+                <textarea
+                  value={newCustomer.notes}
+                  onChange={(e) => setNewCustomer(prev => ({...prev, notes: e.target.value}))}
+                  rows="2"
+                />
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="secondary-button" onClick={() => setIsAddCustomerModalOpen(false)}>
+                Cancel
+              </button>
+              <button type="submit" className="primary-button">
+                {editingItem ? 'Update Customer' : 'Add Customer'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  const AddBranchModal = () => {
+    if (!isAddBranchModalOpen) return null;
+    
+    return (
+      <div className="modal active">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h3>{editingItem ? 'Edit Branch' : 'Add New Branch'}</h3>
+            <button className="close-btn" onClick={() => setIsAddBranchModalOpen(false)}>
+              <FaTimes />
+            </button>
+          </div>
+          <form onSubmit={handleAddBranch}>
+            <div className="form-grid">
+              <div className="form-field">
+                <label>Branch Name *</label>
+                <input
+                  type="text"
+                  value={newBranch.name}
+                  onChange={(e) => setNewBranch(prev => ({...prev, name: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Phone *</label>
+                <input
+                  type="tel"
+                  value={newBranch.phone}
+                  onChange={(e) => setNewBranch(prev => ({...prev, phone: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Manager *</label>
+                <input
+                  type="text"
+                  value={newBranch.manager}
+                  onChange={(e) => setNewBranch(prev => ({...prev, manager: e.target.value}))}
+                  required
+                />
+              </div>
+              <div className="form-field full-width">
+                <label>Address *</label>
+                <textarea
+                  value={newBranch.address}
+                  onChange={(e) => setNewBranch(prev => ({...prev, address: e.target.value}))}
+                  rows="3"
+                  required
+                />
+              </div>
+              <div className="form-field">
+                <label>Status</label>
+                <select
+                  value={newBranch.status}
+                  onChange={(e) => setNewBranch(prev => ({...prev, status: e.target.value}))}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="secondary-button" onClick={() => setIsAddBranchModalOpen(false)}>
+                Cancel
+              </button>
+              <button type="submit" className="primary-button">
+                {editingItem ? 'Update Branch' : 'Add Branch'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  const AddQuotationModal = () => {
+    if (!isAddQuotationModalOpen) return null;
+    
+    return (
+      <div className="modal active large">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h3>{editingItem ? 'Edit Quotation' : 'Create New Quotation'}</h3>
+            <button className="close-btn" onClick={() => setIsAddQuotationModalOpen(false)}>
+              <FaTimes />
+            </button>
+          </div>
+          
+          <div className="quotation-form">
+            <div className="form-section">
+              <h4>Customer Details</h4>
+              <div className="form-grid">
+                <div className="form-field">
+                  <label>Customer Name *</label>
+                  <input
+                    type="text"
+                    value={newQuotation.customerName}
+                    onChange={(e) => handleQuotationFieldChange('customerName', e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-field">
+                  <label>Valid Until *</label>
+                  <input
+                    type="date"
+                    value={newQuotation.validUntil}
+                    onChange={(e) => handleQuotationFieldChange('validUntil', e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h4>Items</h4>
+              <div className="item-form">
+                <div className="form-grid compact">
+                  <div className="form-field">
+                    <label>Product Name</label>
+                    <input
+                      type="text"
+                      value={newQuotationItem.productName}
+                      onChange={(e) => setNewQuotationItem(prev => ({...prev, productName: e.target.value}))}
+                      placeholder="Enter product name"
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Quantity</label>
+                    <input
+                      type="number"
+                      value={newQuotationItem.quantity}
+                      onChange={(e) => setNewQuotationItem(prev => ({...prev, quantity: parseInt(e.target.value) || 1}))}
+                      min="1"
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Price (₹)</label>
+                    <input
+                      type="number"
+                      value={newQuotationItem.price}
+                      onChange={(e) => setNewQuotationItem(prev => ({...prev, price: parseFloat(e.target.value) || 0}))}
+                      step="0.01"
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Total</label>
+                    <input
+                      type="text"
+                      value={`₹${(newQuotationItem.quantity * newQuotationItem.price).toLocaleString()}`}
+                      disabled
+                    />
+                  </div>
+                  <div className="form-field">
+                    <button type="button" className="outline-button" onClick={handleAddQuotationItem}>
+                      <FaPlus /> Add Item
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {newQuotation.items.length > 0 && (
+                <div className="items-list">
+                  <table className="items-table">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {newQuotation.items.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.productName}</td>
+                          <td>{item.quantity}</td>
+                          <td>₹{item.price.toLocaleString()}</td>
+                          <td>₹{item.total.toLocaleString()}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="icon-btn delete"
+                              onClick={() => handleRemoveQuotationItem(index)}
+                            >
+                              <FaTrash />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            <div className="form-section">
+              <h4>Pricing</h4>
+              <div className="pricing-summary">
+                <div className="price-row">
+                  <span>Subtotal:</span>
+                  <span>₹{newQuotation.subtotal.toLocaleString()}</span>
+                </div>
+                <div className="price-row">
+                  <span>
+                    Discount ({newQuotation.discount}%):
+                    <input
+                      type="number"
+                      value={newQuotation.discount}
+                      onChange={(e) => handleQuotationFieldChange('discount', e.target.value)}
+                      className="discount-input"
+                      min="0"
+                      max="100"
+                    />
+                  </span>
+                  <span>- ₹{newQuotation.discountAmount.toLocaleString()}</span>
+                </div>
+                <div className="price-row">
+                  <span>
+                    Tax ({newQuotation.taxRate}%):
+                    <input
+                      type="number"
+                      value={newQuotation.taxRate}
+                      onChange={(e) => handleQuotationFieldChange('taxRate', e.target.value)}
+                      className="tax-input"
+                      min="0"
+                      max="30"
+                    />
+                  </span>
+                  <span>₹{newQuotation.taxAmount.toLocaleString()}</span>
+                </div>
+                <div className="price-row total">
+                  <span>Total:</span>
+                  <span>₹{newQuotation.total.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h4>Additional Information</h4>
+              <div className="form-field full-width">
+                <label>Notes</label>
+                <textarea
+                  value={newQuotation.notes}
+                  onChange={(e) => handleQuotationFieldChange('notes', e.target.value)}
+                  rows="3"
+                />
+              </div>
+              <div className="form-field full-width">
+                <label>Terms & Conditions</label>
+                <textarea
+                  value={newQuotation.terms}
+                  onChange={(e) => handleQuotationFieldChange('terms', e.target.value)}
+                  rows="3"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-actions">
+            <button type="button" className="secondary-button" onClick={() => setIsAddQuotationModalOpen(false)}>
+              Cancel
+            </button>
+            <button type="button" className="primary-button">
+              {editingItem ? 'Update Quotation' : 'Create Quotation'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Role Selector Component
+  const RoleSelector = () => (
+    <div className="role-selector">
+      <div className="role-section">
+        <h3>Switch Role View</h3>
+        <div className="role-buttons-grid">
+          {Object.entries(roleConfig).map(([roleKey, role]) => {
+            const IconComponent = role.icon;
+            return (
+              <button
+                key={roleKey}
+                className={`role-btn ${userRole === roleKey ? 'active' : ''}`}
+                onClick={() => handleRoleChange(roleKey)}
+                style={{ '--role-color': role.color }}
+              >
+                <div className="role-icon">
+                  <IconComponent />
+                </div>
+                <div className="role-info">
+                  <span className="role-name">{role.name}</span>
+                  {/* <span className="role-desc">View</span> */}
+                </div>
+                {userRole === roleKey && (
+                  <div className="active-indicator">
+                    <FaCheck />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      
+      {/* {(userRole === 'super admin' || userRole === 'admin' || userRole === 'manager' || userRole === 'branch') && (
+        <div className="branch-quick-selector">
+          <h3>Quick Branch View</h3>
+          <div className="branch-buttons">
+            <button 
+              className={`branch-btn ${quickBranch === 'all' ? 'active' : ''}`}
+              onClick={() => handleQuickBranchSelect('all')}
+            >
+              <FaNetworkWired />
+              <span>All Branches</span>
+              <div className="branch-stats">
+                <span className="stat">{quickBranchStats.all.services} Services</span>
+                <span className="stat">{quickBranchStats.all.orders} Orders</span>
+                <span className="stat">₹{quickBranchStats.all.revenue.toLocaleString()}</span>
+              </div>
+            </button>
+            
+            {branches.map(branch => (
+              <button 
+                key={branch.id}
+                className={`branch-btn ${quickBranch === branch.id ? 'active' : ''}`}
+                onClick={() => handleQuickBranchSelect(branch.id)}
+              >
+                <FaBuilding />
+                <span>{branch.name}</span>
+                <div className="branch-stats">
+                  <span className="stat">{quickBranchStats[branch.id]?.services || 0} Services</span>
+                  <span className="stat">{quickBranchStats[branch.id]?.orders || 0} Orders</span>
+                  <span className="stat">₹{quickBranchStats[branch.id]?.revenue?.toLocaleString() || 0}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )} */}
+    </div>
+  );
+
+// Dashboard Component for Branch Manager and Engineer
+const Dashboard = () => {
+  if (!hasAccess('view_reports') && userRole !== 'user') {
+    return null;
+  }
+
+  if (loading) {
+    return (
+      <div className="tab-content">
+        <div className="loading-section">
+          <div className="loading-spinner"></div>
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="tab-content">
+      <div className="section-header">
+        <h2>Dashboard Overview - {roleConfig[userRole].name}</h2>
+        <div className="header-actions">
+          {(userRole === 'branch' || userRole === 'engineer') && (
+            <div className="branch-selector">
+              <label>Branch: </label>
+              <select 
+                value={selectedBranch} 
+                onChange={(e) => setSelectedBranch(e.target.value)}
+                className="branch-filter"
+              >
+                {branches.map(branch => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="dashboard-stats">
+        {/* Services Card - For both Branch Manager and Engineer */}
+        <div className="stat-card">
+          <div className="stat-icon services">
+            <FaTools />
+          </div>
+          <div className="stat-content">
+            <h3>Total Services</h3>
+            <div className="stat-number">{dashboardStats.totalServices || 0}</div>
+            <div className="stat-details">
+              <span className="stat-detail pending">
+                {dashboardStats.pendingServices || 0} Pending
+              </span>
+              <span className="stat-detail completed">
+                {dashboardStats.completedServices || 0} Completed
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Orders Card - For both Branch Manager and Engineer */}
+        <div className="stat-card">
+          <div className="stat-icon orders">
+            <FaShoppingCart />
+          </div>
+          <div className="stat-content">
+            <h3>Total Orders</h3>
+            <div className="stat-number">{dashboardStats.totalOrders || 0}</div>
+            <div className="stat-details">
+              <span className="stat-detail pending">
+                {dashboardStats.pendingOrders || 0} Pending
+              </span>
+              <span className="stat-detail completed">
+                {dashboardStats.completedOrders || 0} Delivered
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Products Card - Only for Branch Manager */}
+        {userRole === 'branch' && (
+          <div className="stat-card">
+            <div className="stat-icon products">
+              <FaBox />
+            </div>
+            <div className="stat-content">
+              <h3>Total Products</h3>
+              <div className="stat-number">{dashboardStats.totalProducts || 0}</div>
+              <div className="stat-details">
+                <span className="stat-detail">Active Products</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Customers Card - Only for Branch Manager */}
+        {userRole === 'branch' && (
+          <div className="stat-card">
+            <div className="stat-icon customers">
+              <FaUsers />
+            </div>
+            <div className="stat-content">
+              <h3>Total Customers</h3>
+              <div className="stat-number">{dashboardStats.totalCustomers || 0}</div>
+              <div className="stat-details">
+                <span className="stat-detail">Registered Customers</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Revenue Card - Only for Branch Manager */}
+        {userRole === 'branch' && (
+          <div className="stat-card revenue">
+            <div className="stat-icon revenue">
+              <FaRupeeSign />
+            </div>
+            <div className="stat-content">
+              <h3>Total Revenue</h3>
+              <div className="stat-number">₹{(dashboardStats.totalRevenue || 0).toLocaleString()}</div>
+              <div className="stat-details">
+                <span className="stat-detail positive">This Month</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Engineer Specific Stats */}
+        {userRole === 'engineer' && (
+          <>
+            <div className="stat-card">
+              <div className="stat-icon completed">
+                <FaCheckCircle />
+              </div>
+              <div className="stat-content">
+                <h3>Completion Rate</h3>
+                <div className="stat-number">
+                  {dashboardStats.totalServices > 0 
+                    ? Math.round((dashboardStats.completedServices / dashboardStats.totalServices) * 100) 
+                    : 0}%
+                </div>
+                <div className="stat-details">
+                  <span className="stat-detail">Services Completed</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-icon in-progress">
+                <FaClock />
+              </div>
+              <div className="stat-content">
+                <h3>In Progress</h3>
+                <div className="stat-number">
+                  {dashboardStats.totalServices - dashboardStats.completedServices - dashboardStats.pendingServices || 0}
+                </div>
+                <div className="stat-details">
+                  <span className="stat-detail">Active Services</span>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Quotations Card - Only for Branch Manager */}
+        {userRole === 'branch' && (
+          <div className="stat-card">
+            <div className="stat-icon quotations">
+              <FaFileInvoice />
+            </div>
+            <div className="stat-content">
+              <h3>Total Quotations</h3>
+              <div className="stat-number">{dashboardStats.totalQuotations || 0}</div>
+              <div className="stat-details">
+                <span className="stat-detail">Active Quotes</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Recent Activities Section */}
+      <div className="recent-activities">
+        <h3>Recent Activities</h3>
+        <div className="activities-grid">
+          {/* Recent Services */}
+          <div className="activity-section">
+            <h4>Recent Services</h4>
+            <div className="activity-list">
+              {filteredServices.slice(0, 5).map(service => (
+                <div key={service.id} className="activity-item">
+                  <div className="activity-icon">
+                    <FaTools />
+                  </div>
+                  <div className="activity-details">
+                    <div className="activity-title">{service.laptopModel}</div>
+                    <div className="activity-subtitle">{service.serviceType}</div>
+                    <div className="activity-meta">
+                      <span className={`status ${service.status}`}>{service.status}</span>
+                      <span className="date">{service.bookingDate}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent Orders - Only for Branch Manager */}
+          {userRole === 'branch' && (
+            <div className="activity-section">
+              <h4>Recent Orders</h4>
+              <div className="activity-list">
+                {filteredOrders.slice(0, 5).map(order => (
+                  <div key={order.id} className="activity-item">
+                    <div className="activity-icon">
+                      <FaShoppingCart />
+                    </div>
+                    <div className="activity-details">
+                      <div className="activity-title">{order.product}</div>
+                      <div className="activity-subtitle">{order.customerName}</div>
+                      <div className="activity-meta">
+                        <span className={`status ${order.status}`}>{order.status}</span>
+                        <span className="date">{order.orderDate}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Engineer's Assigned Services */}
+          {userRole === 'engineer' && (
+            <div className="activity-section">
+              <h4>My Assigned Services</h4>
+              <div className="activity-list">
+                {filteredServices
+                  .filter(service => service.technician === userData.name)
+                  .slice(0, 5)
+                  .map(service => (
+                    <div key={service.id} className="activity-item">
+                      <div className="activity-icon">
+                        <FaTools />
+                      </div>
+                      <div className="activity-details">
+                        <div className="activity-title">{service.laptopModel}</div>
+                        <div className="activity-subtitle">{service.customerName}</div>
+                        <div className="activity-meta">
+                          <span className={`status ${service.status}`}>{service.status}</span>
+                          <span className="priority">High</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+  // Users Component (Super Admin only)
+  const Users = () => {
+    if (userRole !== 'super admin') return null;
 
     return (
       <div className="tab-content">
         <div className="section-header">
-          <h2>Dashboard Overview</h2>
+          <h2>User Management</h2>
           <div className="header-actions">
-            {(userRole === 'admin' || userRole === 'engineer') && (
-              <div className="branch-selector">
-                <label>Branch: </label>
-                <select 
-                  value={selectedBranch} 
-                  onChange={(e) => setSelectedBranch(e.target.value)}
-                  className="branch-filter"
-                >
-                  <option value="all">All Branches</option>
-                  {branches.map(branch => (
-                    <option key={branch.id} value={branch.id}>
-                      {branch.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-            <div className="view-controls">
-              <span className="last-updated">Last updated: Today</span>
+            <div className="search-box">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
             </div>
+            <button className="primary-button">
+              <FaPlus />
+              Add User
+            </button>
           </div>
         </div>
 
-        <div className="dashboard-stats">
-          <div className="stat-card">
-            <div className="stat-icon services">
-              <FaTools />
-            </div>
-            <div className="stat-content">
-              <h3>Total Services</h3>
-              <div className="stat-number">{dashboardStats.totalServices}</div>
-              <div className="stat-details">
-                <span className={`stat-detail pending`}>
-                  {dashboardStats.pendingServices} Pending
-                </span>
-                <span className={`stat-detail completed`}>
-                  {dashboardStats.completedServices} Completed
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon orders">
-              <FaShoppingCart />
-            </div>
-            <div className="stat-content">
-              <h3>Total Orders</h3>
-              <div className="stat-number">{dashboardStats.totalOrders}</div>
-              <div className="stat-details">
-                <span className={`stat-detail pending`}>
-                  {dashboardStats.pendingOrders} Pending
-                </span>
-                <span className={`stat-detail completed`}>
-                  {dashboardStats.completedOrders} Completed
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {(userRole === 'admin') && (
-            <>
-              <div className="stat-card">
-                <div className="stat-icon products">
-                  <FaBox />
-                </div>
-                <div className="stat-content">
-                  <h3>Total Products</h3>
-                  <div className="stat-number">{dashboardStats.totalProducts}</div>
-                  <div className="stat-details">
-                    <span className="stat-detail">Active Products</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon customers">
-                  <FaUsers />
-                </div>
-                <div className="stat-content">
-                  <h3>Total Customers</h3>
-                  <div className="stat-number">{dashboardStats.totalCustomers}</div>
-                  <div className="stat-details">
-                    <span className="stat-detail">Registered Customers</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon quotations">
-                  <FaFileInvoice />
-                </div>
-                <div className="stat-content">
-                  <h3>Total Quotations</h3>
-                  <div className="stat-number">{dashboardStats.totalQuotations}</div>
-                  <div className="stat-details">
-                    <span className="stat-detail">Active Quotes</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon branches">
-                  <FaBuilding />
-                </div>
-                <div className="stat-content">
-                  <h3>Total Branches</h3>
-                  <div className="stat-number">{dashboardStats.totalBranches}</div>
-                  <div className="stat-details">
-                    <span className="stat-detail">Active Branches</span>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Recent Activities */}
-        <div className="recent-activities">
-          <h3>Recent Activities</h3>
-          <div className="activities-list">
-            {filteredServices.slice(0, 5).map(service => (
-              <div key={service.id} className="activity-item">
-                <div className="activity-icon">
-                  <FaTools />
-                </div>
-                <div className="activity-content">
-                  <p><strong>{service.customerName || 'Customer'}</strong> - {service.serviceType}</p>
-                  <span className="activity-date">{service.bookingDate} • {service.branchName}</span>
-                </div>
-                <div className={`activity-status ${service.status}`}>
-                  {getStatusText(service.status)}
-                </div>
-              </div>
-            ))}
+        <div className="houseState-content" style={{ overflowX: "auto" }}>
+          <div className="table-container">
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th className="w-5">S.NO</th>
+                  <th>User ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Branch</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => (
+                  <tr key={user.id}>
+                    <td className="text-center w-5">{index + 1}</td>
+                    <td className="text-left">{user.id}</td>
+                    <td className="text-left">{user.name}</td>
+                    <td className="text-left">{user.email}</td>
+                    <td className="text-center">
+                      <span className={`role-badge ${user.role}`}>
+                        {roleConfig[user.role]?.name || user.role}
+                      </span>
+                    </td>
+                    <td className="text-left">{user.branch}</td>
+                    <td className="text-center">
+                      <span className={`status-badge ${user.status}`}>
+                        {user.status}
+                      </span>
+                    </td>
+                    <td className="text-center">
+                      <div className="action-buttons">
+                        <button className="icon-btn edit" title="Edit">
+                          <FaEdit />
+                        </button>
+                        <button className="icon-btn view" title="View">
+                          <FaEye />
+                        </button>
+                        <button className="icon-btn delete" title="Delete">
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -1969,67 +3088,7 @@ const Account = () => {
       </div>
     );
   };
- const RoleSelector = () => (
-    <div className="role-selector">
-      <div className="role-buttons">
-        <button 
-          className={`role-btn ${userRole === 'user' ? 'active' : ''}`}
-          onClick={() => handleRoleChange('user')}
-        >
-          <FaUser />
-          User View
-        </button>
-        <button 
-          className={`role-btn ${userRole === 'engineer' ? 'active' : ''}`}
-          onClick={() => handleRoleChange('engineer')}
-        >
-          <FaTools />
-          Engineer View
-        </button>
-        <button 
-          className={`role-btn ${userRole === 'admin' ? 'active' : ''}`}
-          onClick={() => handleRoleChange('admin')}
-        >
-          <FaUser />
-          Admin View
-        </button>
-      </div>
-      
-      {(userRole === 'admin' || userRole === 'engineer') && (
-        <div className="branch-quick-selector">
-          <h4>Quick Branch View:</h4>
-          <div className="branch-buttons">
-            <button 
-              className={`branch-btn ${quickBranch === 'all' ? 'active' : ''}`}
-              onClick={() => handleQuickBranchSelect('all')}
-            >
-              <FaStore />
-              <span>All Branches</span>
-              <div className="branch-stats">
-                <span className="stat">{quickBranchStats.all.services} Services</span>
-                <span className="stat">{quickBranchStats.all.orders} Orders</span>
-              </div>
-            </button>
-            
-            {branches.map(branch => (
-              <button 
-                key={branch.id}
-                className={`branch-btn ${quickBranch === branch.id ? 'active' : ''}`}
-                onClick={() => handleQuickBranchSelect(branch.id)}
-              >
-                <FaBuilding />
-                <span>{branch.name}</span>
-                <div className="branch-stats">
-                  <span className="stat">{quickBranchStats[branch.id]?.services || 0} Services</span>
-                  <span className="stat">{quickBranchStats[branch.id]?.orders || 0} Orders</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+
   // Loading state
   if (loading) {
     return (
@@ -2052,22 +3111,24 @@ const Account = () => {
     );
   }
 
+  const currentRole = roleConfig[userRole];
+
   return (
     <div className="account-dashboard">
       <div className="dashboard-container">
         {/* Header */}
-       <div className="dashboard-header">
+        <div className="dashboard-header">
           <div className="user-greeting">
             <h1>Welcome back, {userData.name}!</h1>
-            <p>Manage your {userRole} account and activities</p>
-            {(userRole === 'engineer' || userRole === 'admin') && (
+            <p>Manage your {currentRole.name} account and activities</p>
+            {(userRole === 'super admin' || userRole === 'admin' || userRole === 'manager' || userRole === 'branch') && (
               <p className="branch-info">
                 Currently Viewing: {quickBranch === 'all' ? 'All Branches' : 
                   branches.find(b => b.id === quickBranch)?.name || 'Selected Branch'}
               </p>
             )}
           </div>
-          <div className="user-avatar">
+          <div className="user-avatar" >
             <FaUser className="avatar-icon" />
           </div>
         </div>
@@ -2081,7 +3142,7 @@ const Account = () => {
             <div className="sidebar-section">
               <h3>Navigation</h3>
               <ul className="sidebar-nav">
-                {(userRole === 'engineer' || userRole === 'admin') && (
+                {currentRole.tabs.includes('dashboard') && (
                   <li 
                     className={activeTab === 'dashboard' ? 'active' : ''}
                     onClick={() => setActiveTab('dashboard')}
@@ -2091,65 +3152,85 @@ const Account = () => {
                   </li>
                 )}
 
-                <li 
-                  className={activeTab === 'services' ? 'active' : ''}
-                  onClick={() => setActiveTab('services')}
-                >
-                  <FaTools className="nav-icon" />
-                  Service Bookings
-                </li>
-
-                <li 
-                  className={activeTab === 'orders' ? 'active' : ''}
-                  onClick={() => setActiveTab('orders')}
-                >
-                  <FaShoppingCart className="nav-icon" />
-                  Order History
-                </li>
-
-                {userRole === 'admin' && (
-                  <>
-                    <li 
-                      className={activeTab === 'products' ? 'active' : ''}
-                      onClick={() => setActiveTab('products')}
-                    >
-                      <FaBox className="nav-icon" />
-                      Products
-                    </li>
-
-                    <li 
-                      className={activeTab === 'customers' ? 'active' : ''}
-                      onClick={() => setActiveTab('customers')}
-                    >
-                      <FaUsers className="nav-icon" />
-                      Customers
-                    </li>
-
-                    <li 
-                      className={activeTab === 'quotations' ? 'active' : ''}
-                      onClick={() => setActiveTab('quotations')}
-                    >
-                      <FaFileInvoice className="nav-icon" />
-                      Quotations
-                    </li>
-
-                    <li 
-                      className={activeTab === 'branches' ? 'active' : ''}
-                      onClick={() => setActiveTab('branches')}
-                    >
-                      <FaBuilding className="nav-icon" />
-                      Branch 
-                    </li>
-                  </>
+                {currentRole.tabs.includes('services') && (
+                  <li 
+                    className={activeTab === 'services' ? 'active' : ''}
+                    onClick={() => setActiveTab('services')}
+                  >
+                    <FaTools className="nav-icon" />
+                    Service Bookings
+                  </li>
                 )}
 
-                <li 
-                  className={activeTab === 'profile' ? 'active' : ''}
-                  onClick={() => setActiveTab('profile')}
-                >
-                  <FaUser className="nav-icon" />
-                  Profile Details
-                </li>
+                {currentRole.tabs.includes('orders') && (
+                  <li 
+                    className={activeTab === 'orders' ? 'active' : ''}
+                    onClick={() => setActiveTab('orders')}
+                  >
+                    <FaShoppingCart className="nav-icon" />
+                    Order History
+                  </li>
+                )}
+
+                {currentRole.tabs.includes('products') && (
+                  <li 
+                    className={activeTab === 'products' ? 'active' : ''}
+                    onClick={() => setActiveTab('products')}
+                  >
+                    <FaBox className="nav-icon" />
+                    Products
+                  </li>
+                )}
+
+                {currentRole.tabs.includes('customers') && (
+                  <li 
+                    className={activeTab === 'customers' ? 'active' : ''}
+                    onClick={() => setActiveTab('customers')}
+                  >
+                    <FaUsers className="nav-icon" />
+                    Customers
+                  </li>
+                )}
+
+                {currentRole.tabs.includes('quotations') && (
+                  <li 
+                    className={activeTab === 'quotations' ? 'active' : ''}
+                    onClick={() => setActiveTab('quotations')}
+                  >
+                    <FaFileInvoice className="nav-icon" />
+                    Quotations
+                  </li>
+                )}
+
+                {currentRole.tabs.includes('branches') && (
+                  <li 
+                    className={activeTab === 'branches' ? 'active' : ''}
+                    onClick={() => setActiveTab('branches')}
+                  >
+                    <FaBuilding className="nav-icon" />
+                    Branch Management
+                  </li>
+                )}
+
+                {currentRole.tabs.includes('users') && (
+                  <li 
+                    className={activeTab === 'users' ? 'active' : ''}
+                    onClick={() => setActiveTab('users')}
+                  >
+                    <FaUserShield className="nav-icon" />
+                    User Management
+                  </li>
+                )}
+
+                {currentRole.tabs.includes('profile') && (
+                  <li 
+                    className={activeTab === 'profile' ? 'active' : ''}
+                    onClick={() => setActiveTab('profile')}
+                  >
+                    <FaUser className="nav-icon" />
+                    Profile Details
+                  </li>
+                )}
               </ul>
             </div>
           </div>
@@ -2170,6 +3251,7 @@ const Account = () => {
               {activeTab === 'customers' && 'Customers'}
               {activeTab === 'quotations' && 'Quotations'}
               {activeTab === 'branches' && 'Branches'}
+              {activeTab === 'users' && 'Users'}
               {activeTab === 'profile' && 'Profile'}
             </h2>
           </div>
@@ -2188,75 +3270,16 @@ const Account = () => {
                   </button>
                 </div>
                 <ul className="mobile-sidebar-nav">
-                  {(userRole === 'engineer' || userRole === 'admin') && (
+                  {currentRole.tabs.map(tab => (
                     <li 
-                      className={activeTab === 'dashboard' ? 'active' : ''}
-                      onClick={() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }}
+                      key={tab}
+                      className={activeTab === tab ? 'active' : ''}
+                      onClick={() => { setActiveTab(tab); setMobileMenuOpen(false); }}
                     >
-                      <FaTachometerAlt className="nav-icon" />
-                      Dashboard
+                      {getTabIcon(tab)}
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </li>
-                  )}
-
-                  <li 
-                    className={activeTab === 'services' ? 'active' : ''}
-                    onClick={() => { setActiveTab('services'); setMobileMenuOpen(false); }}
-                  >
-                    <FaTools className="nav-icon" />
-                    Service Bookings
-                  </li>
-
-                  <li 
-                    className={activeTab === 'orders' ? 'active' : ''}
-                    onClick={() => { setActiveTab('orders'); setMobileMenuOpen(false); }}
-                  >
-                    <FaShoppingCart className="nav-icon" />
-                    Order History
-                  </li>
-
-                  {userRole === 'admin' && (
-                    <>
-                      <li 
-                        className={activeTab === 'products' ? 'active' : ''}
-                        onClick={() => { setActiveTab('products'); setMobileMenuOpen(false); }}
-                      >
-                        <FaBox className="nav-icon" />
-                        Products
-                      </li>
-
-                      <li 
-                        className={activeTab === 'customers' ? 'active' : ''}
-                        onClick={() => { setActiveTab('customers'); setMobileMenuOpen(false); }}
-                      >
-                        <FaUsers className="nav-icon" />
-                        Customers
-                      </li>
-
-                      <li 
-                        className={activeTab === 'quotations' ? 'active' : ''}
-                        onClick={() => { setActiveTab('quotations'); setMobileMenuOpen(false); }}
-                      >
-                        <FaFileInvoice className="nav-icon" />
-                        Quotations
-                      </li>
-
-                      <li 
-                        className={activeTab === 'branches' ? 'active' : ''}
-                        onClick={() => { setActiveTab('branches'); setMobileMenuOpen(false); }}
-                      >
-                        <FaBuilding className="nav-icon" />
-                        Branch 
-                      </li>
-                    </>
-                  )}
-
-                  <li 
-                    className={activeTab === 'profile' ? 'active' : ''}
-                    onClick={() => { setActiveTab('profile'); setMobileMenuOpen(false); }}
-                  >
-                    <FaUser className="nav-icon" />
-                    Profile Details
-                  </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -2267,655 +3290,53 @@ const Account = () => {
             {activeTab === 'dashboard' && <Dashboard />}
             {activeTab === 'services' && <Services />}
             {activeTab === 'orders' && <Orders />}
-            {activeTab === 'products' && userRole === 'admin' && <Products />}
-            {activeTab === 'customers' && userRole === 'admin' && <Customers />}
-            {activeTab === 'quotations' && userRole === 'admin' && <Quotations />}
-            {activeTab === 'branches' && userRole === 'admin' && <Branch />}
+            {activeTab === 'products' && <Products />}
+            {activeTab === 'customers' && <Customers />}
+            {activeTab === 'quotations' && <Quotations />}
+            {activeTab === 'branches' && <Branch />}
+            {activeTab === 'users' && <Users />}
             {activeTab === 'profile' && <Profile />}
           </div>
         </div>
 
         {/* Mobile Bottom Navigation */}
         <div className="mobile-bottom-nav mobile-only">
-          {(userRole === 'engineer' || userRole === 'admin') && (
+          {currentRole.tabs.slice(0, 4).map(tab => (
             <div 
-              className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-              onClick={() => setActiveTab('dashboard')}
+              key={tab}
+              className={`nav-item ${activeTab === tab ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab)}
             >
-              <FaTachometerAlt className="nav-icon" />
-              <span className="nav-label">Dashboard</span>
+              {getTabIcon(tab)}
+              <span className="nav-label">{tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
             </div>
-          )}
-          <div 
-            className={`nav-item ${activeTab === 'services' ? 'active' : ''}`}
-            onClick={() => setActiveTab('services')}
-          >
-            <FaTools className="nav-icon" />
-            <span className="nav-label">Services</span>
-          </div>
-          <div 
-            className={`nav-item ${activeTab === 'orders' ? 'active' : ''}`}
-            onClick={() => setActiveTab('orders')}
-          >
-            <FaShoppingCart className="nav-icon" />
-            <span className="nav-label">Orders</span>
-          </div>
-          {userRole === 'admin' && (
-            <div 
-              className={`nav-item ${activeTab === 'products' ? 'active' : ''}`}
-              onClick={() => setActiveTab('products')}
-            >
-              <FaBox className="nav-icon" />
-              <span className="nav-label">Products</span>
-            </div>
-          )}
-          <div 
-            className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
-            onClick={() => setActiveTab('profile')}
-          >
-            <FaUser className="nav-icon" />
-            <span className="nav-label">Profile</span>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Modals */}
-      {/* Add/Edit Product Modal */}
-      {isAddProductModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>{editingItem ? 'Edit Product' : 'Add New Product'}</h2>
-              <button 
-                className="close-btn"
-                onClick={() => setIsAddProductModalOpen(false)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <form onSubmit={editingItem ? handleUpdateProduct : handleAddProduct}>
-              <div className="modal-body">
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Product Name *</label>
-                    <input
-                      type="text"
-                      value={newProduct.name}
-                      onChange={(e) => setNewProduct(prev => ({...prev, name: e.target.value}))}
-                      required
-                      placeholder="Enter product name"
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Category *</label>
-                    <input
-                      type="text"
-                      value={newProduct.category}
-                      onChange={(e) => setNewProduct(prev => ({...prev, category: e.target.value}))}
-                      required
-                      placeholder="e.g., Business Laptop, Gaming Laptop"
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Price (₹) *</label>
-                    <input
-                      type="number"
-                      value={newProduct.price}
-                      onChange={(e) => setNewProduct(prev => ({...prev, price: e.target.value}))}
-                      required
-                      min="0"
-                      step="0.01"
-                      placeholder="0.00"
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Stock *</label>
-                    <input
-                      type="number"
-                      value={newProduct.stock}
-                      onChange={(e) => setNewProduct(prev => ({...prev, stock: e.target.value}))}
-                      required
-                      min="0"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Warranty</label>
-                    <select
-                      value={newProduct.warranty}
-                      onChange={(e) => setNewProduct(prev => ({...prev, warranty: e.target.value}))}
-                    >
-                      <option value="1 year">1 Year</option>
-                      <option value="2 years">2 Years</option>
-                      <option value="3 years">3 Years</option>
-                      <option value="6 months">6 Months</option>
-                      <option value="No warranty">No Warranty</option>
-                    </select>
-                  </div>
-                  <div className="form-field">
-                    <label>Status</label>
-                    <select
-                      value={newProduct.status}
-                      onChange={(e) => setNewProduct(prev => ({...prev, status: e.target.value}))}
-                    >
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-field">
-                  <label>Description</label>
-                  <textarea
-                    value={newProduct.description}
-                    onChange={(e) => setNewProduct(prev => ({...prev, description: e.target.value}))}
-                    rows="3"
-                    placeholder="Enter product description..."
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Specifications</label>
-                  <textarea
-                    value={newProduct.specifications}
-                    onChange={(e) => setNewProduct(prev => ({...prev, specifications: e.target.value}))}
-                    rows="3"
-                    placeholder="Enter product specifications..."
-                  />
-                </div>
-              </div>
-              <div className="modal-actions">
-                <button type="button" className="outline-button" onClick={() => setIsAddProductModalOpen(false)}>
-                  <FaTimes /> Cancel
-                </button>
-                <button type="submit" className="primary-button">
-                  <FaSave /> {editingItem ? 'Update Product' : 'Add Product'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Add/Edit Customer Modal */}
-      {isAddCustomerModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>{editingItem ? 'Edit Customer' : 'Add New Customer'}</h2>
-              <button 
-                className="close-btn"
-                onClick={() => setIsAddCustomerModalOpen(false)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <form onSubmit={editingItem ? handleUpdateCustomer : handleAddCustomer}>
-              <div className="modal-body">
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Full Name *</label>
-                    <input
-                      type="text"
-                      value={newCustomer.name}
-                      onChange={(e) => setNewCustomer(prev => ({...prev, name: e.target.value}))}
-                      required
-                      placeholder="Enter customer name"
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Email *</label>
-                    <input
-                      type="email"
-                      value={newCustomer.email}
-                      onChange={(e) => setNewCustomer(prev => ({...prev, email: e.target.value}))}
-                      required
-                      placeholder="customer@example.com"
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Phone *</label>
-                    <input
-                      type="tel"
-                      value={newCustomer.phone}
-                      onChange={(e) => setNewCustomer(prev => ({...prev, phone: e.target.value}))}
-                      required
-                      placeholder="+91 98765 43210"
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Customer Type *</label>
-                    <select
-                      value={newCustomer.type}
-                      onChange={(e) => setNewCustomer(prev => ({...prev, type: e.target.value}))}
-                    >
-                      <option value="individual">Individual</option>
-                      <option value="business">Business</option>
-                    </select>
-                  </div>
-                </div>
-                {newCustomer.type === 'business' && (
-                  <>
-                    <div className="form-row">
-                      <div className="form-field">
-                        <label>Company Name *</label>
-                        <input
-                          type="text"
-                          value={newCustomer.companyName}
-                          onChange={(e) => setNewCustomer(prev => ({...prev, companyName: e.target.value}))}
-                          required
-                          placeholder="Enter company name"
-                        />
-                      </div>
-                      <div className="form-field">
-                        <label>GST Number *</label>
-                        <input
-                          type="text"
-                          value={newCustomer.gstNumber}
-                          onChange={(e) => setNewCustomer(prev => ({...prev, gstNumber: e.target.value}))}
-                          required
-                          placeholder="27ABCDE1234F1Z5"
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-                <div className="form-field">
-                  <label>Billing Address *</label>
-                  <textarea
-                    value={newCustomer.billingAddress}
-                    onChange={(e) => setNewCustomer(prev => ({...prev, billingAddress: e.target.value}))}
-                    rows="3"
-                    required
-                    placeholder="Enter complete billing address..."
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Shipping Address *</label>
-                  <textarea
-                    value={newCustomer.shippingAddress}
-                    onChange={(e) => setNewCustomer(prev => ({...prev, shippingAddress: e.target.value}))}
-                    rows="3"
-                    required
-                    placeholder="Enter complete shipping address..."
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Notes</label>
-                  <textarea
-                    value={newCustomer.notes}
-                    onChange={(e) => setNewCustomer(prev => ({...prev, notes: e.target.value}))}
-                    rows="2"
-                    placeholder="Any additional notes..."
-                  />
-                </div>
-              </div>
-              <div className="modal-actions">
-                <button type="button" className="outline-button" onClick={() => setIsAddCustomerModalOpen(false)}>
-                  <FaTimes /> Cancel
-                </button>
-                <button type="submit" className="primary-button">
-                  <FaSave /> {editingItem ? 'Update Customer' : 'Add Customer'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Add/Edit Branch Modal */}
-      {isAddBranchModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>{editingItem ? 'Edit Branch' : 'Add New Branch'}</h2>
-              <button 
-                className="close-btn"
-                onClick={() => setIsAddBranchModalOpen(false)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <form onSubmit={editingItem ? handleUpdateBranch : handleAddBranch}>
-              <div className="modal-body">
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Branch Name *</label>
-                    <input
-                      type="text"
-                      value={newBranch.name}
-                      onChange={(e) => setNewBranch(prev => ({...prev, name: e.target.value}))}
-                      required
-                      placeholder="Enter branch name"
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Phone *</label>
-                    <input
-                      type="tel"
-                      value={newBranch.phone}
-                      onChange={(e) => setNewBranch(prev => ({...prev, phone: e.target.value}))}
-                      required
-                      placeholder="+91 98406 04073"
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Manager *</label>
-                    <input
-                      type="text"
-                      value={newBranch.manager}
-                      onChange={(e) => setNewBranch(prev => ({...prev, manager: e.target.value}))}
-                      required
-                      placeholder="Enter manager name"
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Status</label>
-                    <select
-                      value={newBranch.status}
-                      onChange={(e) => setNewBranch(prev => ({...prev, status: e.target.value}))}
-                    >
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-field">
-                  <label>Address *</label>
-                  <textarea
-                    value={newBranch.address}
-                    onChange={(e) => setNewBranch(prev => ({...prev, address: e.target.value}))}
-                    rows="3"
-                    required
-                    placeholder="Enter complete branch address..."
-                  />
-                </div>
-              </div>
-              <div className="modal-actions">
-                <button type="button" className="outline-button" onClick={() => setIsAddBranchModalOpen(false)}>
-                  <FaTimes /> Cancel
-                </button>
-                <button type="submit" className="primary-button">
-                  <FaSave /> {editingItem ? 'Update Branch' : 'Add Branch'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Add Quotation Modal */}
-      {isAddQuotationModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content large">
-            <div className="modal-header">
-              <h2>Create New Quotation</h2>
-              <button 
-                className="close-btn"
-                onClick={() => setIsAddQuotationModalOpen(false)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <form onSubmit={handleAddQuotation}>
-              <div className="modal-body">
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Select Customer *</label>
-                    <select
-                      value={newQuotation.customerId}
-                      onChange={(e) => {
-                        const customer = customers.find(c => c.id === e.target.value);
-                        setNewQuotation(prev => ({
-                          ...prev,
-                          customerId: e.target.value,
-                          customerName: customer ? customer.name : ''
-                        }));
-                      }}
-                      required
-                    >
-                      <option value="">Select Customer</option>
-                      {customers.map(customer => (
-                        <option key={customer.id} value={customer.id}>
-                          {customer.name} ({customer.type})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-field">
-                    <label>Branch *</label>
-                    <select
-                      value={newQuotation.branchId}
-                      onChange={(e) => handleQuotationFieldChange('branchId', e.target.value)}
-                      required
-                      disabled={userBranch !== 'all'}
-                    >
-                      <option value="">Select Branch</option>
-                      {branches.map(branch => (
-                        <option key={branch.id} value={branch.id}>
-                          {branch.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-field">
-                    <label>Valid Until *</label>
-                    <input
-                      type="date"
-                      value={newQuotation.validUntil}
-                      onChange={(e) => handleQuotationFieldChange('validUntil', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Status</label>
-                    <select
-                      value={newQuotation.status}
-                      onChange={(e) => handleQuotationFieldChange('status', e.target.value)}
-                    >
-                      <option value="draft">Draft</option>
-                      <option value="sent">Sent</option>
-                      <option value="accepted">Accepted</option>
-                      <option value="rejected">Rejected</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div className="quotation-items-section">
-                  <h3>Quotation Items</h3>
-                  <div className="add-item-form">
-                    <div className="form-row">
-                      <div className="form-field">
-                        <label>Product</label>
-                        <select
-                          value={newQuotationItem.productId}
-                          onChange={(e) => {
-                            const product = products.find(p => p.id === e.target.value);
-                            setNewQuotationItem(prev => ({
-                              ...prev,
-                              productId: e.target.value,
-                              productName: product ? product.name : '',
-                              price: product ? parseFloat(product.price.replace('₹', '').replace(',', '')) : 0
-                            }));
-                          }}
-                        >
-                          <option value="">Select Product</option>
-                          {products.map(product => (
-                            <option key={product.id} value={product.id}>
-                              {product.name} - {product.price}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="form-field">
-                        <label>Quantity</label>
-                        <input
-                          type="number"
-                          value={newQuotationItem.quantity}
-                          onChange={(e) => setNewQuotationItem(prev => ({
-                            ...prev,
-                            quantity: parseInt(e.target.value) || 0,
-                            total: (parseFloat(prev.price) * (parseInt(e.target.value) || 0))
-                          }))}
-                          min="1"
-                        />
-                      </div>
-                      <div className="form-field">
-                        <label>Price</label>
-                        <input
-                          type="text"
-                          value={`₹${newQuotationItem.price.toLocaleString()}`}
-                          disabled
-                        />
-                      </div>
-                      <div className="form-field">
-                        <label>Total</label>
-                        <input
-                          type="text"
-                          value={`₹${(newQuotationItem.price * newQuotationItem.quantity).toLocaleString()}`}
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="outline-button"
-                      onClick={handleAddQuotationItem}
-                      disabled={!newQuotationItem.productId}
-                    >
-                      <FaPlus /> Add Item
-                    </button>
-                  </div>
-
-                  {newQuotation.items.length > 0 && (
-                    <div className="items-list">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {newQuotation.items.map((item, index) => (
-                            <tr key={index}>
-                              <td>{item.productName}</td>
-                              <td>{item.quantity}</td>
-                              <td>₹{item.price.toLocaleString()}</td>
-                              <td>₹{item.total.toLocaleString()}</td>
-                              <td>
-                                <button
-                                  type="button"
-                                  className="icon-btn delete"
-                                  onClick={() => handleRemoveQuotationItem(index)}
-                                >
-                                  <FaTrash />
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-
-                {/* Enhanced Pricing Summary */}
-                {newQuotation.items.length > 0 && (
-                  <div className="pricing-summary">
-                    <h4>Pricing Summary</h4>
-                    <div className="price-row">
-                      <span>Subtotal:</span>
-                      <span>₹{newQuotation.subtotal.toLocaleString()}</span>
-                    </div>
-                    <div className="form-row">
-                      <div className="form-field">
-                        <label>Discount (%)</label>
-                        <input
-                          type="number"
-                          value={newQuotation.discount}
-                          onChange={(e) => handleQuotationFieldChange('discount', parseFloat(e.target.value) || 0)}
-                          min="0"
-                          max="100"
-                          step="0.1"
-                        />
-                      </div>
-                      <div className="form-field">
-                        <label>Tax Rate (%)</label>
-                        <input
-                          type="number"
-                          value={newQuotation.taxRate}
-                          onChange={(e) => handleQuotationFieldChange('taxRate', parseFloat(e.target.value) || 0)}
-                          min="0"
-                          max="30"
-                          step="0.1"
-                        />
-                      </div>
-                    </div>
-                    <div className="price-row discount">
-                      <span>Discount Amount:</span>
-                      <span>-₹{newQuotation.discountAmount.toLocaleString()}</span>
-                    </div>
-                    <div className="price-row tax">
-                      <span>Tax Amount:</span>
-                      <span>₹{newQuotation.taxAmount.toLocaleString()}</span>
-                    </div>
-                    <div className="price-row total">
-                      <span>Total Amount:</span>
-                      <span>₹{newQuotation.total.toLocaleString()}</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="form-field">
-                  <label>Notes</label>
-                  <textarea
-                    value={newQuotation.notes}
-                    onChange={(e) => handleQuotationFieldChange('notes', e.target.value)}
-                    rows="3"
-                    placeholder="Additional notes for the quotation..."
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>Terms & Conditions</label>
-                  <textarea
-                    value={newQuotation.terms}
-                    onChange={(e) => handleQuotationFieldChange('terms', e.target.value)}
-                    rows="3"
-                    placeholder="Enter terms and conditions..."
-                  />
-                </div>
-              </div>
-              <div className="modal-actions">
-                <button type="button" className="outline-button" onClick={() => setIsAddQuotationModalOpen(false)}>
-                  <FaTimes /> Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  className="primary-button"
-                  disabled={newQuotation.items.length === 0}
-                >
-                  <FaSave /> Create Quotation
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <AddProductModal />
+      <AddCustomerModal />
+      <AddBranchModal />
+      <AddQuotationModal />
     </div>
   );
+};
+
+// Helper function to get tab icons
+const getTabIcon = (tab) => {
+  switch (tab) {
+    case 'dashboard': return <FaTachometerAlt className="nav-icon" />;
+    case 'services': return <FaTools className="nav-icon" />;
+    case 'orders': return <FaShoppingCart className="nav-icon" />;
+    case 'products': return <FaBox className="nav-icon" />;
+    case 'customers': return <FaUsers className="nav-icon" />;
+    case 'quotations': return <FaFileInvoice className="nav-icon" />;
+    case 'branches': return <FaBuilding className="nav-icon" />;
+    case 'users': return <FaUserShield className="nav-icon" />;
+    case 'profile': return <FaUser className="nav-icon" />;
+    default: return <FaTachometerAlt className="nav-icon" />;
+  }
 };
 
 export default Account;

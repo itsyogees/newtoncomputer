@@ -199,7 +199,7 @@ body {
   .user-avatar {
     width: 80px;
     height: 80px;
-    background: var(--text-white);
+    background: #ffffff;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -238,184 +238,189 @@ body {
 }
 
 // Role Selector
-// Role Selector with Branch Buttons
+// Role Selector Component - Simplified
 .role-selector {
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-light);
-  padding: var(--spacing-lg) var(--spacing-xl);
-  
-  .role-buttons {
-    display: flex;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
 
-    .role-btn {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-md) var(--spacing-lg);
-      border: 2px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      background: var(--bg-primary);
-      color: var(--text-tertiary);
-      font-weight: 500;
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      flex: 1;
-      min-width: 140px;
-      max-width: 200px;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-        transition: left var(--transition-slow);
-      }
-
-      &:hover {
-        border-color: var(--primary-blue);
-        color: var(--primary-blue);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-medium);
-
-        &::before {
-          left: 100%;
-        }
-      }
-
-      &.active {
-        background: var(--primary-blue);
-        border-color: var(--primary-blue);
-        color: var(--text-white);
-        box-shadow: var(--shadow-medium);
-      }
-
-      @media (max-width: 768px) {
-        min-width: 120px;
-        padding: var(--spacing-sm) var(--spacing-md);
-        font-size: 0.85rem;
-      }
-
-      @media (max-width: 480px) {
-        min-width: 100px;
-        padding: var(--spacing-sm);
-        font-size: 0.8rem;
-      }
-    }
-  }
-
-  .branch-quick-selector {
-    border-top: 1px solid var(--border-light);
-    padding-top: var(--spacing-lg);
-
-    h4 {
+  .role-section {
+    h3 {
       color: var(--text-secondary);
       margin-bottom: var(--spacing-md);
       font-size: 0.9rem;
       font-weight: 600;
-      text-align: center;
+    }
+
+   .role-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+  
+  .role-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: var(--primary-blue);
+      color: var(--primary-blue);
+    }
+    
+    &.active {
+      background: var(--primary-blue);
+      border-color: var(--primary-blue);
+      color: var(--text-white);
+      
+      .role-icon {
+        color: var(--text-white); // Add this to change icon color when active
+      }
+    }
+    
+    .role-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-blue); // Default color
+      transition: color 0.2s ease; // Add smooth transition
+      
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    
+    .role-info {
+      flex: 1;
+      
+      .role-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: inherit;
+      }
+      
+      .role-desc {
+        font-size: 0.75rem;
+        color: inherit;
+        opacity: 0.8;
+      }
+    }
+    
+    .active-indicator {
+      color: inherit;
+      
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+}
+  }
+
+  .branch-quick-selector {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-light);
+
+    h3 {
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
     .branch-buttons {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--spacing-md);
-      max-width: 1200px;
-      margin: 0 auto;
-
-      @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-      }
-
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-sm);
+      
       .branch-btn {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: var(--spacing-lg);
-        border: 2px solid var(--border-light);
-        border-radius: var(--radius-lg);
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-md);
         background: var(--bg-primary);
         color: var(--text-tertiary);
         cursor: pointer;
-        transition: all var(--transition-normal);
-        text-align: left;
-        position: relative;
-        overflow: hidden;
-
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(101, 142, 232, 0.1), transparent);
-          transition: left var(--transition-slow);
-        }
-
+        transition: all 0.2s ease;
+        
         &:hover {
           border-color: var(--primary-blue);
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-medium);
-
-          &::before {
-            left: 100%;
-          }
-
-          .branch-stats {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
-
+        
         &.active {
+          background: var(--primary-blue);
           border-color: var(--primary-blue);
-          background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
           color: var(--text-white);
-          box-shadow: var(--shadow-medium);
-
-          .branch-stats {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
-
+        
         svg {
-          font-size: 1.5rem;
-          margin-bottom: var(--spacing-sm);
+          font-size: 1rem;
           color: inherit;
         }
-
+        
         span {
           font-weight: 600;
-          font-size: 1rem;
-          margin-bottom: var(--spacing-sm);
+          font-size: 0.9rem;
           color: inherit;
+          flex: 1;
         }
-
+        
         .branch-stats {
           display: flex;
-          gap: var(--spacing-md);
-          opacity: 0.8;
-          transform: translateY(5px);
-          transition: all var(--transition-normal);
-
+          gap: var(--spacing-sm);
+          
           .stat {
-            font-size: 0.8rem;
-            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: 0.7rem;
+            padding: 2px 6px;
             background: rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-md);
+            border-radius: 4px;
             color: inherit;
-            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .role-selector {
+    padding: var(--spacing-sm);
+    
+    .role-section {
+      .role-buttons-grid {
+        grid-template-columns: 1fr;
+        
+        .role-btn {
+          padding: var(--spacing-sm);
+        }
+      }
+    }
+    
+    .branch-quick-selector {
+      .branch-buttons {
+        grid-template-columns: 1fr;
+        
+        .branch-btn {
+          padding: var(--spacing-sm);
+          
+          .branch-stats {
+            flex-direction: column;
+            gap: 2px;
           }
         }
       }
