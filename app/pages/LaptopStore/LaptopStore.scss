@@ -752,53 +752,263 @@ $shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 // Features Section
+// =============================================
+// STORE FEATURES SECTION - Modern & Responsive
+// =============================================
 .store-features {
-  background: $white;
-  padding: 2.5rem 0;
-  margin-top: 2.5rem;
-  border-top: 1px solid $border-color;
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 3rem 0;
+  margin-top: 3rem;
+  overflow: hidden;
 
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $primary-color, transparent);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $primary-color, transparent);
+  }
+
+  @media (max-width: 1024px) {
+    padding: 4rem 0;
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 3.5rem 0;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 3rem 0;
+    margin-top: 1.5rem;
+  }
+}
+
+.store-features__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  position: relative;
+  z-index: 2;
+
+  @media (max-width: 1024px) {
+    gap: 1.75rem;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+  }
 
-    .feature {
-      text-align: center;
-      padding: 1.5rem 1rem;
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+}
 
-      .feature-icon {
-        font-size: 1.75rem;
-        color: $primary-color;
-        margin-bottom: 0.75rem;
-      }
+.store-feature__card {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border: 1.5px solid rgba(37, 99, 235, 0.15);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.08);
 
-      h3 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: $text-dark;
-        margin-bottom: 0.5rem;
-      }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(101, 142, 232, 0.03) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
 
-      p {
-        font-size: 0.875rem;
-        color: $text-medium;
-        line-height: 1.4;
-        margin: 0;
-      }
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(37, 99, 235, 0.3);
+    box-shadow: 0 16px 48px rgba(37, 99, 235, 0.15);
+
+    &::before {
+      opacity: 1;
     }
 
-    @media (max-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+    .store-feature__icon {
+      transform: translateY(-5px) scale(1.1);
+      color: $primary-color;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(101, 142, 232, 0.1) 100%);
     }
 
-    @media (max-width: 480px) {
-      grid-template-columns: 1fr;
+    .store-feature__title {
+      color: $primary-color;
+      transform: translateY(-2px);
+    }
+  }
+
+ 
+}
+
+.store-feature__icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(101, 142, 232, 0.08) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: $primary-color;
+  font-size: 2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: 2px solid rgba(37, 99, 235, 0.1);
+
+  @media (max-width: 1024px) {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+      font-size: 1.5rem;
+    margin-bottom: 1.125rem;
+  }
+
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.store-feature__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+
+  @media (max-width: 1024px) {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    margin-bottom: 0.625rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
+}
+
+.store-feature__description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #64748b;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  font-weight: 500;
+
+  @media (max-width: 1024px) {
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.775rem;
+  }
+}
+
+// Animation for feature cards
+@keyframes fadeInUpCards {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.store-feature__card {
+  opacity: 0;
+  animation: fadeInUpCards 0.6s ease-out forwards;
+
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+}
+
+// Responsive adjustments
+@media (max-width: 1024px) {
+  .store-features__grid {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .store-features {
+    &::before,
+    &::after {
+      height: 0.5px;
     }
   }
 }
 
+// Add decorative elements
+.store-features .container {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    border-radius: 2px;
+    z-index: 1;
+  }
+}
 // Animations
 @keyframes pulse {
   0%, 100% {

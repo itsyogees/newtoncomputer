@@ -139,8 +139,8 @@ const DataRecoveryPage = () => {
             <div className="container">
               <div className="features-content">
                 <h2>Our Recovery Process</h2>
-                <div className="features-grid">
-                  <div className="feature-card">
+                <div className="features-grids">
+                  <div className="feature-carde">
                     <div className="feature-card-icon">
                       <FaDatabase className="icon" />
                     </div>
@@ -148,7 +148,7 @@ const DataRecoveryPage = () => {
                     <p>Thorough assessment of your storage device to determine the best recovery approach.</p>
                   </div>
                   
-                  <div className="feature-card">
+                  <div className="feature-carde">
                     <div className="feature-card-icon">
                       <FaUserShield className="icon" />
                     </div>
@@ -156,7 +156,7 @@ const DataRecoveryPage = () => {
                     <p>Your data is protected with strict security protocols throughout the recovery process.</p>
                   </div>
                   
-                  <div className="feature-card">
+                  <div className="feature-carde">
                     <div className="feature-card-icon">
                       <FaClock className="icon" />
                     </div>
@@ -164,7 +164,7 @@ const DataRecoveryPage = () => {
                     <p>Emergency services available for critical data loss situations with fast recovery times.</p>
                   </div>
                   
-                  <div className="feature-card">
+                  <div className="feature-carde">
                     <div className="feature-card-icon">
                       <FaCogs className="icon" />
                     </div>

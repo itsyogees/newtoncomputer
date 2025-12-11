@@ -34,7 +34,7 @@
     }
 
     .current {
-      color: #64748b;
+      color: #000;
       font-weight: 500;
     }
   }
@@ -159,7 +159,7 @@
     }
 
     .product-specs {
-      color: #64748b;
+      color: #000;
       font-size: 1.1rem;
       margin-bottom: 1rem;
       line-height: 1.5;
@@ -185,7 +185,7 @@
       }
 
       .rating-text {
-        color: #64748b;
+        color: #000;
         font-size: 0.9rem;
       }
     }
@@ -211,7 +211,7 @@
       font-size: 1.1rem;
 
       .price-label {
-        color: #64748b;
+        color: #000;
         font-size: 0.9rem;
       }
     }
@@ -222,7 +222,7 @@
       color: #1e293b;
 
       .price-label {
-        color: #64748b;
+        color: #000;
         font-size: 1rem;
         font-weight: normal;
       }
@@ -471,7 +471,7 @@
       background: transparent;
       font-size: 1rem;
       font-weight: 600;
-      color: #64748b;
+      color: #000;
       cursor: pointer;
       transition: all 0.3s ease;
       border-bottom: 3px solid transparent;
@@ -506,7 +506,7 @@
       }
 
       p {
-        color: #64748b;
+        color: #000;
         line-height: 1.7;
         margin-bottom: 1.5rem;
       }
@@ -526,7 +526,7 @@
 
           li {
             padding: 0.5rem 0;
-            color: #64748b;
+            color: #000;
             position: relative;
             padding-left: 1.5rem;
 
@@ -566,7 +566,7 @@
           }
 
           .spec-value {
-            color: #64748b;
+            color: #000;
             line-height: 1.6;
 
             ul {
@@ -597,7 +597,7 @@
         padding: 3rem 2rem;
 
         h3 {
-          color: #64748b;
+          color: #000;
           margin-bottom: 0.5rem;
         }
 
@@ -683,7 +683,7 @@
       }
 
       p {
-        color: #64748b;
+        color: #000;
         line-height: 1.6;
         margin: 0;
       }

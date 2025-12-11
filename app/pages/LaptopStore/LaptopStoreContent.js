@@ -642,11 +642,7 @@ const LaptopStoreContent = () => {
                           <span className={`badge ${laptop.category.toLowerCase()}`}>
                             {laptop.category.charAt(0).toUpperCase() + laptop.category.slice(1)}
                           </span>
-                          {laptop.currentPrice < laptop.originalPrice && (
-                            <span className="badge discount">
-                              Save {formatPrice(laptop.originalPrice - laptop.currentPrice)}
-                            </span>
-                          )}
+                          
                         </div>
                       </div>
 
@@ -701,40 +697,51 @@ const LaptopStoreContent = () => {
       </section>
 
       {/* Features Section */}
-      <section className="store-features">
-        <div className="container">
-          <div className="features-grid">
-            <div className="feature">
-              <div className="feature-icon">
-                <FaShieldAlt />
-              </div>
-              <h3>12 Months Warranty</h3>
-              <p>Comprehensive warranty coverage</p>
-            </div>
-            <div className="feature">
-              <div className="feature-icon">
-                <FaTruck />
-              </div>
-              <h3>Free Shipping</h3>
-              <p>Free delivery across Chennai</p>
-            </div>
-            <div className="feature">
-              <div className="feature-icon">
-                <FaCheckCircle />
-              </div>
-              <h3>Quality Tested</h3>
-              <p>25-point quality check</p>
-            </div>
-            <div className="feature">
-              <div className="feature-icon">
-                <FaSyncAlt />
-              </div>
-              <h3>7-Day Return</h3>
-              <p>Easy return policy</p>
-            </div>
-          </div>
+<section className="store-features">
+  <div className="container">
+    <div className="store-features__grid">
+      <div className="store-feature__card">
+        <div className="store-feature__icon">
+          <FaShieldAlt />
         </div>
-      </section>
+        <h3 className="store-feature__title">12 Months Warranty</h3>
+        <p className="store-feature__description">
+          Comprehensive warranty on all refurbished laptops
+        </p>
+      </div>
+      
+      <div className="store-feature__card">
+        <div className="store-feature__icon">
+          <FaTruck />
+        </div>
+        <h3 className="store-feature__title">Free Shipping</h3>
+        <p className="store-feature__description">
+          Free delivery across Chennai & suburbs
+        </p>
+      </div>
+      
+      <div className="store-feature__card">
+        <div className="store-feature__icon">
+          <FaCheckCircle />
+        </div>
+        <h3 className="store-feature__title">Quality Tested</h3>
+        <p className="store-feature__description">
+          Rigorous 25-point quality inspection
+        </p>
+      </div>
+      
+      <div className="store-feature__card">
+        <div className="store-feature__icon">
+          <FaSyncAlt />
+        </div>
+        <h3 className="store-feature__title">7-Day Return</h3>
+        <p className="store-feature__description">
+          Hassle-free return policy
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
     </div>
   );
 };

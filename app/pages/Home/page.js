@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRef} from 'react';
-import { FaLaptop, FaTools, FaHeadset, FaCloud,FaEnvelope,FaUserCheck, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaPhone, FaMapMarkerAlt, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaLaptop, FaTools,FaStar, FaHeadset, FaCloud,FaEnvelope,FaUserCheck, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaPhone, FaMapMarkerAlt, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FaCheck, FaCopy } from 'react-icons/fa'; 
 import { LuCctv } from "react-icons/lu";
 import { MdOutlineSecurity } from "react-icons/md";
@@ -201,56 +201,88 @@ useEffect(() => {
     'ASUS Laptops'
   ]
 
-  const refurbishedLaptops = [
-    {
-      id: 1,
-      name: 'Lenovo ThinkPad T460 – (Refurbished)',
-      specs: 'Intel® Core i5 – 6th Gen/ 8 GB/ 256 GB SSD',
-      originalPrice: '₹21,470.00',
-      currentPrice: '₹19,470.00',
-      image: '/assets/lenovo-image1.jpeg',
-      sideImages: [
-        '/assets/lenovo-image1-side1.jpeg',
-        '/assets/lenovo-image1-side2.jpeg',
-        '/assets/lenovo-image1-side3.jpeg'
-      ],
-      category: 'Lenovo Laptops',
-      description: 'Return, Replacement & Warranty - Every Product Is Backed By 6 month Warranty, 7 Days Refund and 14 Days Replacement Policy.',
-      fullDescription: 'With powerful processing and reliable performance, the ThinkPad T460 is designed to enhance your productivity, anywhere. Easy to use, deploy, and service, this robust laptop has solid-state storage and the legendary ThinkPad reliability and support.'
-    },
-    {
-      id: 2,
-      name: 'Lenovo ThinkPad T470 – (Refurbished)',
-      specs: 'Intel® Core i7 – 6th Gen/ 8 GB/ 256 GB SSD',
-      originalPrice: '₹23,240.00',
-      currentPrice: '₹21,240.00',
-      image: '/assets/lenovo-image1.jpeg',
-      sideImages: [
-        '/assets/lenovo-image1-side1.jpeg',
-        '/assets/lenovo-image1-side2.jpeg',
-        '/assets/lenovo-image1-side3.jpeg'
-      ],
-      category: 'Lenovo Laptops',
-      description: 'Return, Replacement & Warranty - Every Product Is Backed By 6 month Warranty, 7 Days Refund and 14 Days Replacement Policy.',
-      fullDescription: 'With powerful processing, a superb operating system, the ThinkPad T470 is designed to enhance your productivity, anywhere. Easy to use, deploy, and service, this 35.56cms (14) robust laptop has a host of cutting-edge technology, including solid-state storage, secure fingerprint reading, and advanced facial recognition. All of this, plus the legendary ThinkPad reliability and support.'
-    },
-    {
-      id: 3,
-      name: 'HP Elitebook 830 G5 & G6 – (Refurbished)',
-      specs: 'Intel i7, 8th gen/16GB/256GB SSD',
-      originalPrice: '₹25,999.00',
-      currentPrice: '₹22,999.00',
-      image: '/assets/hp-image1.jpeg',
-      sideImages: [
-        '/assets/hp-image1-side1.jpeg',
-        '/assets/hp-image1-side2.jpeg',
-        '/assets/hp-image1-side3.jpeg'
-      ],
-      category: 'HP Laptops',
-      description: 'Return, Replacement & Warranty - Every Product Is Backed By 6 month Warranty, 7 Days Refund and 14 Days Replacement Policy.',
-      fullDescription: 'Refurbished HP ProBook 440 G3 Notebook PC. The HP Elitebook 830 G5 & G6 offers exceptional performance with 8th generation Intel i7 processor, 16GB RAM, and fast 256GB SSD storage. Perfect for business professionals and power users.'
-    },
-  ]
+const refurbishedLaptops = [
+  {
+    id: 1,
+    name: 'Lenovo ThinkPad T460 – (Refurbished)',
+    specs: 'Intel® Core i5 – 6th Gen/ 8 GB/ 256 GB SSD',
+    originalPrice: '₹21,470.00',
+    currentPrice: '₹19,470.00',
+    image: '/assets/lenovo-image1.jpeg',
+    sideImages: [
+      '/assets/lenovo-image1-side1.jpeg',
+      '/assets/lenovo-image1-side2.jpeg',
+      '/assets/lenovo-image1-side3.jpeg'
+    ],
+    category: 'Lenovo Laptops',
+    description: 'Return, Replacement & Warranty - Every Product Is Backed By 6 month Warranty, 7 Days Refund and 14 Days Replacement Policy.',
+    fullDescription: 'With powerful processing and reliable performance, the ThinkPad T460 is designed to enhance your productivity, anywhere. Easy to use, deploy, and service, this robust laptop has solid-state storage and the legendary ThinkPad reliability and support.',
+    // ADD THESE NEW PROPERTIES:
+    inStock: true,
+    rating: 4.5,
+    reviews: 42,
+    brand: 'Lenovo'
+  },
+  {
+    id: 2,
+    name: 'Lenovo ThinkPad T470 – (Refurbished)',
+    specs: 'Intel® Core i7 – 6th Gen/ 8 GB/ 256 GB SSD',
+    originalPrice: '₹23,240.00',
+    currentPrice: '₹21,240.00',
+    image: '/assets/lenovo-image1.jpeg',
+    sideImages: [
+      '/assets/lenovo-image1-side1.jpeg',
+      '/assets/lenovo-image1-side2.jpeg',
+      '/assets/lenovo-image1-side3.jpeg'
+    ],
+    category: 'Lenovo Laptops',
+    description: 'Return, Replacement & Warranty - Every Product Is Backed By 6 month Warranty, 7 Days Refund and 14 Days Replacement Policy.',
+    fullDescription: 'With powerful processing, a superb operating system, the ThinkPad T470 is designed to enhance your productivity, anywhere. Easy to use, deploy, and service, this 35.56cms (14) robust laptop has a host of cutting-edge technology, including solid-state storage, secure fingerprint reading, and advanced facial recognition. All of this, plus the legendary ThinkPad reliability and support.',
+    // ADD THESE NEW PROPERTIES:
+    inStock: true,
+    rating: 4.8,
+    reviews: 38,
+    brand: 'Lenovo'
+  },
+  {
+    id: 3,
+    name: 'HP Elitebook 830 G5 & G6 – (Refurbished)',
+    specs: 'Intel i7, 8th gen/16GB/256GB SSD',
+    originalPrice: '₹25,999.00',
+    currentPrice: '₹22,999.00',
+    image: '/assets/hp-image1.jpeg',
+    sideImages: [
+      '/assets/hp-image1-side1.jpeg',
+      '/assets/hp-image1-side2.jpeg',
+      '/assets/hp-image1-side3.jpeg'
+    ],
+    category: 'HP Laptops',
+    description: 'Return, Replacement & Warranty - Every Product Is Backed By 6 month Warranty, 7 Days Refund and 14 Days Replacement Policy.',
+    fullDescription: 'Refurbished HP ProBook 440 G3 Notebook PC. The HP Elitebook 830 G5 & G6 offers exceptional performance with 8th generation Intel i7 processor, 16GB RAM, and fast 256GB SSD storage. Perfect for business professionals and power users.',
+    // ADD THESE NEW PROPERTIES:
+    inStock: false, // This one is out of stock
+    rating: 4.3,
+    reviews: 29,
+    brand: 'HP'
+  },
+  // Add more laptops if needed
+];
+const handleAddToCart = (laptop) => {
+  if (!laptop.inStock) {
+    alert('This product is currently out of stock. Please check back later.');
+    return;
+  }
+  
+  // Your cart logic here
+  alert(`${laptop.name} added to cart!`);
+  console.log('Added to cart:', laptop);
+};
+
+const handleAddToWishlist = (laptop) => {
+  // Your wishlist logic here
+  alert(`${laptop.name} added to wishlist!`);
+  console.log('Added to wishlist:', laptop);
+};
 
   // Slider functions
   const nextSlide = () => {
@@ -664,77 +696,105 @@ const partnerLogos = [
 
     {/* Refurbished Laptops Grid */}
     <div className="refurbished-section">
- <div className="laptops-grid">
-  {refurbishedLaptops.map((laptop) => {
-    const discount = Math.round(
-      ((laptop.originalPrice - laptop.currentPrice) / laptop.originalPrice) * 100
-    );
-    
-    return (
-      <div 
-        key={laptop.id}
-        className="laptop-card"
-        onMouseEnter={() => setHoveredLaptop(laptop.id)}
-        onMouseLeave={() => setHoveredLaptop(null)}
-      >
-        <div className="laptop-card__badge">Refurbished</div>
-        
-        <div className="laptop-card__image">
-          <Image 
-            src={
-              hoveredLaptop === laptop.id && laptop.sideImages?.[0] 
-                ? laptop.sideImages[0] 
-                : laptop.image
-            } 
-            alt={laptop.name}
-            width={280}
-            height={180}
-            className="laptop-image"
-          />
-        </div>
-
-        <div className="laptop-card__content">
-          <h4 className="laptop-card__name">{laptop.name}</h4>
-          <p className="laptop-card__specs">{laptop.specs}</p>
+      <div className="laptop-products-grid">
+        {refurbishedLaptops.map((laptop) => {
+          const discount = Math.round(
+            ((laptop.originalPrice - laptop.currentPrice) / laptop.originalPrice) * 100
+          );
           
-          <div className="laptop-card__features">
-            {laptop.features?.slice(0, 3).map((feature, index) => (
-              <span key={index} className="laptop-card__feature">
-                {feature}
-              </span>
-            ))}
-          </div>
-          
-          <div className="laptop-card__pricing">
-            <span className="original-price">
-              ${laptop.originalPrice?.toLocaleString()}
-            </span>
-            <span className="current-price">
-              ${laptop.currentPrice?.toLocaleString()}
-            </span>
-            {discount > 0 && (
-              <span className="discount-badge">
-                {discount}% OFF
-              </span>
-            )}
-          </div>
-          
-          <div className="laptop-card__actions">
-            <button className="laptop-btn laptop-btn--primary">
-              Add to Cart
-            </button>
-            <button 
-              className="laptop-btn laptop-btn--secondary"
-              onClick={() => openModal(laptop)}
+          return (
+            <div 
+              key={laptop.id}
+              className="laptop-product-card"
             >
-              Quick View
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  })}
+              <div className="laptop-img-wrapper">
+                <Image 
+                  src={laptop.image} 
+                  alt={laptop.name}
+                  width={200}
+                  height={140}
+                  className="laptop-main-img"
+                  // onError={handleImageError}
+                />
+                
+                {!laptop.inStock && (
+                  <div className="out-of-stock-label">Out of Stock</div>
+                )}
+                
+                <button 
+                  className="favorite-icon-btn"
+                  onClick={() => handleAddToWishlist(laptop)}
+                >
+                  <FaHeart />
+                </button>
+
+                <div className="laptop-label-group">
+                  <span className="laptop-badge refurb-badge">Refurbished</span>
+                  {/* {laptop.currentPrice < laptop.originalPrice && (
+                    <span className="laptop-badge save-badge">
+                      Save {(laptop.originalPrice - laptop.currentPrice).toLocaleString()}
+                    </span>
+                  )} */}
+                </div>
+              </div>
+
+              <div className="laptop-details-section">
+                <div className="laptop-manufacturer">{laptop.brand}</div>
+                <h3 className="laptop-model-name">{laptop.name}</h3>
+                <p className="laptop-specifications">{laptop.specs}</p>
+                
+                <div className="laptop-rating-container">
+                  <div className="rating-stars">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar 
+                        key={i} 
+                        className={i < Math.floor(laptop.rating) ? 'star-icon active' : 'star-icon'}
+                      />
+                    ))}
+                  </div>
+                  <span className="review-count">({laptop.reviews})</span>
+                </div>
+
+           <div className="laptop-price-wrapper">
+  <span className="selling-price">
+    {parseFloat(laptop.currentPrice.replace('₹', '').replace(',', '')).toLocaleString('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    })}
+  </span>
+  {laptop.originalPrice > laptop.currentPrice && (
+    <span className="list-price">
+      {parseFloat(laptop.originalPrice.replace('₹', '').replace(',', '')).toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+      })}
+    </span>
+  )}
 </div>
+
+                <div className="laptop-action-buttons">
+                  <button 
+                    className={`add-cart-button ${!laptop.inStock ? 'btn-disabled' : ''}`}
+                    onClick={() => handleAddToCart(laptop)}
+                    disabled={!laptop.inStock}
+                  >
+                    <FaShoppingCart />
+                    {laptop.inStock ? 'Add to Cart' : 'Out of Stock'}
+                  </button>
+                  <button 
+                    className="quick-view-button"
+                    onClick={() => openModal(laptop)}
+                  >
+                    Quick View
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   </div>
 </section>
@@ -878,9 +938,9 @@ const partnerLogos = [
       {/* Right side image */}
       <div className="services-image">
         <Image 
-          src="/assets/service-details-right-bg.png"
+          src="/assets/newone.png"
           alt="Service Details"
-          width={500}
+          width={300}
           height={400}
           className="service-image"
         />

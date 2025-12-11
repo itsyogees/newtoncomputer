@@ -2117,7 +2117,7 @@ const Dashboard = () => {
   if (userRole === 'user') {
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>My Dashboard</h2>
         </div>
         {/* ... user dashboard content ... */}
@@ -2152,7 +2152,7 @@ const Dashboard = () => {
 
   return (
     <div className="tab-content">
-      <div className="section-header">
+      <div className="section-header-account">
         <h2>Dashboard Overview - {roleConfig[userRole]?.name || userRole}</h2>
         <div className="header-actions">
           {(userRole === 'branch' || userRole === 'engineer') && (
@@ -2437,7 +2437,7 @@ const Dashboard = () => {
 
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>User </h2>
           <div className="header-actions">
             <div className="search-box">
@@ -2645,7 +2645,7 @@ const Dashboard = () => {
 
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>Service Bookings</h2>
           {(userRole === 'admin' || userRole === 'engineer') && (
             <div className="branch-selector">
@@ -2792,7 +2792,7 @@ const Dashboard = () => {
 
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>Order History</h2>
           {(userRole === 'admin' || userRole === 'engineer') && (
             <div className="branch-selector">
@@ -2908,7 +2908,7 @@ const Dashboard = () => {
   const Products = () => {
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>Products</h2>
           <div className="header-actions">
             <div className="search-box">
@@ -3016,7 +3016,7 @@ const Dashboard = () => {
   const Customers = () => {
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>Customers</h2>
           <div className="header-actions">
             <div className="search-box">
@@ -3121,146 +3121,400 @@ const Dashboard = () => {
   };
 
   // Quotations Component - Table Version
-  const Quotations = () => {
+const Quotations = () => {
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [selectedQuotation, setSelectedQuotation] = useState(null);
+
+  // Function to open view modal
+  const handleViewQuotation = (quote) => {
+    setSelectedQuotation(quote);
+    setViewModalOpen(true);
+  };
+
+  // Function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  // View Quotation Modal Component
+  const ViewQuotationModal = () => {
+    if (!viewModalOpen || !selectedQuotation) return null;
+
     return (
-      <div className="tab-content">
-        <div className="section-header">
-          <h2>Quotations</h2>
-          <div className="header-actions">
-            <div className="search-box">
-              <FaSearch className="search-icon" />
-              <input
-                type="text"
-                placeholder="Search quotations..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
+      <div className="modal active large">
+        <div className="modal-content quotation-view">
+          <div className="modal-header">
+            <h3>Quotation #{selectedQuotation.id}</h3>
+            <div className="modal-header-actions">
+              <button className="icon-btn print" title="Print" onClick={() => window.print()}>
+                <FaPrint />
+              </button>
+              <button className="icon-btn download" title="Download">
+                <FaDownload />
+              </button>
+              <button className="close-btn" onClick={() => setViewModalOpen(false)}>
+                <FaTimes />
+              </button>
             </div>
-            {(userRole === 'admin' || userRole === 'engineer') && (
-              <div className="branch-selector">
-                <label>Branch: </label>
-                <select 
-                  value={selectedBranch} 
-                  onChange={(e) => setSelectedBranch(e.target.value)}
-                  className="branch-filter"
-                >
-                  <option value="all">All Branches</option>
-                  {branches.map(branch => (
-                    <option key={branch.id} value={branch.id}>
-                      {branch.name}
-                    </option>
-                  ))}
-                </select>
+          </div>
+          
+          <div className="quotation-document">
+            {/* Company Header */}
+            <div className="quotation-header">
+              <div className="company-info">
+                <div className="company-logo">
+                  <FaBuilding className="logo-icon" />
+                </div>
+                <div>
+                  <h2 className="company-name">Laptop Service Hub</h2>
+                  <p className="company-tagline">Professional Laptop Repair & Sales</p>
+                </div>
               </div>
-            )}
+              <div className="quotation-title">
+                <h1>QUOTATION</h1>
+                <div className="quotation-status">
+                  <span className={`status-badge ${selectedQuotation.status}`}>
+                    {selectedQuotation.status.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quotation Details */}
+            <div className="quotation-details-grid">
+              <div className="detail-section">
+                <h4>BILL TO</h4>
+                <div className="detail-content">
+                  <p className="customer-name">{selectedQuotation.customerName}</p>
+                  {selectedQuotation.customerId && (
+                    <p className="customer-id">Customer ID: {selectedQuotation.customerId}</p>
+                  )}
+                </div>
+              </div>
+              
+              <div className="detail-section">
+                <h4>QUOTATION DETAILS</h4>
+                <div className="detail-content">
+                  <div className="detail-row">
+                    <span className="label">Quotation #:</span>
+                    <span className="value">{selectedQuotation.id}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="label">Date:</span>
+                    <span className="value">{formatDate(selectedQuotation.createdDate)}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="label">Valid Until:</span>
+                    <span className="value">{formatDate(selectedQuotation.validUntil)}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="label">Branch:</span>
+                    <span className="value">{selectedQuotation.branchName || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Items Table */}
+            <div className="items-table-section">
+              <h4>ITEMS</h4>
+              <table className="quotation-items-table">
+                <thead>
+                  <tr>
+                    <th className="item-no">#</th>
+                    <th className="item-description">Description</th>
+                    <th className="item-qty">Qty</th>
+                    <th className="item-price">Unit Price</th>
+                    <th className="item-total">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedQuotation.items && selectedQuotation.items.length > 0 ? (
+                    selectedQuotation.items.map((item, index) => (
+                      <tr key={index}>
+                        <td className="item-no">{index + 1}</td>
+                        <td className="item-description">
+                          <div className="item-name">{item.productName}</div>
+                          {item.productId && (
+                            <div className="item-id">SKU: {item.productId}</div>
+                          )}
+                        </td>
+                        <td className="item-qty">{item.quantity}</td>
+                        <td className="item-price">₹{parseFloat(item.price).toLocaleString()}</td>
+                        <td className="item-total">₹{parseFloat(item.total).toLocaleString()}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="no-items">
+                        No items in this quotation
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Totals Section */}
+            <div className="totals-section">
+              <div className="totals-wrapper">
+                <div className="totals-grid">
+                  <div className="total-row">
+                    <span className="label">Subtotal:</span>
+                    <span className="value">₹{parseFloat(selectedQuotation.subtotal?.replace('₹', '') || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="total-row">
+                    <span className="label">
+                      Discount ({selectedQuotation.discount || 0}%):
+                    </span>
+                    <span className="value discount">
+                      - ₹{parseFloat(selectedQuotation.discountAmount?.replace('₹', '') || 0).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="total-row">
+                    <span className="label">
+                      GST ({selectedQuotation.taxRate || 18}%):
+                    </span>
+                    <span className="value">₹{parseFloat(selectedQuotation.taxAmount?.replace('₹', '') || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="total-row grand-total">
+                    <span className="label">Total Amount:</span>
+                    <span className="value">₹{parseFloat(selectedQuotation.total?.replace('₹', '') || 0).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Notes and Terms */}
+            <div className="notes-section">
+              <div className="notes-column">
+                <h4>NOTES</h4>
+                <div className="notes-content">
+                  {selectedQuotation.notes || 'No notes provided.'}
+                </div>
+              </div>
+              <div className="terms-column">
+                <h4>TERMS & CONDITIONS</h4>
+                <div className="terms-content">
+                  {selectedQuotation.terms || '1. Prices are valid for 30 days\n2. Payment due upon delivery\n3. Warranty as per product terms\n4. Taxes extra as applicable'}
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="quotation-footer">
+              <div className="authorized-sign">
+                <div className="signature-line"></div>
+                <p>Authorized Signature</p>
+              </div>
+              <div className="company-contact">
+                <p>Thank you for your business!</p>
+                <div className="contact-info">
+                  <p><FaPhone /> +91 98406 04073</p>
+                  <p><FaEnvelope /> info@laptopservicehub.com</p>
+                  <p><FaMapMarkerAlt /> Chennai, Tamil Nadu</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-actions">
+            <button 
+              className="secondary-button" 
+              onClick={() => setViewModalOpen(false)}
+            >
+              Close
+            </button>
             <button 
               className="primary-button"
               onClick={() => {
-                setEditingItem(null);
-                setNewQuotation({
-                  customerId: '',
-                  customerName: '',
-                  branchId: userBranch === 'all' ? '' : userBranch,
-                  items: [],
-                  subtotal: 0,
-                  discount: 0,
-                  discountAmount: 0,
-                  taxRate: 18,
-                  taxAmount: 0,
-                  total: 0,
-                  validUntil: '',
-                  notes: '',
-                  terms: 'Payment due within 30 days. Warranty as per product terms.',
-                  status: 'draft'
-                });
-                setIsAddQuotationModalOpen(true);
+                // Convert to order or send email logic
+                console.log('Convert to order:', selectedQuotation.id);
               }}
             >
-              <FaPlus />
-              Create Quotation
+              <FaCheck /> Convert to Order
             </button>
-          </div>
-        </div>
-        <div className="houseState-content" style={{ overflowX: "auto" }}>
-          <div className="table-container">
-            <table className="custom-table">
-              <thead>
-                <tr>
-                  <th className="w-5">S.NO</th>
-                  <th>Quote ID</th>
-                  <th>Customer</th>
-                  {(userRole === 'admin' || userRole === 'engineer') && <th>Branch</th>}
-                  <th>Amount</th>
-                  <th>Status</th>
-                  {/* <th>Created Date</th>
-                  <th>Valid Until</th> */}
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredQuotations.length > 0 ? (
-                  filteredQuotations.map((quote, index) => (
-                    <tr key={quote.id}>
-                      <td className="text-center w-5">{index + 1}</td>
-                      <td className="text-left">{quote.id}</td>
-                      <td className="text-left">{quote.customerName}</td>
-                      {(userRole === 'admin' || userRole === 'engineer') && (
-                        <td className="text-left">{quote.branchName}</td>
-                      )}
-                      <td className="text-left">{quote.total}</td>
-                      <td className="text-center">
-                        <span className={`status-badge ${quote.status}`}>
-                          {quote.status}
-                        </span>
-                      </td>
-                      {/* <td className="text-left">{quote.createdDate}</td>
-                      <td className="text-left">{quote.validUntil}</td> */}
-                      <td className="text-center">
-                        <div className="action-buttons">
-                          <button className="icon-btn edit" title="Edit">
-                            <FaEdit />
-                          </button>
-                          <button className="icon-btn view" title="View">
-                            <FaEye />
-                          </button>
-                          <button className="icon-btn print" title="Print">
-                            <FaPrint />
-                          </button>
-                          <button className="icon-btn download" title="Download">
-                            <FaDownload />
-                          </button>
-                          <button 
-                            className="icon-btn delete"
-                            onClick={() => handleDeleteQuotation(quote.id)}
-                            title="Delete"
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="9" className="text-center">
-                      No quotations found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <button 
+              className="outline-button"
+              onClick={() => {
+                // Send email logic
+                console.log('Send email for:', selectedQuotation.id);
+              }}
+            >
+              <FaEnvelope /> Send Email
+            </button>
           </div>
         </div>
       </div>
     );
   };
 
+  return (
+    <div className="tab-content">
+      <div className="section-header-account">
+        <h2>Quotations</h2>
+        <div className="header-actions">
+          <div className="search-box">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search quotations..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          {(userRole === 'admin' || userRole === 'engineer') && (
+            <div className="branch-selector">
+              <label>Branch: </label>
+              <select 
+                value={selectedBranch} 
+                onChange={(e) => setSelectedBranch(e.target.value)}
+                className="branch-filter"
+              >
+                <option value="all">All Branches</option>
+                {branches.map(branch => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <button 
+            className="primary-button"
+            onClick={() => {
+              setEditingItem(null);
+              setNewQuotation({
+                customerId: '',
+                customerName: '',
+                branchId: userBranch === 'all' ? '' : userBranch,
+                items: [],
+                subtotal: 0,
+                discount: 0,
+                discountAmount: 0,
+                taxRate: 18,
+                taxAmount: 0,
+                total: 0,
+                validUntil: '',
+                notes: '',
+                terms: 'Payment due within 30 days. Warranty as per product terms.',
+                status: 'draft'
+              });
+              setIsAddQuotationModalOpen(true);
+            }}
+          >
+            <FaPlus />
+            Create Quotation
+          </button>
+        </div>
+      </div>
+      <div className="houseState-content" style={{ overflowX: "auto" }}>
+        <div className="table-container">
+          <table className="custom-table">
+            <thead>
+              <tr>
+                <th className="w-5">S.NO</th>
+                <th>Quote ID</th>
+                <th>Customer</th>
+                {(userRole === 'admin' || userRole === 'engineer') && <th>Branch</th>}
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredQuotations.length > 0 ? (
+                filteredQuotations.map((quote, index) => (
+                  <tr key={quote.id}>
+                    <td className="text-center w-5">{index + 1}</td>
+                    <td className="text-left">{quote.id}</td>
+                    <td className="text-left">{quote.customerName}</td>
+                    {(userRole === 'admin' || userRole === 'engineer') && (
+                      <td className="text-left">{quote.branchName}</td>
+                    )}
+                    <td className="text-left">{quote.total}</td>
+                    <td className="text-center">
+                      <span className={`status-badge ${quote.status}`}>
+                        {quote.status}
+                      </span>
+                    </td>
+                    <td className="text-center">
+                      <div className="action-buttons">
+                        <button 
+                          className="icon-btn edit" 
+                          title="Edit"
+                          onClick={() => {
+                            setEditingItem(quote);
+                            setIsAddQuotationModalOpen(true);
+                          }}
+                        >
+                          <FaEdit />
+                        </button>
+                        <button 
+                          className="icon-btn view" 
+                          title="View"
+                          onClick={() => handleViewQuotation(quote)}
+                        >
+                          <FaEye />
+                        </button>
+                        <button 
+                          className="icon-btn print" 
+                          title="Print"
+                          onClick={() => window.print()}
+                        >
+                          <FaPrint />
+                        </button>
+                        <button 
+                          className="icon-btn download" 
+                          title="Download"
+                          onClick={() => {
+                            // Implement download logic
+                            console.log('Download:', quote.id);
+                          }}
+                        >
+                          <FaDownload />
+                        </button>
+                        <button 
+                          className="icon-btn delete"
+                          onClick={() => handleDeleteQuotation(quote.id)}
+                          title="Delete"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" className="text-center">
+                    No quotations found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      {/* View Quotation Modal */}
+      <ViewQuotationModal />
+    </div>
+  );
+};
+
   // Branch Component - Fixed Table Version
   const Branch = () => {
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>Branch </h2>
           <div className="header-actions">
             <div className="search-box">
@@ -3358,7 +3612,7 @@ const Dashboard = () => {
   const Profile = () => {
     return (
       <div className="tab-content">
-        <div className="section-header">
+        <div className="section-header-account">
           <h2>Profile Details</h2>
           <button 
             className={isEditing ? 'secondary-button' : 'primary-button'}
