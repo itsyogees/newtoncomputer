@@ -175,10 +175,10 @@ const closeMenu = () => {
               <div className="dropdown-menu">
                 <Link href="/pages/BusinessMail" className="dropdown-item" onClick={closeMenu}>Business Mail Services</Link>
                 <Link href="/pages/NetworkSecurity" className="dropdown-item" onClick={closeMenu}>Network Security Solutions</Link>
-                <Link href="/it-services/server-storage" className="dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
+                {/* <Link href="/it-services/server-storage" className="dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
                 <Link href="/it-services/wifi-networking" className="dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
                 <Link href="/it-services/cctv" className="dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
-                <Link href="/it-services/cloud-hosting" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link>
+                <Link href="/it-services/cloud-hosting" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link> */}
               </div>
             </div>
 
