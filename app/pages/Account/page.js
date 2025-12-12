@@ -43,7 +43,11 @@ import {
   FaLaptopCode,
   FaNetworkWired
 } from 'react-icons/fa';
+// Add these imports at the top of your Account.jsx file
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import './Account.scss';
+import Image from 'next/image';
 
 const Account = () => {
   const [userRole, setUserRole] = useState('super admin');
@@ -52,7 +56,7 @@ const Account = () => {
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+  const [generatingPDF, setGeneratingPDF] = useState(false);
   // Modal states
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
@@ -3132,16 +3136,573 @@ const Quotations = () => {
   };
 
   // Function to format date
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  try {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
     });
-  };
+  } catch (error) {
+    return 'Invalid Date';
+  }
+};
+const loadImageAsBase64 = async (imagePath) => {
+  try {
+    // For production, use the actual image path
+    const response = await fetch(imagePath);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Error loading image:', error);
+    // Fallback to a simple logo
+    return null;
+  }
+};
+const downloadQuotationPDF = async (quotation) => {
+  try {
+    setGeneratingPDF(true);
+    
+    // Load company logo
+    const logoBase64 = await loadImageAsBase64('/assets/logo-newton.png');
+    
+    // Create PDF
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true
+    });
+    
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 15;
+    
+    // Set default font
+    pdf.setFont('helvetica');
+    
+    // Add Header - MODIFIED: Only logo, no text
+    const addHeader = (currentY) => {
+      // Try to add logo if available
+      if (logoBase64) {
+        try {
+          // Add logo in left corner
+          pdf.addImage(logoBase64, 'PNG', margin, 15, 30, 30);
+        } catch (error) {
+          console.log('Error adding logo:', error);
+        }
+      }
+      
+      // Quotation title on right side
+      pdf.setFontSize(20);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(59, 130, 246);
+      pdf.text('QUOTATION', pageWidth - margin, 30, { align: 'right' });
+      
+      return currentY + 40;
+    };
+    
+    // Add Company and Customer Info
+    const addInfoSection = (currentY) => {
+      const sectionHeight = 40;
+      
+      // Company info box
+      pdf.setFillColor(249, 250, 251);
+      pdf.rect(margin, currentY, pageWidth/2 - margin - 5, sectionHeight, 'F');
+      pdf.setDrawColor(229, 231, 235);
+      pdf.rect(margin, currentY, pageWidth/2 - margin - 5, sectionHeight);
+      
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(107, 114, 128);
+      pdf.text('FROM:', margin + 5, currentY + 8);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(31, 41, 55);
+      
+      const companyInfo = [
+        'Laptop Service Hub',
+        'Chennai, Tamil Nadu',
+        'Phone: +91 98406 04073',
+        'Email: info@laptopservicehub.com',
+        'GSTIN: 33ABCDE1234F1Z5'
+      ];
+      
+      companyInfo.forEach((line, index) => {
+        pdf.text(line, margin + 5, currentY + 15 + (index * 4));
+      });
+      
+      // Customer info box
+      pdf.setFillColor(249, 250, 251);
+      pdf.rect(pageWidth/2 + 5, currentY, pageWidth/2 - margin - 5, sectionHeight, 'F');
+      pdf.setDrawColor(229, 231, 235);
+      pdf.rect(pageWidth/2 + 5, currentY, pageWidth/2 - margin - 5, sectionHeight);
+      
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(107, 114, 128);
+      pdf.text('BILL TO:', pageWidth/2 + 10, currentY + 8);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(31, 41, 55);
+      
+      pdf.text(quotation.customerName, pageWidth/2 + 10, currentY + 15);
+      if (quotation.customerId) {
+        pdf.setFontSize(8);
+        pdf.text(`ID: ${quotation.customerId}`, pageWidth/2 + 10, currentY + 19);
+      }
+      
+      return currentY + sectionHeight + 10;
+    };
+    
+    // Add Quotation Details
+    const addQuotationDetails = (currentY) => {
+      const details = [
+        { label: 'Quotation #', value: quotation.id },
+        { label: 'Date', value: formatDate(quotation.createdDate || new Date().toISOString()) },
+        { label: 'Valid Until', value: formatDate(quotation.validUntil) },
+        { label: 'Branch', value: quotation.branchName || 'N/A' },
+        { label: 'Status', value: quotation.status.toUpperCase() }
+      ];
+      
+      pdf.setFontSize(9);
+      pdf.setTextColor(75, 85, 99);
+      
+      details.forEach((detail, index) => {
+        const yPos = currentY + (index * 5);
+        pdf.text(`${detail.label}:`, margin, yPos);
+        pdf.text(detail.value, pageWidth - margin, yPos, { align: 'right' });
+      });
+      
+      return currentY + 30;
+    };
+    
+    // Add Items Table
+    const addItemsTable = (currentY) => {
+      const tableTop = currentY + 5;
+      const colWidths = [10, 70, 20, 25, 25]; // Widths in mm
+      const colPositions = [margin];
+      
+      // Calculate column positions
+      for (let i = 1; i < colWidths.length; i++) {
+        colPositions[i] = colPositions[i - 1] + colWidths[i - 1];
+      }
+      
+      // Table header
+      pdf.setFillColor(243, 244, 246);
+      pdf.rect(margin, tableTop, pageWidth - (2 * margin), 8, 'F');
+      
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(55, 65, 81);
+      
+      const headers = ['#', 'Description', 'Qty', 'Price', 'Amount'];
+      headers.forEach((header, index) => {
+        const align = index >= 3 ? 'right' : 'left';
+        pdf.text(header, colPositions[index], tableTop + 5, { align });
+      });
+      
+      // Table rows
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(31, 41, 55);
+      let rowY = tableTop + 14;
+      
+      quotation.items.forEach((item, index) => {
+        // Check for page break
+        if (rowY > pageHeight - 40) {
+          pdf.addPage();
+          rowY = margin + 15;
+        }
+        
+        // Row background (alternating)
+        if (index % 2 === 0) {
+          pdf.setFillColor(249, 250, 251);
+          pdf.rect(margin, rowY - 4, pageWidth - (2 * margin), 8, 'F');
+        }
+        
+        // Row data
+        pdf.text((index + 1).toString(), colPositions[0], rowY);
+        
+        // Product name (with word wrap)
+        const maxWidth = colWidths[1] - 2;
+        const productLines = pdf.splitTextToSize(item.productName, maxWidth);
+        productLines.forEach((line, lineIndex) => {
+          pdf.text(line, colPositions[1], rowY + (lineIndex * 4));
+        });
+        
+        pdf.text(item.quantity.toString(), colPositions[2], rowY, { align: 'center' });
+        pdf.text(`₹${parseFloat(item.price).toFixed(2)}`, colPositions[3], rowY, { align: 'right' });
+        pdf.text(`₹${(item.quantity * item.price).toFixed(2)}`, colPositions[4], rowY, { align: 'right' });
+        
+        // Move Y position based on product description height
+        rowY += Math.max(8, productLines.length * 4);
+      });
+      
+      return rowY + 10;
+    };
+    
+    // Add Totals
+    const addTotals = (currentY) => {
+      const subtotal = parseFloat(quotation.subtotal?.replace('₹', '').replace(/,/g, '') || 0);
+      const discountAmount = parseFloat(quotation.discountAmount?.replace('₹', '').replace(/,/g, '') || 0);
+      const taxAmount = parseFloat(quotation.taxAmount?.replace('₹', '').replace(/,/g, '') || 0);
+      const total = parseFloat(quotation.total?.replace('₹', '').replace(/,/g, '') || 0);
+      
+      const totalsX = pageWidth - margin - 80;
+      
+      const totals = [
+        { label: 'Subtotal:', value: subtotal },
+        { label: `Discount (${quotation.discount || 0}%):`, value: -discountAmount },
+        { label: `Tax (${quotation.taxRate || 18}%):`, value: taxAmount },
+        { label: 'Total:', value: total, isTotal: true }
+      ];
+      
+      let totalY = currentY;
+      
+      totals.forEach((item, index) => {
+        pdf.setFontSize(item.isTotal ? 11 : 10);
+        pdf.setFont('helvetica', item.isTotal ? 'bold' : 'normal');
+        
+        if (item.isTotal) {
+          pdf.setTextColor(5, 150, 105);
+          // Add separator line
+          pdf.setDrawColor(229, 231, 235);
+          pdf.line(totalsX, totalY - 2, pageWidth - margin, totalY - 2);
+          totalY += 2;
+        } else if (item.value < 0) {
+          pdf.setTextColor(220, 38, 38);
+        } else {
+          pdf.setTextColor(75, 85, 99);
+        }
+        
+        pdf.text(item.label, totalsX, totalY);
+        pdf.text(`₹${item.value.toFixed(2)}`, pageWidth - margin, totalY, { align: 'right' });
+        
+        totalY += item.isTotal ? 8 : 6;
+      });
+      
+      return totalY + 10;
+    };
+    
+    // Add Notes and Terms
+    const addNotesAndTerms = (currentY) => {
+      const sectionWidth = (pageWidth - (3 * margin)) / 2;
+      
+      // Notes section
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(107, 114, 128);
+      pdf.text('NOTES:', margin, currentY);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(75, 85, 99);
+      
+      const notes = quotation.notes || 'No notes provided.';
+      const notesLines = pdf.splitTextToSize(notes, sectionWidth);
+      notesLines.forEach((line, index) => {
+        pdf.text(line, margin, currentY + 7 + (index * 4));
+      });
+      
+      // Terms section
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(107, 114, 128);
+      pdf.text('TERMS & CONDITIONS:', margin + sectionWidth + margin, currentY);
+      
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(75, 85, 99);
+      
+      const terms = quotation.terms || 
+        '1. Prices are valid for 30 days from date of quotation\n' +
+        '2. Payment due within 15 days of invoice date\n' +
+        '3. Warranty as per individual product terms\n' +
+        '4. Delivery charges may apply\n' +
+        '5. Taxes extra as applicable';
+      
+      const termsLines = pdf.splitTextToSize(terms, sectionWidth);
+      termsLines.forEach((line, index) => {
+        pdf.text(line, margin + sectionWidth + margin, currentY + 7 + (index * 4));
+      });
+      
+      return currentY + Math.max(notesLines.length, termsLines.length) * 4 + 15;
+    };
+    
+    // Add Footer
+    const addFooter = (currentY) => {
+      // Signature line
+      pdf.setDrawColor(55, 65, 81);
+      pdf.line(margin, currentY, margin + 80, currentY);
+      
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(107, 114, 128);
+      pdf.text('Authorized Signature', margin, currentY + 5);
+      
+      // Thank you message
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(31, 41, 55);
+      pdf.text('Thank you for your business!', pageWidth / 2, currentY, { align: 'center' });
+      
+      // Contact info
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(107, 114, 128);
+      
+      const contactInfo = [
+        'Laptop Service Hub | Chennai, Tamil Nadu',
+        'Phone: +91 98406 04073 | Email: info@laptopservicehub.com'
+      ];
+      
+      contactInfo.forEach((line, index) => {
+        pdf.text(line, pageWidth / 2, currentY + 10 + (index * 4), { align: 'center' });
+      });
+      
+      // Page number
+      pdf.text(`Page 1 of 1 | Generated on ${formatDate(new Date().toISOString())}`, 
+               pageWidth / 2, pageHeight - 10, { align: 'center' });
+    };
+    
+    // Build the PDF
+    let currentY = margin;
+    
+    currentY = addHeader(currentY);
+    currentY = addInfoSection(currentY);
+    currentY = addQuotationDetails(currentY);
+    currentY = addItemsTable(currentY);
+    currentY = addTotals(currentY);
+    
+    // Check if we need a new page for notes
+    if (currentY > pageHeight - 80) {
+      pdf.addPage();
+      currentY = margin;
+    }
+    
+    currentY = addNotesAndTerms(currentY);
+    addFooter(currentY);
+    
+    // Save the PDF
+    pdf.save(`Quotation-${quotation.id}.pdf`);
+    
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('Failed to generate PDF. Please try again.');
+  } finally {
+    setGeneratingPDF(false);
+  }
+};
 
+// Alternative method using html2canvas for exact UI representation
+const downloadQuotationAsHTML2PDF = async (quotation) => {
+  try {
+    setGeneratingPDF(true);
+    
+    // Create a temporary container
+    const tempDiv = document.createElement('div');
+    tempDiv.id = 'quotation-pdf-print';
+    tempDiv.style.cssText = `
+      position: fixed;
+      left: -10000px;
+      top: -10000px;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 15mm;
+      background: white;
+      font-family: 'Arial', sans-serif;
+      color: #333;
+    `;
+    
+    // Build HTML content - MODIFIED: Only logo, no text
+    tempDiv.innerHTML = `
+      <div style="width: 100%;">
+        <!-- Header - MODIFIED: Only logo -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #3b82f6;">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="width: 120px; height: 120px; display: flex; align-items: center; justify-content: center;">
+              <img src="/assets/logo-newton.png" alt="Logo" style="width: 120px; height: auto; object-fit: contain;">
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <h2 style="margin: 0; font-size: 28px; font-weight: 800; color: #3b82f6; letter-spacing: 1px;">QUOTATION</h2>
+          </div>
+        </div>
+        
+        <!-- Quotation Details -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+          <div style="flex: 1;">
+            <h3 style="margin: 0 0 10px 0; color: #6b7280; font-size: 12px; text-transform: uppercase;">Bill To</h3>
+            <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+              <p style="margin: 0 0 5px 0; font-size: 16px; font-weight: 600; color: #1f2937;">${quotation.customerName}</p>
+              ${quotation.customerId ? `<p style="margin: 0; color: #6b7280; font-size: 12px;">Customer ID: ${quotation.customerId}</p>` : ''}
+            </div>
+          </div>
+          
+          <div style="flex: 1; padding-left: 30px;">
+            <h3 style="margin: 0 0 10px 0; color: #6b7280; font-size: 12px; text-transform: uppercase;">Quotation Details</h3>
+            <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #6b7280;">Quotation #:</span>
+                <span style="font-weight: 600; color: #1f2937;">${quotation.id}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #6b7280;">Date:</span>
+                <span style="font-weight: 600; color: #1f2937;">${formatDate(quotation.createdDate || new Date().toISOString())}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #6b7280;">Valid Until:</span>
+                <span style="font-weight: 600; color: #1f2937;">${formatDate(quotation.validUntil)}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #6b7280;">Status:</span>
+                <span style="font-weight: 600; color: ${
+                  quotation.status === 'sent' ? '#059669' : 
+                  quotation.status === 'pending' ? '#f59e0b' : '#6b7280'
+                };">${quotation.status.toUpperCase()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Items Table -->
+        <div style="margin-bottom: 30px;">
+          <h3 style="margin: 0 0 15px 0; color: #6b7280; font-size: 12px; text-transform: uppercase;">Items</h3>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #e5e7eb;">
+            <thead>
+              <tr style="background: #f3f4f6;">
+                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-size: 11px; color: #374151;">#</th>
+                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-size: 11px; color: #374151;">Description</th>
+                <th style="padding: 12px; text-align: center; border: 1px solid #e5e7eb; font-size: 11px; color: #374151;">Qty</th>
+                <th style="padding: 12px; text-align: right; border: 1px solid #e5e7eb; font-size: 11px; color: #374151;">Unit Price</th>
+                <th style="padding: 12px; text-align: right; border: 1px solid #e5e7eb; font-size: 11px; color: #374151;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${quotation.items.map((item, index) => `
+                <tr style="${index % 2 === 0 ? 'background: #f9fafb;' : ''}">
+                  <td style="padding: 10px; border: 1px solid #e5e7eb; font-size: 11px;">${index + 1}</td>
+                  <td style="padding: 10px; border: 1px solid #e5e7eb;">
+                    <div style="font-weight: 600; font-size: 11px; color: #1f2937;">${item.productName}</div>
+                    ${item.productId ? `<div style="font-size: 10px; color: #6b7280;">SKU: ${item.productId}</div>` : ''}
+                  </td>
+                  <td style="padding: 10px; text-align: center; border: 1px solid #e5e7eb; font-size: 11px;">${item.quantity}</td>
+                  <td style="padding: 10px; text-align: right; border: 1px solid #e5e7eb; font-size: 11px;">₹${parseFloat(item.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                  <td style="padding: 10px; text-align: right; border: 1px solid #e5e7eb; font-size: 11px; font-weight: 600;">₹${(item.quantity * item.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Totals -->
+        <div style="margin-left: auto; width: 300px; margin-bottom: 40px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+            <span style="color: #6b7280; font-size: 13px;">Subtotal:</span>
+            <span style="font-weight: 600; color: #1f2937; font-size: 13px;">₹${parseFloat(quotation.subtotal?.replace('₹', '').replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+            <span style="color: #6b7280; font-size: 13px;">Discount (${quotation.discount || 0}%):</span>
+            <span style="font-weight: 600; color: #dc2626; font-size: 13px;">- ₹${parseFloat(quotation.discountAmount?.replace('₹', '').replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+            <span style="color: #6b7280; font-size: 13px;">Tax (${quotation.taxRate || 18}%):</span>
+            <span style="font-weight: 600; color: #1f2937; font-size: 13px;">₹${parseFloat(quotation.taxAmount?.replace('₹', '').replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 2px solid #3b82f6;">
+            <span style="font-weight: 700; color: #1f2937; font-size: 16px;">Total Amount:</span>
+            <span style="font-weight: 800; color: #059669; font-size: 18px;">₹${parseFloat(quotation.total?.replace('₹', '').replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          </div>
+        </div>
+        
+        <!-- Notes & Terms -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
+          <div>
+            <h4 style="margin: 0 0 10px 0; color: #6b7280; font-size: 11px; text-transform: uppercase;">Notes</h4>
+            <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 11px; color: #4b5563; min-height: 80px;">
+              ${quotation.notes || 'No additional notes.'}
+            </div>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 10px 0; color: #6b7280; font-size: 11px; text-transform: uppercase;">Terms & Conditions</h4>
+            <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 11px; color: #4b5563; min-height: 80px; white-space: pre-line;">
+              ${quotation.terms || '1. Prices are valid for 30 days\n2. Payment due within 15 days\n3. Warranty as per product terms\n4. Delivery charges may apply\n5. Taxes extra as applicable'}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Footer - MODIFIED: Remove company name references -->
+        <div style="display: flex; justify-content: space-between; padding-top: 30px; border-top: 2px solid #3b82f6; font-size: 11px; color: #6b7280;">
+          <div>
+            <div style="width: 150px; height: 1px; background: #374151; margin-bottom: 10px;"></div>
+            <p style="margin: 0;">Authorized Signature</p>
+          </div>
+          <div style="text-align: right;">
+            <p style="margin: 0 0 10px 0; font-weight: 600; color: #1f2937;">Thank you for your business!</p>
+            <p style="margin: 5px 0;">Phone: +91 98406 04073</p>
+            <p style="margin: 5px 0;">Email: info@laptopservicehub.com</p>
+          </div>
+        </div>
+        
+        <!-- Generation Info -->
+        <div style="margin-top: 30px; text-align: center; font-size: 9px; color: #9ca3af;">
+          <p style="margin: 0;">Generated on ${formatDate(new Date().toISOString())} | Quotation ID: ${quotation.id}</p>
+        </div>
+      </div>
+    `;
+   
+    
+    document.body.appendChild(tempDiv);
+    
+    // Wait for images to load
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Convert to canvas and PDF
+    const canvas = await html2canvas(tempDiv, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff'
+    });
+    
+    const imgData = canvas.toDataURL('image/png', 1.0);
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    
+    const imgWidth = 190; // A4 width - margins
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    pdf.save(`Quotation-${quotation.id}.pdf`);
+    
+    // Clean up
+    document.body.removeChild(tempDiv);
+    
+  } catch (error) {
+    console.error('Error generating PDF via html2canvas:', error);
+    // Fallback to jsPDF method
+    downloadQuotationPDF(quotation);
+  } finally {
+    setGeneratingPDF(false);
+  }
+};
+const handleDownloadQuotation = async (quotation) => {
+  try {
+    setGeneratingPDF(true); // Show loading overlay
+    await downloadQuotationAsHTML2PDF(quotation);
+  } catch (error) {
+    console.error('Download error:', error);
+    alert('Failed to generate PDF');
+  } finally {
+    setGeneratingPDF(false); // Hide loading overlay
+  }
+};
   // View Quotation Modal Component
   const ViewQuotationModal = () => {
     if (!viewModalOpen || !selectedQuotation) return null;
@@ -3150,41 +3711,57 @@ const Quotations = () => {
       <div className="modal active large">
         <div className="modal-content quotation-view">
           <div className="modal-header">
-            <h3>Quotation #{selectedQuotation.id}</h3>
-            <div className="modal-header-actions">
-              <button className="icon-btn print" title="Print" onClick={() => window.print()}>
-                <FaPrint />
-              </button>
-              <button className="icon-btn download" title="Download">
-                <FaDownload />
-              </button>
-              <button className="close-btn" onClick={() => setViewModalOpen(false)}>
-                <FaTimes />
-              </button>
-            </div>
+          <h3>Quotation #{selectedQuotation.id}</h3>
+          <div className="modal-header-actions">
+            <button className="icon-btn print" title="Print" onClick={() => window.print()}>
+              <FaPrint />
+            </button>
+            <button 
+              className="icon-btn download" 
+              title="Download"
+              onClick={() => handleDownloadQuotation(selectedQuotation)}
+              disabled={generatingPDF}
+            >
+              <FaDownload />
+            </button>
+            <button className="close-btn" onClick={() => setViewModalOpen(false)}>
+              <FaTimes />
+            </button>
           </div>
+        </div>
           
           <div className="quotation-document">
             {/* Company Header */}
             <div className="quotation-header">
-              <div className="company-info">
-                <div className="company-logo">
-                  <FaBuilding className="logo-icon" />
-                </div>
-                <div>
-                  <h2 className="company-name">Laptop Service Hub</h2>
-                  <p className="company-tagline">Professional Laptop Repair & Sales</p>
-                </div>
-              </div>
-              <div className="quotation-title">
-                <h1>QUOTATION</h1>
-                <div className="quotation-status">
-                  <span className={`status-badge ${selectedQuotation.status}`}>
-                    {selectedQuotation.status.toUpperCase()}
-                  </span>
-                </div>
+            <div className="company-info">
+              <div className="company-logo">
+                <Image
+                width={200}
+                height={200}
+              src="/assets/logo-newton.png" 
+  alt="Logo" 
+  style={{ width: '100px', height: 'auto' }}
+  onError={(e) => {
+    e.target.style.display = 'none';
+    // Show a simple text alternative if image fails to load
+    e.target.parentElement.innerHTML = `
+      <div style="width: 100px; height: 100px; background: #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+        <span style="color: white; font-weight: bold; font-size: 14px;">QUOTE</span>
+      </div>
+    `;
+  }}
+                />
               </div>
             </div>
+            <div className="quotation-title">
+              <h1>QUOTATION</h1>
+              <div className="quotation-status">
+                <span className={`status-badge ${selectedQuotation.status}`}>
+                  {selectedQuotation.status.toUpperCase()}
+                </span>
+              </div>
+            </div>
+          </div>
 
             {/* Quotation Details */}
             <div className="quotation-details-grid">
@@ -3471,16 +4048,14 @@ const Quotations = () => {
                         >
                           <FaPrint />
                         </button>
-                        <button 
-                          className="icon-btn download" 
-                          title="Download"
-                          onClick={() => {
-                            // Implement download logic
-                            console.log('Download:', quote.id);
-                          }}
-                        >
-                          <FaDownload />
-                        </button>
+                      <button 
+  className="icon-btn download" 
+  title="Download"
+  onClick={() => handleDownloadQuotation(quote)}
+  disabled={generatingPDF}
+>
+  <FaDownload />
+</button>
                         <button 
                           className="icon-btn delete"
                           onClick={() => handleDeleteQuotation(quote.id)}
@@ -3921,6 +4496,15 @@ const Quotations = () => {
       <AddBranchModal />
       {/* <AddProjectModal /> */}
       <AddQuotationModal />
+       {generatingPDF && (
+      <div className="pdf-generating-overlay">
+        <div className="pdf-generating-modal">
+          <div className="spinner"></div>
+          <h3>Generating PDF</h3>
+          <p>Please wait while we prepare your quotation...</p>
+        </div>
+      </div>
+    )}
     </div>
   );
 };

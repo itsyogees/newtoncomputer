@@ -2397,7 +2397,7 @@ textarea:focus-visible {
 .quotation-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 2px solid #e5e7eb;
@@ -2405,34 +2405,24 @@ textarea:focus-visible {
   .company-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
     
     .company-logo {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-      border-radius: 0.75rem;
+      width: 100px;
+      height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
       
-      .logo-icon {
-        font-size: 2rem;
-        color: white;
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
       }
-    }
-    
-    .company-name {
-      margin: 0 0 0.25rem 0;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #1f2937;
-    }
-    
-    .company-tagline {
-      margin: 0;
-      color: #6b7280;
-      font-size: 0.9rem;
+      
+      .logo-icon {
+        font-size: 3rem;
+        color: #3b82f6;
+      }
     }
   }
   
@@ -2443,7 +2433,7 @@ textarea:focus-visible {
       margin: 0 0 0.5rem 0;
       font-size: 2rem;
       font-weight: 800;
-      color: #1f2937;
+      color: #3b82f6;
       letter-spacing: 1px;
     }
     
@@ -2482,7 +2472,6 @@ textarea:focus-visible {
     }
   }
 }
-
 // Details Grid
 .quotation-details-grid {
   display: grid;
@@ -2875,4 +2864,73 @@ textarea:focus-visible {
   @media (max-width: 768px) {
     flex-direction: column;
   }
+}
+
+// PDF Generating Overlay
+.pdf-generating-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  
+  .pdf-generating-modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    
+    h3 {
+      margin: 0 0 0.5rem 0;
+      color: #1f2937;
+      font-size: 1.2rem;
+    }
+    
+    p {
+      color: #6b7280;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Print styles for quotation
+@media print {
+  .modal-content.quotation-view {
+    box-shadow: none;
+    border: none;
+    
+    .modal-header,
+    .modal-actions {
+      display: none !important;
+    }
+  }
+}
+
+// Ensure logo loads in PDF
+#quotation-pdf-print img {
+  max-width: 100%;
+  height: auto;
 }
