@@ -187,7 +187,7 @@ const Footer = () => {
         <div className="footer__container">
           <div className="footer-bottom-content">
             <p className="copyright">
-              © 2024 Newton Computers. All Rights Reserved
+              © 2025 Newton Computers. All Rights Reserved
             </p>
             <button 
               className="back-to-top"

@@ -21,7 +21,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [cartItemsCount, setCartItemsCount ] = useState(0);
 useEffect(() => {
   const handleScroll = () => {
     setIsScrolled(window.scrollY > 50);
@@ -175,10 +175,10 @@ const closeMenu = () => {
               <div className="dropdown-menu">
                 <Link href="/pages/BusinessMail" className="dropdown-item" onClick={closeMenu}>Business Mail Services</Link>
                 <Link href="/pages/NetworkSecurity" className="dropdown-item" onClick={closeMenu}>Network Security Solutions</Link>
-                {/* <Link href="/it-services/server-storage" className="dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
-                <Link href="/it-services/wifi-networking" className="dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
-                <Link href="/it-services/cctv" className="dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
-                <Link href="/it-services/cloud-hosting" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link> */}
+                 <Link href="/pages/ServerAndStorageSolutions" className="dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
+                <Link href="/pages/WifiNetworkingSolutions" className="dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
+            <Link href="/pages/CctvSolutions" className="dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
+                    <Link href="/pages/CloudHostingServices" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link> 
               </div>
             </div>
 
@@ -327,10 +327,10 @@ const closeMenu = () => {
                 <div className="mobile-dropdown-content">
                   <Link href="/pages/BusinessMail" className="mobile-dropdown-item" onClick={closeMenu}>Business Mail Services</Link>
                   <Link href="/pages/NetworkSecurity" className="mobile-dropdown-item" onClick={closeMenu}>Network Security Solutions</Link>
-                  <Link href="/it-services/server-storage" className="mobile-dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
-                  <Link href="/it-services/wifi-networking" className="mobile-dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
-                  <Link href="/it-services/cctv" className="mobile-dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
-                  <Link href="/it-services/cloud-hosting" className="mobile-dropdown-item" onClick={closeMenu}>Cloud hosting services</Link>
+                  <Link href="/pages/ServerAndStorageSolutions" className="mobile-dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
+                  <Link href="/pages/WifiNetworkingSolutions" className="mobile-dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
+                  <Link href="/pages/CctvSolutions" className="mobile-dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
+                  <Link href="/pages/CloudHostingServices" className="mobile-dropdown-item" onClick={closeMenu}>Cloud hosting services</Link>
                 </div>
               </details>
             </div>
