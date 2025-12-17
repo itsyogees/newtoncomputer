@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   FaShoppingCart, 
   FaPhone, 
@@ -12,7 +12,9 @@ import {
   FaSignInAlt, 
   FaBars, 
   FaTimes, 
-  FaBookmark 
+  FaBookmark,
+  FaSignOutAlt,
+  FaCalendarAlt
 } from "react-icons/fa";
 import BookServiceModal from "../BookServiceModal/page";
 import "./Navbar.scss";
@@ -21,45 +23,63 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
-  const [cartItemsCount, setCartItemsCount ] = useState(0);
-useEffect(() => {
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 50);
-  };
-
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
- useEffect(() => {
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 50);
-  };
-
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-
-// Add this cleanup for mobile menu
-useEffect(() => {
-  if (isMenuOpen) {
-    document.body.classList.add('mobile-menu-open');
-  } else {
-    document.body.classList.remove('mobile-menu-open');
-  }
+  const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   
-  return () => {
-    document.body.classList.remove('mobile-menu-open');
+  const profileDropdownRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile view
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
-}, [isMenuOpen]);
 
-// Add a small delay for menu transitions
-const toggleMenu = () => {
-  setIsMenuOpen(!isMenuOpen);
-};
-
-const closeMenu = () => {
-  setIsMenuOpen(false);
-};
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   const handleBookService = () => {
     closeMenu();
@@ -70,38 +90,52 @@ const closeMenu = () => {
     setIsBookServiceModalOpen(false);
   };
 
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
   return (
     <>
-      {/* Top Info Bar */}
-      <div className={`info-bar ${isScrolled ? 'info-bar--hidden' : ''}`}>
-        <div className="info-bar__container">
-          <div className="info-bar__contact">
-            <FaEnvelope className="info-bar__icon" />
-            <a href="mailto:info@newtoncomputers.in">info@newtoncomputers.in</a>
-          </div>
-
-          <div className="info-bar__phones">
-            <span className="phone-item">
-              <FaMapMarkerAlt className="info-bar__icon" />
-              <span className="location-badge">T.Nagar</span>
-              <FaPhone className="info-bar__icon" />
-              <a href="tel:9840604073">9840604073</a>
-            </span>
+      {/* Top Info Bar with Diagonal Split - HIDDEN ON MOBILE */}
+      {!isMobile && (
+        <div className={`info-bar ${isScrolled ? 'info-bar--hidden' : ''}`}>
+          <div className="info-bar__diagonal-split">
+            {/* Blue Section (70%) */}
+            <div className="info-bar__section info-bar__section--blue">
+              <div className="info-bar__content">
+                <div className="info-bar__contact-info">
+                  <FaEnvelope className="info-bar__icon info-bar__icon--white" />
+                  <a href="mailto:info@newtoncomputers.in">info@newtoncomputers.in</a>
+                  
+                  <div className="info-bar__locations">
+                    <span className="location-separator">|</span>
+                    <FaMapMarkerAlt className="info-bar__icon info-bar__icon--white" />
+                    <span className="locations-text">
+                      T.Nagar-9840604073 | Thoraipakkam-9940185417
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
             
-            <span className="divider">|</span>
-            
-            <span className="phone-item">
-              <FaMapMarkerAlt className="info-bar__icon" />
-              <span className="location-badge">Thoraipakkam</span>
-              <FaPhone className="info-bar__icon" />
-              <a href="tel:9940185417">9940185417</a>
-            </span>
+            {/* White Section (30%) */}
+            <div className="info-bar__section info-bar__section--white">
+              <div className="info-bar__content">
+                <button 
+                  className="info-bar__book-btn"
+                  onClick={handleBookService}
+                >
+                  <FaCalendarAlt className="book-icon" />
+                  <span>Book Service</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Navigation */}
-      <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`}>
+      <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''} ${isMobile ? 'navbar--mobile' : ''}`}>
         <div className="navbar__container">
           {/* Logo */}
           <div className="navbar__logo">
@@ -175,41 +209,53 @@ const closeMenu = () => {
               <div className="dropdown-menu">
                 <Link href="/pages/BusinessMail" className="dropdown-item" onClick={closeMenu}>Business Mail Services</Link>
                 <Link href="/pages/NetworkSecurity" className="dropdown-item" onClick={closeMenu}>Network Security Solutions</Link>
-                 <Link href="/pages/ServerAndStorageSolutions" className="dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
+                <Link href="/pages/ServerAndStorageSolutions" className="dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
                 <Link href="/pages/WifiNetworkingSolutions" className="dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
-            <Link href="/pages/CctvSolutions" className="dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
-                    <Link href="/pages/CloudHostingServices" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link> 
+                <Link href="/pages/CctvSolutions" className="dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
+                <Link href="/pages/CloudHostingServices" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link> 
               </div>
             </div>
 
-            {/* Contact Us Dropdown */}
-            <div className="nav-item dropdown">
-              <button className="nav-link dropdown-toggle">
-                Contact Us <FaChevronDown className="dropdown-arrow" />
-              </button>
-              <div className="dropdown-menu">
-                <Link href="/pages/About" className="dropdown-item" onClick={closeMenu}>About Us</Link>
-                <Link href="/pages/Branches" className="dropdown-item" onClick={closeMenu}>Branches</Link>
-                {/* <Link href="/contact" className="dropdown-item" onClick={closeMenu}>Contact Form</Link> */}
-              </div>
-            </div>
+            <Link href="/pages/About" className="nav-link" onClick={closeMenu}>
+              About Us
+            </Link>
           </nav>
 
-          {/* Desktop Actions */}
+          {/* Desktop Actions with Profile Dropdown */}
           <div className="navbar__actions">
-            <Link href="/pages/Account" className="action-btn account-btn" title="My Account">
-              <FaUser className="action-icon" />
-            </Link>
+            {/* Profile Dropdown */}
+            <div className="nav-item profile-dropdown" ref={profileDropdownRef}>
+              <button 
+                className="action-btn profile-btn"
+                onClick={toggleProfileDropdown}
+                title="My Account"
+              >
+                <FaUser className="action-icon" />
+              </button>
+              
+              {isProfileDropdownOpen && (
+                <div className="profile-dropdown-menu">
+                  <Link href="/component/Login" className="profile-dropdown-item" onClick={() => setIsProfileDropdownOpen(false)}>
+                    <FaSignInAlt className="profile-dropdown-icon" />
+                    <span>Login</span>
+                  </Link>
+                  <Link href="/pages/Account" className="profile-dropdown-item" onClick={() => setIsProfileDropdownOpen(false)}>
+                    <FaUser className="profile-dropdown-icon" />
+                    <span>Account</span>
+                  </Link>
+                  <button className="profile-dropdown-item logout-btn" onClick={() => setIsProfileDropdownOpen(false)}>
+                    <FaSignOutAlt className="profile-dropdown-icon" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             <Link href="/pages/Cart" className="action-btn cart-btn" title="Cart">
               <FaShoppingCart className="action-icon" />
               {cartItemsCount > 0 && (
                 <span className="cart-count">{cartItemsCount}</span>
               )}
-            </Link>
-
-            <Link href="/component/Login" className="action-btn login-btn" title="Login">
-              <FaSignInAlt className="action-icon" />
             </Link>
             
             <button 
@@ -257,6 +303,21 @@ const closeMenu = () => {
             >
               <FaTimes />
             </button>
+          </div>
+
+          {/* Mobile Contact Info Section */}
+          <div className="navbar__mobile-contact">
+            <div className="mobile-contact-section">
+              <FaEnvelope className="mobile-contact-icon" />
+              <a href="mailto:info@newtoncomputers.in">info@newtoncomputers.in</a>
+            </div>
+            
+            <div className="mobile-locations-section">
+              <FaMapMarkerAlt className="mobile-location-icon" />
+              <span className="mobile-locations-text">
+                T.Nagar-9840604073 | Thoraipakkam-9940185417
+              </span>
+            </div>
           </div>
 
           {/* Mobile Navigation Links */}
@@ -335,60 +396,53 @@ const closeMenu = () => {
               </details>
             </div>
 
-            {/* Mobile Contact Us Dropdown */}
-            <div className="mobile-nav-section dropdown-section">
-              <details>
-                <summary className="mobile-dropdown-summary">
-                  Contact Us
-                  <FaChevronDown className="mobile-dropdown-arrow" />
-                </summary>
-                <div className="mobile-dropdown-content">
-                  <Link href="/pages/About" className="mobile-dropdown-item" onClick={closeMenu}>About Us</Link>
-                  <Link href="/pages/Branches" className="mobile-dropdown-item" onClick={closeMenu}>Branches</Link>
-                  <Link href="/contact" className="mobile-dropdown-item" onClick={closeMenu}>Contact Form</Link>
-                </div>
-              </details>
-            </div>
-          </nav>
-
-          {/* Mobile Actions */}
-          <div className="navbar__mobile-actions">
-            <div className="mobile-actions-row">
-              <Link href="/pages/Account" className="mobile-action-btn" onClick={closeMenu}>
-                <FaUser className="mobile-action-icon" />
-                <span className="mobile-action-text">Account</span>
-              </Link>
-
-              <Link href="/pages/Cart" className="mobile-action-btn" onClick={closeMenu}>
-                <FaShoppingCart className="mobile-action-icon" />
-                <span className="mobile-action-text">Cart</span>
+            {/* Additional Mobile Links */}
+            <div className="mobile-nav-section">
+              <Link href="/pages/Cart" className="mobile-nav-link" onClick={closeMenu}>
+                Cart
                 {cartItemsCount > 0 && (
-                  <span className="mobile-cart-count">{cartItemsCount}</span>
+                  <span className="mobile-cart-badge">{cartItemsCount}</span>
                 )}
               </Link>
-
-              <Link href="/component/Login" className="mobile-action-btn" onClick={closeMenu}>
-                <FaSignInAlt className="mobile-action-icon" />
-                <span className="mobile-action-text">Login</span>
-              </Link>
-              
-              <button 
-                className="mobile-action-btn"
-                onClick={handleBookService}
-                aria-label="Book Service"
-              >
-                <FaBookmark className="mobile-action-icon" />
-                <span className="mobile-action-text">Book</span>
-              </button>
             </div>
             
-            <button 
-              className="mobile-book-service-btn"
-              onClick={handleBookService}
-            >
-              BOOK SERVICE
-            </button>
-          </div>
+            <div className="mobile-nav-section">
+              <Link href="/pages/Branches" className="mobile-nav-link" onClick={closeMenu}>
+                Our Branches
+              </Link>
+            </div>
+            
+            <div className="mobile-nav-section">
+              <Link 
+                href="#" 
+                className="mobile-nav-link" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleBookService();
+                }}
+              >
+                Book Service
+              </Link>
+            </div>
+            
+            <div className="mobile-nav-section">
+              <Link href="/pages/About" className="mobile-nav-link" onClick={closeMenu}>
+                About Us
+              </Link>
+            </div>
+            
+            <div className="mobile-nav-section">
+              <Link href="/component/Login" className="mobile-nav-link" onClick={closeMenu}>
+                Login
+              </Link>
+            </div>
+            
+            <div className="mobile-nav-section">
+              <Link href="/pages/Account" className="mobile-nav-link" onClick={closeMenu}>
+                My Account
+              </Link>
+            </div>
+          </nav>
         </div>
 
         {/* Mobile Overlay */}

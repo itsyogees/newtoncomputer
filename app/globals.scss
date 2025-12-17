@@ -2,12 +2,40 @@
    GLOBAL FONT VARIABLES (Bootstrap Style)
 ---------------------------------------------------------*/ 
 :root {
-  /* Montserrat as primary font */
---font-primary: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  /* DM Sans as primary font with proper fallbacks */
+--font-primary: var(--font-dm-sans), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   
   /* Keep mono font for code */
-  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Font Size System - Consistent Scale */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 1.875rem;   /* 30px */
+  --text-4xl: 2.25rem;    /* 36px */
+  --text-5xl: 3rem;       /* 48px */
+  --text-6xl: 3.75rem;    /* 60px */
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+  --leading-loose: 2;
+
+  /* Font Weights for DM Sans */
+  --font-thin: 100;
+  --font-extralight: 200;
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
 
   /* Primary Colors */
   --color-navy: #1a237e;
@@ -23,6 +51,18 @@
   --color-gray-light: #f5f5f5;
   --color-gray-medium: #9e9e9e;
   --color-gray-dark: #424242;
+}
+
+/* Apply the font family globally */
+body {
+  font-family: var(--font-primary);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-normal);
+}
+
+/* Optional: Add a class for monospace */
+.font-mono {
+  font-family: var(--font-mono);
 }
 
 /* --------------------------------------------------------
@@ -54,14 +94,104 @@ html {
   scroll-behavior: smooth;
 }
 
+/* --------------------------------------------------------
+   TYPOGRAPHY - CONSISTENT SYSTEM
+---------------------------------------------------------*/
 body {
   font-family: var(--font-primary);
-  background-color: $primary-white;
-  color: $primary-black;
-  line-height: 1.6;
+  font-size: var(--text-base); /* 16px base */
+  line-height: var(--leading-normal);
+  font-weight: var(--font-normal);
+  color: var(--color-black);
+  background-color: var(--color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Heading Scale - Consistent with Design System */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-navy);
+}
+
+h1 {
+  font-size: var(--text-5xl);    /* 48px */
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: var(--text-4xl);    /* 36px */
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-size: var(--text-3xl);    /* 30px */
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight); 
+}
+
+h4 {
+  font-size: var(--text-2xl);    /* 24px */
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-normal);
+  margin-bottom: 0.875rem;
+}
+
+h5 {
+  font-size: var(--text-xl);     /* 20px */
+  font-weight: var(--font-medium);
+  line-height: var(--leading-normal);
+  margin-bottom: 0.75rem;
+}
+
+h6 {
+  font-size: var(--text-lg);     /* 18px */
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-normal);
+  margin-bottom: 0.5rem;
+}
+
+p {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 1rem;
+  color: var(--color-black);
+}
+
+/* Small text */
+small, .text-sm {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+/* Large text */
+.text-lg {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+}
+
+/* Extra large text */
+.text-xl {
+  font-size: var(--text-xl);
+  line-height: var(--leading-relaxed);
+}
+
+/* --------------------------------------------------------
+   LINKS
+---------------------------------------------------------*/
+a {
+  color: var(--color-navy);
+  text-decoration: none;
+  transition: 0.3s ease;
+  font-weight: var(--font-medium);
+
+  &:hover {
+    color: var(--color-red);
+  }
 }
 
 /* --------------------------------------------------------
@@ -72,105 +202,25 @@ body {
 }
 
 /* --------------------------------------------------------
-   TYPOGRAPHY
+   UTILITIES
 ---------------------------------------------------------*/
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-primary);
-  line-height: 1.3;
-  color: $primary-navy;
-}
-
-/* Montserrat-specific font weights */
-h1 {
-  font-size: 2.5rem;
-  font-weight: 700; /* Bold */
-}
-
-h2 {
-  font-size: 2rem;
-  font-weight: 600; /* SemiBold */
-}
-
-h3 {
-  font-size: 1.5rem;
-  font-weight: 600; /* SemiBold */
-}
-
-h4 {
-  font-size: 1.25rem;
-  font-weight: 500; /* Medium */
-}
-
-h5 {
-  font-size: 1.125rem;
-  font-weight: 500; /* Medium */
-}
-
-h6 {
-  font-size: 1rem;
-  font-weight: 600; /* SemiBold */
-}
-
-p {
-  line-height: 1.5;
-  color: $primary-black;
-  font-weight: 400; /* Regular */
-}
-
-/* Strong/bold text */
-strong, b {
-  font-weight: 600; /* SemiBold in Montserrat */
-}
-
-code, pre {
-  font-family: var(--font-mono);
-}
-
-/* --------------------------------------------------------
-   LINKS
----------------------------------------------------------*/
-a {
-  color: $primary-navy;
-  text-decoration: none;
-  transition: 0.3s ease;
-  font-weight: 500; /* Medium */
-
-  &:hover {
-    color: $accent-red;
-  }
-}
-
-/* --------------------------------------------------------
-   BUTTONS
----------------------------------------------------------*/
-button {
-  font-family: var(--font-primary);
-  cursor: pointer;
-}
-
-/* --------------------------------------------------------
-   UTILITIES - Montserrat Specific
----------------------------------------------------------*/
-/* Font weights for Montserrat */
-.font-thin { font-weight: 100; }           /* Thin */
-.font-extralight { font-weight: 200; }     /* ExtraLight */
-.font-light { font-weight: 300; }          /* Light */
-.font-normal { font-weight: 400; }         /* Regular */
-.font-medium { font-weight: 500; }         /* Medium */
-.font-semibold { font-weight: 600; }       /* SemiBold */
-.font-bold { font-weight: 700; }           /* Bold */
-.font-extrabold { font-weight: 800; }      /* ExtraBold */
-.font-black { font-weight: 900; }          /* Black */
-
-/* Font style */
-.font-italic { font-style: italic; }
+/* Font weights */
+.font-thin { font-weight: var(--font-thin); }
+.font-extralight { font-weight: var(--font-extralight); }
+.font-light { font-weight: var(--font-light); }
+.font-normal { font-weight: var(--font-normal); }
+.font-medium { font-weight: var(--font-medium); }
+.font-semibold { font-weight: var(--font-semibold); }
+.font-bold { font-weight: var(--font-bold); }
+.font-extrabold { font-weight: var(--font-extrabold); }
+.font-black { font-weight: var(--font-black); }
 
 /* Text transforms */
 .uppercase { text-transform: uppercase; }
 .lowercase { text-transform: lowercase; }
 .capitalize { text-transform: capitalize; }
 
-/* Letter spacing for Montserrat (optional styling) */
+/* Letter spacing */
 .letter-spacing-tight { letter-spacing: -0.025em; }
 .letter-spacing-normal { letter-spacing: normal; }
 .letter-spacing-wide { letter-spacing: 0.025em; }
@@ -180,49 +230,54 @@ button {
    RESPONSIVE TYPOGRAPHY
 ---------------------------------------------------------*/
 @media (max-width: 768px) {
+  :root {
+    --text-base: 0.9375rem; /* 15px on tablet */
+  }
+  
   h1 {
-    font-size: 2rem;
-    font-weight: 700; /* Keep Bold on mobile */
+    font-size: var(--text-4xl);
   }
 
   h2 {
-    font-size: 1.75rem;
-    font-weight: 600; /* Keep SemiBold on mobile */
+    font-size: var(--text-3xl);
   }
 
   h3 {
-    font-size: 1.25rem;
-    font-weight: 600; /* Keep SemiBold on mobile */
+    font-size: var(--text-2xl);
   }
   
   h4 {
-    font-size: 1.125rem;
+    font-size: var(--text-xl);
   }
   
   h5 {
-    font-size: 1rem;
-  }
-
-  body {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.75rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  h3 {
-    font-size: 1.125rem;
+    font-size: var(--text-lg);
   }
   
   .main-content {
     min-height: calc(100vh - 180px);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --text-base: 0.875rem; /* 14px on mobile */
+  }
+  
+  h1 {
+    font-size: var(--text-3xl);
+  }
+
+  h2 {
+    font-size: var(--text-2xl);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+  }
+  
+  .main-content {
+    min-height: calc(100vh - 160px);
   }
 }
 
@@ -240,8 +295,6 @@ button {
     page-break-inside: avoid;
   }
 }
-
- 
 
 /* --------------------------------------------------------
    ACCESSIBILITY
