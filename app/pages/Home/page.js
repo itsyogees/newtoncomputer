@@ -159,21 +159,21 @@ const [cart, setCart] = useState([]);
   const sliderData = [
     {
       id: 1,
-      image: '/assets/banner1.jpg',
+      image: '/assets/banner-5.jpg',
       title: 'Premium Laptops & Services',
       subtitle: 'Get the best deals on refurbished laptops with warranty',
       buttonText: 'Shop Now'
     },
     {
       id: 2,
-      image: '/assets/banner2.jpg',
+      image: '/assets/banner1.jpg',
       title: 'Expert Laptop Repair Services',
       subtitle: 'Chip level service, data recovery, and hardware upgrades',
       buttonText: 'Book Service'
     },
     {
       id: 3,
-      image: '/assets/home-banner.jpg',
+      image: '/assets/banner-4.jpg',
       title: 'IT Solutions & Support',
       subtitle: 'Complete IT services for home and business',
       buttonText: 'Get Quote'
@@ -1198,7 +1198,7 @@ const partnerLogos = [
 <section className="laptop-services-carousel">
   <div className="services-carousel-container">
     <h2 className="services-carousel-title">Laptop <span className="services-main-title-accent">Services</span></h2>
-    <p className="services-carousel-subtitle">Professional laptop repair services with expert solutions</p>
+    
     
     <div className="carousel-wrapper">
       <button 
@@ -1563,7 +1563,7 @@ const partnerLogos = [
   <div className="container">
     <div className="partners-header">
       <h2 className="partners-title">Our Partners</h2>
-      <p className="partners-subtitle">Trusted by leading brands worldwide</p>
+     
     </div>
     
     <div className="partners-container">
