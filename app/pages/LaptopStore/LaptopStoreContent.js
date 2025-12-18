@@ -12,7 +12,11 @@ import {
   FaShieldAlt,
   FaTruck,
   FaCheckCircle,
-  FaSyncAlt
+  FaSyncAlt,
+  FaLaptop,
+  FaLaptopCode,
+  FaKeyboard,
+  FaPrint
 } from 'react-icons/fa';
 import CommonBanner from '../../component/CommonBanner/CommonBanner'; 
 import './LaptopStore.scss';
@@ -21,11 +25,12 @@ import Loading from '../../component/Loading/Loading';
 const LaptopStoreContent = () => {
   const searchParams = useSearchParams();
   const brand = searchParams.get('brand');
+  const category = searchParams.get('category');
   const router = useRouter();
   const sidebarRef = useRef(null);
   
-  const [laptops, setLaptops] = useState([]);
-  const [filteredLaptops, setFilteredLaptops] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState([0, 200000]);
@@ -33,24 +38,27 @@ const LaptopStoreContent = () => {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedOS, setSelectedOS] = useState([]);
   const [selectedRAM, setSelectedRAM] = useState([]);
-  const [selectedProcessors, setSelectedProcessors] = useState([]);
-  const [showSidebar, setShowSidebar] = useState(typeof window !== 'undefined' && window.innerWidth > 768);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedStorage, setSelectedStorage] = useState([]);
   const [selectedProcessor, setSelectedProcessor] = useState([]);
-  const [selectedCondition, setSelectedCondition] = useState([]);
+  const [selectedProductType, setSelectedProductType] = useState([]);
+  const [selectedPrinterType, setSelectedPrinterType] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(typeof window !== 'undefined' && window.innerWidth > 768);
 
-  // Enhanced laptop data with more specifications
-  const laptopData = [
+  // Enhanced product data with all categories
+  const productData = [
+    // Refurbished Laptops
     {
       id: 1,
-      name: 'Lenovo ThinkPad T460 – (Refurbished)',
+      name: 'Lenovo ThinkPad T460',
       brand: 'lenovo',
       specs: 'Intel® Core i5 – 6th Gen/ 8 GB/ 256 GB SSD',
       originalPrice: 21470,
       currentPrice: 19470,
       image: '/assets/lenovo-image1.jpeg',
-      category: 'business',
+      category: 'refurbished-laptop',
+      type: 'laptop',
+      condition: 'refurbished',
       rating: 4.5,
       reviews: 128,
       inStock: true,
@@ -67,13 +75,15 @@ const LaptopStoreContent = () => {
     },
     {
       id: 2,
-      name: 'Dell Latitude 5490 – (Refurbished)',
+      name: 'Dell Latitude 5490',
       brand: 'dell',
       specs: 'Intel® Core i7 – 8th Gen/ 16 GB/ 512 GB SSD',
       originalPrice: 35470,
       currentPrice: 29470,
       image: '/assets/placeholder-lap.png',
-      category: 'business',
+      category: 'refurbished-laptop',
+      type: 'laptop',
+      condition: 'refurbished',
       rating: 4.7,
       reviews: 95,
       inStock: true,
@@ -88,61 +98,44 @@ const LaptopStoreContent = () => {
         operatingSystem: 'windows'
       }
     },
+
+    // Brand New Laptops
     {
       id: 3,
-      name: 'HP EliteBook 840 G5 – (Refurbished)',
-      brand: 'hp',
-      specs: 'Intel® Core i5 – 8th Gen/ 8 GB/ 256 GB SSD',
-      originalPrice: 28470,
-      currentPrice: 24470,
+      name: 'Apple MacBook Air M1',
+      brand: 'apple',
+      specs: 'Apple M1/ 8 GB/ 256 GB SSD',
+      originalPrice: 92900,
+      currentPrice: 84900,
       image: '/assets/placeholder-lap.png',
-      category: 'business',
-      rating: 4.3,
-      reviews: 87,
+      category: 'new-laptop',
+      type: 'laptop',
+      condition: 'new',
+      rating: 4.9,
+      reviews: 234,
       inStock: true,
       specifications: {
-        processor: 'Intel Core i5-8250U',
-        processorBrand: 'intel',
+        processor: 'Apple M1',
+        processorBrand: 'apple',
         ram: '8GB',
         ramCapacity: 8,
         storage: '256GB SSD',
-        display: '14" FHD (1920x1080)',
-        os: 'Windows 10 Pro',
-        operatingSystem: 'windows'
+        display: '13.3" Retina',
+        os: 'macOS Monterey',
+        operatingSystem: 'macos'
       }
     },
     {
       id: 4,
-      name: 'Acer Aspire 5 – (Refurbished)',
-      brand: 'acer',
-      specs: 'Intel® Core i3 – 10th Gen/ 4 GB/ 1 TB HDD',
-      originalPrice: 18470,
-      currentPrice: 15470,
-      image: '/assets/placeholder-lap.png',
-      category: 'personal',
-      rating: 4.0,
-      reviews: 64,
-      inStock: false,
-      specifications: {
-        processor: 'Intel Core i3-10110U',
-        processorBrand: 'intel',
-        ram: '4GB',
-        ramCapacity: 4,
-        storage: '1TB HDD',
-        display: '15.6" HD (1366x768)',
-        os: 'Windows 10 Home',
-        operatingSystem: 'windows'
-      }
-    },
-    {
-      id: 5,
       name: 'ASUS ROG Strix G15 – Gaming Laptop',
       brand: 'asus',
       specs: 'Intel® Core i7 – 11th Gen/ 16 GB/ 1 TB SSD/ RTX 3050',
       originalPrice: 85470,
       currentPrice: 79470,
       image: '/assets/placeholder-lap.png',
-      category: 'gaming',
+      category: 'new-laptop',
+      type: 'laptop',
+      condition: 'new',
       rating: 4.8,
       reviews: 156,
       inStock: true,
@@ -157,110 +150,243 @@ const LaptopStoreContent = () => {
         operatingSystem: 'windows'
       }
     },
+
+    // Laptop Accessories
     {
-      id: 6,
-      name: 'Apple MacBook Air M1',
-      brand: 'apple',
-      specs: 'Apple M1/ 8 GB/ 256 GB SSD',
-      originalPrice: 92900,
-      currentPrice: 84900,
+      id: 5,
+      name: 'Logitech MX Master 3 Wireless Mouse',
+      brand: 'logitech',
+      specs: 'Wireless, 4000 DPI, Ergonomic Design',
+      originalPrice: 7999,
+      currentPrice: 6499,
       image: '/assets/placeholder-lap.png',
-      category: 'premium',
-      rating: 4.9,
-      reviews: 234,
+      category: 'accessories',
+      type: 'mouse',
+      condition: 'new',
+      rating: 4.6,
+      reviews: 89,
       inStock: true,
       specifications: {
-        processor: 'Apple M1',
-        processorBrand: 'apple',
-        ram: '8GB',
-        ramCapacity: 8,
-        storage: '256GB SSD',
-        display: '13.3" Retina',
-        os: 'macOS Monterey',
-        operatingSystem: 'macos'
+        connectivity: 'Wireless (Bluetooth/Receiver)',
+        battery: '70 days',
+        dpi: '4000 DPI',
+        color: 'Graphite'
+      }
+    },
+    {
+      id: 6,
+      name: 'Dell Professional Laptop Backpack',
+      brand: 'dell',
+      specs: 'Water-resistant, 15.6" Laptop Compartment',
+      originalPrice: 3499,
+      currentPrice: 2499,
+      image: '/assets/placeholder-lap.png',
+      category: 'accessories',
+      type: 'bag',
+      condition: 'new',
+      rating: 4.3,
+      reviews: 45,
+      inStock: true,
+      specifications: {
+        capacity: '30L',
+        waterResistance: 'Yes',
+        laptopSize: 'Up to 15.6"',
+        color: 'Black'
+      }
+    },
+    {
+      id: 7,
+      name: 'HP USB-C Docking Station',
+      brand: 'hp',
+      specs: 'USB-C Hub with 4K HDMI, Ethernet, USB Ports',
+      originalPrice: 8999,
+      currentPrice: 6999,
+      image: '/assets/placeholder-lap.png',
+      category: 'accessories',
+      type: 'docking-station',
+      condition: 'new',
+      rating: 4.4,
+      reviews: 67,
+      inStock: true,
+      specifications: {
+        ports: 'HDMI, USB 3.0, Ethernet, USB-C',
+        powerDelivery: '100W',
+        displaySupport: '4K@60Hz'
+      }
+    },
+
+    // Printers
+    {
+      id: 8,
+      name: 'HP LaserJet Pro MFP M428fdw',
+      brand: 'hp',
+      specs: 'Laser Printer, Print/Scan/Copy/Fax, Wireless',
+      originalPrice: 34999,
+      currentPrice: 29999,
+      image: '/assets/placeholder-lap.png',
+      category: 'printer',
+      type: 'laser-mfp',
+      condition: 'new',
+      rating: 4.7,
+      reviews: 120,
+      inStock: true,
+      specifications: {
+        printerType: 'Laser',
+        functions: 'Print/Scan/Copy/Fax',
+        connectivity: 'Wi-Fi, Ethernet, USB',
+        printSpeed: '28 ppm'
+      }
+    },
+    {
+      id: 9,
+      name: 'Canon PIXMA G3070 Ink Tank Printer',
+      brand: 'canon',
+      specs: 'Ink Tank, Wi-Fi, AirPrint',
+      originalPrice: 18999,
+      currentPrice: 15999,
+      image: '/assets/placeholder-lap.png',
+      category: 'printer',
+      type: 'ink-tank',
+      condition: 'new',
+      rating: 4.5,
+      reviews: 95,
+      inStock: true,
+      specifications: {
+        printerType: 'Ink Tank',
+        functions: 'Print',
+        connectivity: 'Wi-Fi, USB',
+        printSpeed: '8.8 ipm (color)'
+      }
+    },
+    {
+      id: 10,
+      name: 'Epson EcoTank L3210',
+      brand: 'epson',
+      specs: 'Refillable Ink Tank, All-in-One',
+      originalPrice: 16999,
+      currentPrice: 13999,
+      image: '/assets/placeholder-lap.png',
+      category: 'printer',
+      type: 'ink-tank',
+      condition: 'new',
+      rating: 4.6,
+      reviews: 110,
+      inStock: true,
+      specifications: {
+        printerType: 'Ink Tank',
+        functions: 'Print/Scan/Copy',
+        connectivity: 'USB',
+        printSpeed: '10 ppm (black)'
       }
     }
   ];
 
-  const brands = ['dell', 'lenovo', 'hp', 'acer', 'asus', 'apple'];
+  const brands = ['dell', 'lenovo', 'hp', 'apple', 'asus', 'logitech', 'canon', 'epson'];
   const operatingSystems = ['windows', 'macos', 'linux'];
   const ramOptions = [4, 8, 16, 32];
-  const categories = ['business', 'gaming', 'personal', 'premium'];
+  const productCategories = ['refurbished-laptop', 'new-laptop', 'accessories', 'printer'];
   const storageOptions = ['256GB SSD', '512GB SSD', '1TB SSD', '1TB HDD'];
   const processorOptions = ['Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Apple M1'];
-  const conditionOptions = ['Refurbished', 'Like New'];
+  const printerTypes = ['laser', 'ink-tank', 'laser-mfp', 'all-in-one'];
+  const accessoryTypes = ['mouse', 'keyboard', 'bag', 'docking-station', 'adapter', 'stand'];
 
-  // Initialize with brand from URL
+  // Initialize with brand or category from URL
   useEffect(() => {
+    const selectedBrands = [];
+    const selectedCategories = [];
+    
     if (brand) {
-      setSelectedBrands([brand.toLowerCase()]);
+      selectedBrands.push(brand.toLowerCase());
     }
-  }, [brand]);
+    
+    if (category) {
+      selectedCategories.push(category.toLowerCase());
+    }
+    
+    setSelectedBrands(selectedBrands);
+    setSelectedCategories(selectedCategories);
+  }, [brand, category]);
 
   // Data loading effect
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
-      setLaptops(laptopData);
-      setFilteredLaptops(laptopData);
+      setProducts(productData);
+      setFilteredProducts(productData);
       setLoading(false);
     }, 1000);
   }, []);
 
   // Filtering function
-  const filterLaptops = useCallback(() => {
-    let filtered = [...laptopData];
+  const filterProducts = useCallback(() => {
+    let filtered = [...productData];
+
+    // Product Category filter
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(product => selectedCategories.includes(product.category));
+    }
 
     // Brand filter
     if (selectedBrands.length > 0) {
-      filtered = filtered.filter(laptop => selectedBrands.includes(laptop.brand));
+      filtered = filtered.filter(product => selectedBrands.includes(product.brand));
     }
 
-    // Operating System filter
+    // Operating System filter (only for laptops)
     if (selectedOS.length > 0) {
-      filtered = filtered.filter(laptop => selectedOS.includes(laptop.specifications.operatingSystem));
-    }
-
-    // RAM filter
-    if (selectedRAM.length > 0) {
-      filtered = filtered.filter(laptop => selectedRAM.includes(laptop.specifications.ramCapacity));
-    }
-
-    // Category filter
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter(laptop => selectedCategories.includes(laptop.category));
-    }
-
-    // Storage filter
-    if (selectedStorage.length > 0) {
-      filtered = filtered.filter(laptop => selectedStorage.includes(laptop.specifications.storage));
-    }
-
-    // Processor filter
-    if (selectedProcessor.length > 0) {
-      filtered = filtered.filter(laptop => 
-        selectedProcessor.some(proc => laptop.specifications.processor.includes(proc))
+      filtered = filtered.filter(product => 
+        product.type === 'laptop' && selectedOS.includes(product.specifications?.operatingSystem)
       );
     }
 
-    // Condition filter
-    if (selectedCondition.length > 0) {
-      filtered = filtered.filter(laptop => 
-        selectedCondition.some(condition => laptop.name.toLowerCase().includes(condition.toLowerCase()))
+    // RAM filter (only for laptops)
+    if (selectedRAM.length > 0) {
+      filtered = filtered.filter(product => 
+        product.type === 'laptop' && selectedRAM.includes(product.specifications?.ramCapacity)
+      );
+    }
+
+    // Storage filter (only for laptops)
+    if (selectedStorage.length > 0) {
+      filtered = filtered.filter(product => 
+        product.type === 'laptop' && selectedStorage.includes(product.specifications?.storage)
+      );
+    }
+
+    // Processor filter (only for laptops)
+    if (selectedProcessor.length > 0) {
+      filtered = filtered.filter(product => 
+        product.type === 'laptop' && 
+        selectedProcessor.some(proc => product.specifications?.processor?.includes(proc))
+      );
+    }
+
+    // Product Type filter (for accessories and printers)
+    if (selectedProductType.length > 0) {
+      filtered = filtered.filter(product => 
+        (product.category === 'accessories' || product.category === 'printer') &&
+        selectedProductType.includes(product.type)
+      );
+    }
+
+    // Printer Type filter
+    if (selectedPrinterType.length > 0 && selectedCategories.includes('printer')) {
+      filtered = filtered.filter(product => 
+        selectedPrinterType.some(type => product.type.includes(type))
       );
     }
 
     // Price filter
-    filtered = filtered.filter(laptop => 
-      laptop.currentPrice >= priceRange[0] && laptop.currentPrice <= priceRange[1]
+    filtered = filtered.filter(product => 
+      product.currentPrice >= priceRange[0] && product.currentPrice <= priceRange[1]
     );
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(laptop =>
-        laptop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        laptop.specs.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        laptop.brand.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.specs.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -282,7 +408,7 @@ const LaptopStoreContent = () => {
         break;
     }
 
-    setFilteredLaptops(filtered);
+    setFilteredProducts(filtered);
   }, [
     selectedBrands, 
     selectedOS, 
@@ -290,15 +416,16 @@ const LaptopStoreContent = () => {
     selectedCategories,
     selectedStorage,
     selectedProcessor,
-    selectedCondition,
+    selectedProductType,
+    selectedPrinterType,
     priceRange, 
     searchTerm, 
     sortBy
   ]);
 
   useEffect(() => {
-    filterLaptops();
-  }, [filterLaptops]);
+    filterProducts();
+  }, [filterProducts]);
 
   // Handle window resize for sidebar
   useEffect(() => {
@@ -314,34 +441,6 @@ const LaptopStoreContent = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Handle click outside sidebar to close it on mobile
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (window.innerWidth <= 768 && 
-          showSidebar && 
-          sidebarRef.current && 
-          !sidebarRef.current.contains(event.target) &&
-          !event.target.closest('.sidebar-toggle')) {
-        setShowSidebar(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showSidebar]);
-
-  // Close sidebar when pressing escape key
-  useEffect(() => {
-    const handleEscapeKey = (event) => {
-      if (event.key === 'Escape' && window.innerWidth <= 768 && showSidebar) {
-        setShowSidebar(false);
-      }
-    };
-
-    document.addEventListener('keydown', handleEscapeKey);
-    return () => document.removeEventListener('keydown', handleEscapeKey);
-  }, [showSidebar]);
-
   const handleBrandToggle = (brandItem) => {
     setSelectedBrands(prev =>
       prev.includes(brandItem)
@@ -350,35 +449,27 @@ const LaptopStoreContent = () => {
     );
   };
 
-  const handleCategoryToggle = (category) => {
+  const handleCategoryToggle = (categoryItem) => {
     setSelectedCategories(prev =>
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
+      prev.includes(categoryItem)
+        ? prev.filter(c => c !== categoryItem)
+        : [...prev, categoryItem]
     );
   };
 
-  const handleRAMToggle = (ram) => {
-    setSelectedRAM(prev =>
-      prev.includes(ram)
-        ? prev.filter(r => r !== ram)
-        : [...prev, ram]
+  const handleProductTypeToggle = (type) => {
+    setSelectedProductType(prev =>
+      prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
     );
   };
 
-  const handleStorageToggle = (storage) => {
-    setSelectedStorage(prev =>
-      prev.includes(storage)
-        ? prev.filter(s => s !== storage)
-        : [...prev, storage]
-    );
-  };
-
-  const handleProcessorToggle = (processor) => {
-    setSelectedProcessor(prev =>
-      prev.includes(processor)
-        ? prev.filter(p => p !== processor)
-        : [...prev, processor]
+  const handlePrinterTypeToggle = (type) => {
+    setSelectedPrinterType(prev =>
+      prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
     );
   };
 
@@ -389,21 +480,22 @@ const LaptopStoreContent = () => {
     setSelectedCategories([]);
     setSelectedStorage([]);
     setSelectedProcessor([]);
-    setSelectedCondition([]);
+    setSelectedProductType([]);
+    setSelectedPrinterType([]);
     setPriceRange([0, 200000]);
     setSearchTerm('');
   };
 
-  const handleAddToCart = (laptop) => {
-    console.log('Added to cart:', laptop);
+  const handleAddToCart = (product) => {
+    console.log('Added to cart:', product);
   };
 
-  const handleAddToWishlist = (laptop) => {
-    console.log('Added to wishlist:', laptop);
+  const handleAddToWishlist = (product) => {
+    console.log('Added to wishlist:', product);
   };
 
-  const handleViewDetails = (laptopId) => {
-    router.push(`/pages/LaptopProductDetails/${laptopId}`);
+  const handleViewDetails = (productId) => {
+    router.push(`/pages/ProductDetails/${productId}`);
   };
 
   const formatPrice = (price) => {
@@ -418,8 +510,35 @@ const LaptopStoreContent = () => {
     return brandItem.charAt(0).toUpperCase() + brandItem.slice(1);
   };
 
+  const getCategoryDisplayName = (categoryItem) => {
+    const names = {
+      'refurbished-laptop': 'Refurbished Laptops',
+      'new-laptop': 'New Laptops',
+      'accessories': 'Laptop Accessories',
+      'printer': 'Printers'
+    };
+    return names[categoryItem] || categoryItem;
+  };
+
+  const getProductIcon = (category) => {
+    switch(category) {
+      case 'refurbished-laptop':
+        return <FaLaptopCode />;
+      case 'new-laptop':
+        return <FaLaptop />;
+      case 'accessories':
+        return <FaKeyboard />;
+      case 'printer':
+        return <FaPrint />;
+      default:
+        return <FaLaptop />;
+    }
+  };
+
   const getBannerTitle = () => {
-    return brand ? `${getBrandDisplayName(brand)} Laptops` : 'All Laptops';
+    if (category) return getCategoryDisplayName(category);
+    if (brand) return `${getBrandDisplayName(brand)} Products`;
+    return 'Shop All Products';
   };
 
   const handleImageError = (e) => {
@@ -433,7 +552,7 @@ const LaptopStoreContent = () => {
         <div className="loading-section">
           <Loading 
             type="spinner" 
-            text="Loading laptops..." 
+            text="Loading products..." 
             fullScreen={false}
             size="medium"
           />
@@ -454,7 +573,7 @@ const LaptopStoreContent = () => {
               <FaSearch className="search-icon" />
               <input
                 type="text"
-                placeholder="Search laptops..."
+                placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
@@ -518,6 +637,29 @@ const LaptopStoreContent = () => {
                   </div>
                 </div>
 
+                {/* Product Categories Filter */}
+                <div className="filter-section">
+                  <h4>Product Categories</h4>
+                  <div className="filter-options">
+                    {productCategories.map(categoryItem => (
+                      <label key={categoryItem} className="filter-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedCategories.includes(categoryItem)}
+                          onChange={() => handleCategoryToggle(categoryItem)}
+                        />
+                        <span className="checkmark"></span>
+                        <span className="filter-text">
+                          <span className="filter-icon">
+                            {getProductIcon(categoryItem)}
+                          </span>
+                          {getCategoryDisplayName(categoryItem)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Brands Filter */}
                 <div className="filter-section">
                   <h4>Brands</h4>
@@ -559,41 +701,96 @@ const LaptopStoreContent = () => {
                   </div>
                 </div>
 
-                {/* Category Filter */}
-                <div className="filter-section">
-                  <h4>Category</h4>
-                  <div className="filter-options">
-                    {categories.map(category => (
-                      <label key={category} className="filter-option">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(category)}
-                          onChange={() => handleCategoryToggle(category)}
-                        />
-                        <span className="checkmark"></span>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                {/* Laptop Specific Filters */}
+                {(selectedCategories.includes('refurbished-laptop') || 
+                  selectedCategories.includes('new-laptop') || 
+                  selectedCategories.length === 0) && (
+                  <>
+                    {/* RAM Filter */}
+                    <div className="filter-section">
+                      <h4>RAM</h4>
+                      <div className="filter-options">
+                        {ramOptions.map(ram => (
+                          <label key={ram} className="filter-option">
+                            <input
+                              type="checkbox"
+                              checked={selectedRAM.includes(ram)}
+                              onChange={() => setSelectedRAM(prev =>
+                                prev.includes(ram)
+                                  ? prev.filter(r => r !== ram)
+                                  : [...prev, ram]
+                              )}
+                            />
+                            <span className="checkmark"></span>
+                            {ram}GB
+                          </label>
+                        ))}
+                      </div>
+                    </div>
 
-                {/* RAM Filter */}
-                <div className="filter-section">
-                  <h4>RAM</h4>
-                  <div className="filter-options">
-                    {ramOptions.map(ram => (
-                      <label key={ram} className="filter-option">
-                        <input
-                          type="checkbox"
-                          checked={selectedRAM.includes(ram)}
-                          onChange={() => handleRAMToggle(ram)}
-                        />
-                        <span className="checkmark"></span>
-                        {ram}GB
-                      </label>
-                    ))}
+                    {/* Storage Filter */}
+                    <div className="filter-section">
+                      <h4>Storage</h4>
+                      <div className="filter-options">
+                        {storageOptions.map(storage => (
+                          <label key={storage} className="filter-option">
+                            <input
+                              type="checkbox"
+                              checked={selectedStorage.includes(storage)}
+                              onChange={() => setSelectedStorage(prev =>
+                                prev.includes(storage)
+                                  ? prev.filter(s => s !== storage)
+                                  : [...prev, storage]
+                              )}
+                            />
+                            <span className="checkmark"></span>
+                            {storage}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Accessories Type Filter */}
+                {(selectedCategories.includes('accessories') || selectedCategories.length === 0) && (
+                  <div className="filter-section">
+                    <h4>Accessory Type</h4>
+                    <div className="filter-options">
+                      {accessoryTypes.map(type => (
+                        <label key={type} className="filter-option">
+                          <input
+                            type="checkbox"
+                            checked={selectedProductType.includes(type)}
+                            onChange={() => handleProductTypeToggle(type)}
+                          />
+                          <span className="checkmark"></span>
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Printer Type Filter */}
+                {(selectedCategories.includes('printer') || selectedCategories.length === 0) && (
+                  <div className="filter-section">
+                    <h4>Printer Type</h4>
+                    <div className="filter-options">
+                      {printerTypes.map(type => (
+                        <label key={type} className="filter-option">
+                          <input
+                            type="checkbox"
+                            checked={selectedPrinterType.includes(type)}
+                            onChange={() => handlePrinterTypeToggle(type)}
+                          />
+                          <span className="checkmark"></span>
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -601,13 +798,22 @@ const LaptopStoreContent = () => {
             <div className={`products-section ${showSidebar ? 'with-sidebar' : 'full-width'}`}>
               <div className="results-info">
                 <span className="results-count">
-                  {filteredLaptops.length} {filteredLaptops.length === 1 ? 'product' : 'products'} found
+                  {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found
                 </span>
+                {selectedCategories.length > 0 && (
+                  <div className="active-filters">
+                    {selectedCategories.map(cat => (
+                      <span key={cat} className="active-filter">
+                        {getCategoryDisplayName(cat)}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {filteredLaptops.length === 0 ? (
+              {filteredProducts.length === 0 ? (
                 <div className="no-results">
-                  <h3>No laptops found</h3>
+                  <h3>No products found</h3>
                   <p>Try adjusting your filters or search terms</p>
                   <button className="clear-filters-btn" onClick={clearAllFilters}>
                     Clear All Filters
@@ -615,73 +821,80 @@ const LaptopStoreContent = () => {
                 </div>
               ) : (
                 <div className="products-grid">
-                  {filteredLaptops.map(laptop => (
-                    <div key={laptop.id} className="product-card">
+                  {filteredProducts.map(product => (
+                    <div key={product.id} className="product-card">
                       <div className="product-image">
                         <Image 
-                          src={laptop.image} 
-                          alt={laptop.name}
+                          src={product.image} 
+                          alt={product.name}
                           width={200}
                           height={140}
                           className="product-img"
                           onError={handleImageError}
                         />
                         
-                        {!laptop.inStock && (
+                        {!product.inStock && (
                           <div className="stock-badge">Out of Stock</div>
                         )}
                         
                         <button 
                           className="wishlist-btn"
-                          onClick={() => handleAddToWishlist(laptop)}
+                          onClick={() => handleAddToWishlist(product)}
                         >
                           <FaHeart />
                         </button>
 
                         <div className="product-badges">
-                          <span className={`badge ${laptop.category.toLowerCase()}`}>
-                            {laptop.category.charAt(0).toUpperCase() + laptop.category.slice(1)}
+                          <span className={`badge ${product.category}`}>
+                            {getProductIcon(product.category)}
+                            {product.condition === 'refurbished' ? 'Refurbished' : 
+                             product.category === 'new-laptop' ? 'New' :
+                             getCategoryDisplayName(product.category)}
                           </span>
-                          
+                          {product.originalPrice > product.currentPrice && (
+                            <span className="badge discount">
+                              Save {Math.round((1 - product.currentPrice / product.originalPrice) * 100)}%
+                            </span>
+                          )}
                         </div>
                       </div>
 
                       <div className="product-info">
-                        <div className="product-brand">{getBrandDisplayName(laptop.brand)}</div>
-                        <h3 className="product-title">{laptop.name}</h3>
-                        <p className="product-specs">{laptop.specs}</p>
+                        <div className="product-brand">{getBrandDisplayName(product.brand)}</div>
+                        <h3 className="product-title">{product.name}</h3>
+                        <p className="product-specs">{product.specs}</p>
                         
                         <div className="product-rating">
                           <div className="stars">
                             {[...Array(5)].map((_, i) => (
                               <FaStar 
                                 key={i} 
-                                className={i < Math.floor(laptop.rating) ? 'star filled' : 'star'}
+                                className={i < Math.floor(product.rating) ? 'star filled' : 'star'}
                               />
                             ))}
                           </div>
-                          <span className="rating-text">({laptop.reviews})</span>
+                          <span className="rating-text">({product.reviews})</span>
                         </div>
 
                         <div className="product-pricing">
-                          <span className="current-price">{formatPrice(laptop.currentPrice)}</span>
-                          {laptop.originalPrice > laptop.currentPrice && (
-                            <span className="original-price">{formatPrice(laptop.originalPrice)}</span>
+                          <span className="current-price">{formatPrice(product.currentPrice)}</span>
+                          {product.originalPrice > product.currentPrice && (
+                            <span className="original-price">{formatPrice(product.originalPrice)}</span>
                           )}
                         </div>
 
                         <div className="product-actions">
                           <button 
-                            className={`cart-btn ${!laptop.inStock ? 'disabled' : ''}`}
-                            onClick={() => handleAddToCart(laptop)}
-                            disabled={!laptop.inStock}
+                            className={`cart-btn ${!product.inStock ? 'disabled' : ''}`}
+                            onClick={() => handleAddToCart(product)}
+                            disabled={!product.inStock}
                           >
                             <FaShoppingCart />
-                            {laptop.inStock ? 'Add to Cart' : 'Out of Stock'}
+                            {product.inStock ? 'Add to Cart' : 'Out of Stock'}
                           </button>
                           <button 
                             className="details-btn"
-                            onClick={() => handleViewDetails(laptop.id)}
+                            onClick={() => handleViewDetails(product.id)}
                           >
                             Details
                           </button>
@@ -697,51 +910,51 @@ const LaptopStoreContent = () => {
       </section>
 
       {/* Features Section */}
-<section className="store-features">
-  <div className="container">
-    <div className="store-features__grid">
-      <div className="store-feature__card">
-        <div className="store-feature__icon">
-          <FaShieldAlt />
+      <section className="store-features">
+        <div className="container">
+          <div className="store-features__grid">
+            <div className="store-feature__card">
+              <div className="store-feature__icon">
+                <FaShieldAlt />
+              </div>
+              <h3 className="store-feature__title">12 Months Warranty</h3>
+              <p className="store-feature__description">
+                Comprehensive warranty on all refurbished laptops
+              </p>
+            </div>
+            
+            <div className="store-feature__card">
+              <div className="store-feature__icon">
+                <FaTruck />
+              </div>
+              <h3 className="store-feature__title">Free Shipping</h3>
+              <p className="store-feature__description">
+                Free delivery across Chennai & suburbs
+              </p>
+            </div>
+            
+            <div className="store-feature__card">
+              <div className="store-feature__icon">
+                <FaCheckCircle />
+              </div>
+              <h3 className="store-feature__title">Quality Tested</h3>
+              <p className="store-feature__description">
+                Rigorous quality inspection for all products
+              </p>
+            </div>
+            
+            <div className="store-feature__card">
+              <div className="store-feature__icon">
+                <FaSyncAlt />
+              </div>
+              <h3 className="store-feature__title">7-Day Return</h3>
+              <p className="store-feature__description">
+                Hassle-free return policy on all purchases
+              </p>
+            </div>
+          </div>
         </div>
-        <h3 className="store-feature__title">12 Months Warranty</h3>
-        <p className="store-feature__description">
-          Comprehensive warranty on all refurbished laptops
-        </p>
-      </div>
-      
-      <div className="store-feature__card">
-        <div className="store-feature__icon">
-          <FaTruck />
-        </div>
-        <h3 className="store-feature__title">Free Shipping</h3>
-        <p className="store-feature__description">
-          Free delivery across Chennai & suburbs
-        </p>
-      </div>
-      
-      <div className="store-feature__card">
-        <div className="store-feature__icon">
-          <FaCheckCircle />
-        </div>
-        <h3 className="store-feature__title">Quality Tested</h3>
-        <p className="store-feature__description">
-          Rigorous 25-point quality inspection
-        </p>
-      </div>
-      
-      <div className="store-feature__card">
-        <div className="store-feature__icon">
-          <FaSyncAlt />
-        </div>
-        <h3 className="store-feature__title">7-Day Return</h3>
-        <p className="store-feature__description">
-          Hassle-free return policy
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
     </div>
   );
 };

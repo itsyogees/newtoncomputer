@@ -1022,7 +1022,7 @@ const partnerLogos = [
         className="view-all-btn-header"
         onClick={() => router.push('/pages/LaptopStore')}
       >
-        View All Products <FaArrowRight className="arrow-icon" />
+        View All  <FaArrowRight className="arrow-icon" />
       </button>
     </div>
 
@@ -1306,7 +1306,7 @@ const partnerLogos = [
           <FaLaptop className="service-icon" />
         </div>
         <h3 className="service-name">Laptop & Desktop</h3>
-        <p className="service-description">Repair, upgrade & maintenance services</p>
+        {/* <p className="service-description">Repair, upgrade & maintenance services</p> */}
       </div>
       
       <div className="service-card">
@@ -1314,7 +1314,7 @@ const partnerLogos = [
           <LuCctv className="service-icon" />
         </div>
         <h3 className="service-name">CCTV Solutions</h3>
-        <p className="service-description">Installation & monitoring systems</p>
+        {/* <p className="service-description">Installation & monitoring systems</p> */}
       </div>
       
       <div className="service-card">
@@ -1322,7 +1322,7 @@ const partnerLogos = [
           <MdOutlineSecurity className="service-icon" />
         </div>
         <h3 className="service-name">Network Security</h3>
-        <p className="service-description">Firewall & threat protection</p>
+        {/* <p className="service-description">Firewall & threat protection</p> */}
       </div>
       
       <div className="service-card">
@@ -1330,7 +1330,7 @@ const partnerLogos = [
           <LuWifi className="service-icon" />
         </div>
         <h3 className="service-name">Wi-Fi & Networking</h3>
-        <p className="service-description">Setup & optimization services</p>
+        {/* <p className="service-description">Setup & optimization services</p> */}
       </div>
       
       <div className="service-card">
@@ -1338,7 +1338,7 @@ const partnerLogos = [
           <FiServer className="service-icon" />
         </div>
         <h3 className="service-name">Server & Storage</h3>
-        <p className="service-description">Setup & management solutions</p>
+        {/* <p className="service-description">Setup & management solutions</p> */}
       </div>
       
       <div className="service-card">
@@ -1346,7 +1346,7 @@ const partnerLogos = [
           <CiMail className="service-icon" />
         </div>
         <h3 className="service-name">Business Mail</h3>
-        <p className="service-description">Email setup & configuration</p>
+        {/* <p className="service-description">Email setup & configuration</p> */}
       </div>
       
       <div className="service-card">
@@ -1354,7 +1354,7 @@ const partnerLogos = [
           <TiCloudStorageOutline className="service-icon" />
         </div>
         <h3 className="service-name">Cloud Storage</h3>
-        <p className="service-description">Secure data storage solutions</p>
+        {/* <p className="service-description">Secure data storage solutions</p> */}
       </div>
     </div>
   </div>

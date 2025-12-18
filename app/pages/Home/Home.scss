@@ -2182,7 +2182,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1.75rem;
+  padding: 0.5rem 1.5rem;
   background: transparent;
   border: 2px solid var(--color-blue);
   border-radius: 8px;
@@ -2449,8 +2449,7 @@ body {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        padding: 0.375rem 0.75rem;
-        border-radius: 8px;
+        padding: 0.375rem 0.75rem; 
         font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -2675,8 +2674,7 @@ body {
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        transition: all 0.3s ease;
-        border-radius: 8px;
+        transition: all 0.3s ease; 
         font-family: var(--font-primary);
         &.add-to-cart {
           background: var(--color-blue);
@@ -3611,105 +3609,419 @@ body {
     }
   }
 }
-// Ultra-minimal version
+// Services Section - All Cards in One Row on Big Screens
 .services-section {
-  padding: 3rem 0;
-  background: #f8fafc;
+  padding: 40px 0;
+  position: relative;
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+    url('/assets/data-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  
+  .container {
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+  }
 }
 
+// Services Header
 .services-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 30px;
+  padding: 0 20px;
   
   .services-title {
- font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
-  font-weight: var(--font-bold);
-  text-align: center;
-  color: #1e293b;
- margin-bottom: 2rem;
-  position: relative;
-  text-transform: uppercase;
-  span.services-main-title-accent {
-    color: #dc2626;
-    position: relative;
-    
-    
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: $accent-red;
-    border-radius: 2px;
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 1.75rem;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 1.5rem;
-  }
-}
-  
-  .title-accent {
-    color: var(--color-blue);
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    .services-main-title-accent {
+      color: var(--color-blue);
+      font-weight: 800;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+          border-radius: 2px;
+        background: #ffffff;
+        opacity: 0.7;
+      }
+    }
   }
   
   .services-subtitle {
-    color: #64748b;
-    font-size: 1.1rem;
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 1.5;
+    opacity: 0.9;
+    font-weight: 400;
   }
 }
 
+// Services Grid - 7 Cards in One Row on Big Screens
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(7, 1fr); // All 7 cards in one row
+  gap: 15px;
+  padding: 0 20px;
   
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
+  // For large monitors (1440px+)
+  @media (min-width: 1441px) {
+    gap: 20px;
+    padding: 0 40px;
   }
   
-  @media (max-width: 640px) {
+  // For medium-large screens (1201px - 1440px)
+  @media (max-width: 1440px) and (min-width: 1201px) {
+    gap: 15px;
+  }
+  
+  // For smaller big screens (1025px - 1200px)
+  @media (max-width: 1200px) and (min-width: 1025px) {
+    gap: 12px;
+  }
+  
+  // For tablets (900px - 1024px)
+  @media (max-width: 1024px) and (min-width: 901px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  
+  // For small tablets (768px - 900px)
+  @media (max-width: 900px) and (min-width: 769px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  
+  // For mobile tablets (600px - 768px)
+  @media (max-width: 768px) and (min-width: 601px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  
+  // For mobile (below 600px)
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  // For extra small mobile
+  @media (max-width: 480px) {
     grid-template-columns: 1fr;
+    gap: 15px;
+    max-width: 350px;
+    margin: 0 auto;
   }
 }
 
+// Service Card - Optimized for 7-in-a-row
 .service-card {
-  background: white;
-  padding: 2rem;
+  background: #ffffff;
+  padding: 0.5rem;
   border-radius: 8px;
   text-align: center;
-  transition: transform 0.2s ease;
-  
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+color: #000;
+  transition: transform 0.18s ease-out,
+              box-shadow 0.18s ease-out,
+              border-color 0.18s ease-out;
+
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: #d1d5db;
+
+    .service-icon-box {
+      background: var(--color-blue);
+
+      .service-icon {
+        color: #ffffff;
+      }
+    }
+  }
+.service-name{
+  color: #000;
+  font-size: var(--text-2xl);
+}
+  .service-icon-box {
+    width: 50px;
+    height: 50px;
+    background: #f3f4f6;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+
+    transition: background-color 0.15s ease-out;
+
+    .service-icon {
+      font-size: 24px;
+      color: #1f2937;
+      transition: color 0.15s ease-out;
+    }
+  }
+}
+
+
+// Adjustments for 7-in-a-row on different screen sizes
+
+// On extra large monitors (1440px+)
+@media (min-width: 1441px) {
+  .service-card {
+    padding: 0.5rem;
+    min-height: 180px;
+    
+    .service-icon-box {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 15px;
+      
+      .service-icon {
+        font-size: 28px;
+      }
+    }
+    
+    .service-name {
+      font-size: var(--text-2xl);
+    }
+    
+    .service-description {
+      font-size: 13px;
+    }
+  }
+}
+
+// On standard big screens (1201px - 1440px)
+@media (max-width: 1440px) and (min-width: 1201px) {
+  .service-card {
+    padding: 0.5rem; 
+    
+    .service-icon-box {
+      width: 55px;
+      height: 55px;
+      margin-bottom: 14px;
+      
+      .service-icon {
+        font-size: 26px;
+      }
+    }
+    
+    .service-name {
+      font-size: 14px;
+    }
+    
+    .service-description {
+      font-size: 12px;
+    }
+  }
+}
+
+// On smaller big screens (1025px - 1200px)
+@media (max-width: 1200px) and (min-width: 1025px) {
+  .service-card {
+    padding: 18px 10px;
+    min-height: 160px;
+    
+    .service-icon-box {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+      
+      .service-icon {
+        font-size: 22px;
+      }
+    }
+    
+    .service-name {
+      font-size: 13px;
+    }
+    
+    .service-description {
+      font-size: 11px;
+    }
+  }
+}
+
+// For tablets (768px - 1024px)
+@media (max-width: 1024px) {
+  .services-section {
+    padding: 30px 0;
   }
   
-  .service-icon {
-    font-size: 2.5rem;
-    color: var(--color-blue);
-    margin-bottom: 1rem;
+  .services-header {
+    margin-bottom: 25px;
+    
+    .services-title {
+      font-size: 26px;
+    }
+    
+    .services-subtitle {
+      font-size: 15px;
+    }
   }
   
-  .service-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 0.5rem;
+  .service-card {
+    padding: 20px 12px;
+    min-height: 150px;
+    
+    .service-icon-box {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 12px;
+      
+      .service-icon {
+        font-size: 24px;
+      }
+    }
+    
+    .service-name {
+      font-size: 14px;
+    }
+    
+    .service-description {
+      font-size: 12px;
+    }
+  }
+}
+
+// For mobile tablets (600px - 768px)
+@media (max-width: 768px) {
+  .services-grid {
+    .service-card {
+      padding: 18px 10px;
+      min-height: 140px;
+      
+      .service-icon-box {
+        width: 45px;
+        height: 45px;
+        margin-bottom: 10px;
+        
+        .service-icon {
+          font-size: 22px;
+        }
+      }
+      
+      .service-name {
+        font-size: 13px;
+      }
+      
+      .service-description {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+// For mobile (below 600px)
+@media (max-width: 600px) {
+  .services-section {
+    padding: 25px 0;
   }
   
-  .service-description {
-    color: #64748b;
-    font-size: 0.9rem;
-    line-height: 1.4;
+  .services-header {
+    margin-bottom: 20px;
+    padding: 0 15px;
+    
+    .services-title {
+      font-size: 24px;
+    }
+    
+    .services-subtitle {
+      font-size: 14px;
+    }
+  }
+  
+  .services-grid {
+    padding: 0 15px;
+  }
+  
+  .service-card {
+    padding: 20px 15px;
+    min-height: 150px;
+    
+    .service-icon-box {
+      width: 50px;
+      height: 50px;
+      
+      .service-icon {
+        font-size: 24px;
+      }
+    }
+    
+    .service-name {
+      font-size: 14px;
+    }
+    
+    .service-description {
+      font-size: 12px;
+    }
+  }
+}
+
+// For very small mobile screens
+@media (max-width: 480px) {
+  .service-card {
+    padding: 18px 12px;
+    min-height: 140px;
+    
+    .service-icon-box {
+      width: 45px;
+      height: 45px;
+      
+      .service-icon {
+        font-size: 22px;
+      }
+    }
+    
+    .service-name {
+      font-size: 13px;
+    }
+    
+    .service-description {
+      font-size: 11px;
+    }
+  }
+}
+
+// Animation
+.service-card {
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+  
+  @for $i from 1 through 7 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -6277,7 +6589,7 @@ width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 100000;
   padding: 2rem;
   animation: fadeIn 0.3s ease;
 
