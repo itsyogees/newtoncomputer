@@ -149,31 +149,105 @@ body {
     }
   }
 
-  /* Book Service Button in Info Bar */
-  .info-bar__book-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--color-red);
-    color: var(--color-white);
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    font-family: var(--font-primary);
-    transition: all 0.3s ease;
-    white-space: nowrap;
+  /* Info Bar Search Form */
+  .info-bar__search-form {
+    width: 100%;
+    max-width: 400px;
     
-    &:hover {
-      background: (#DC1728);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(220, 23, 40, 0.3);
+    .search-input-wrapper {
+      display: flex;
+      align-items: center;
+      background: var(--color-white);
+      border-radius: 25px;
+      padding: 0.25rem;
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+      
+      &:focus-within {
+        border-color: var(--color-blue);
+        box-shadow: 0 0 0 3px rgba(101, 142, 232, 0.1);
+      }
+      
+      .search-icon {
+        color: var(--color-dark-gray);
+        margin: 0 0.75rem;
+        font-size: 0.9rem;
+      }
+      
+      .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+        font-family: var(--font-primary);
+        color: var(--color-black);
+        background: transparent;
+        
+        &::placeholder {
+          color: var(--color-dark-gray);
+        }
+      }
+      
+      .search-submit-btn {
+        background: var(--color-blue);
+        color: var(--color-white);
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: var(--font-primary);
+        white-space: nowrap;
+        
+        &:hover {
+          background: (#658EE8);
+          transform: translateY(-1px);
+        }
+      }
     }
+  }
+
+  /* Remove old book service button styles */
+  .info-bar__book-btn {
+    display: none;
+  }
+}
+
+/* Responsive adjustments for the search in info bar */
+@media (max-width: 1280px) {
+  .info-bar__search-form {
+    max-width: 320px;
     
-    .book-icon {
-      font-size: 0.9rem;
+    .search-input-wrapper {
+      .search-submit-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .info-bar__search-form {
+    max-width: 280px;
+    
+    .search-input-wrapper {
+      .search-input {
+        font-size: 0.85rem;
+        padding: 0.4rem 0;
+        
+        &::placeholder {
+          font-size: 0.85rem;
+        }
+      }
+      
+      .search-submit-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
     }
   }
 }
@@ -192,7 +266,7 @@ body {
   }
 
   &.navbar--mobile {
-    top: 0; /* Remove the 50px offset on mobile */
+    top: 0;
   }
 
   .navbar__container {
@@ -563,11 +637,15 @@ body {
       }
     }
 
-    .book-service-btn {
+    /* Updated Book Service Button in Navbar */
+    .navbar__book-service-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       background: var(--color-red);
       color: var(--color-white);
-      padding: 0.75rem 1.5rem;
-      border-radius: 50px;
+      padding: 0.625rem 1.25rem;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
       font-family: var(--font-primary);
@@ -584,11 +662,24 @@ body {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(220, 23, 40, 0.3);
       }
-
-      @media (max-width: 1024px) {
-        padding: 0.625rem 1.25rem;
-        font-size: 0.813rem;
+      
+      .book-service-icon {
+        font-size: 0.9rem;
       }
+      
+      @media (max-width: 1024px) {
+        padding: 0.5rem 1rem;
+        font-size: 0.813rem;
+        
+        .book-service-icon {
+          font-size: 0.8rem;
+        }
+      }
+    }
+    
+    /* Remove old book service button styles */
+    .book-service-btn {
+      display: none;
     }
   }
 
@@ -728,6 +819,46 @@ body {
         font-size: 0.9rem;
         font-family: var(--font-primary);
         line-height: 1.4;
+      }
+    }
+  }
+
+  /* Mobile Search */
+  .navbar__mobile-search {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-light-gray);
+    
+    .mobile-search-form {
+      width: 100%;
+      
+      .mobile-search-input-wrapper {
+        display: flex;
+        align-items: center;
+        background: var(--color-white);
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--color-border);
+        
+        .mobile-search-icon {
+          color: var(--color-dark-gray);
+          margin-right: 0.75rem;
+          font-size: 1rem;
+        }
+        
+        .mobile-search-input {
+          flex: 1;
+          border: none;
+          outline: none;
+          font-size: 0.95rem;
+          font-family: var(--font-primary);
+          color: var(--color-black);
+          background: transparent;
+          
+          &::placeholder {
+            color: var(--color-dark-gray);
+          }
+        }
       }
     }
   }
@@ -925,7 +1056,7 @@ summary:focus-visible {
 
 /* Responsive fixes */
 @media (max-width: 768px) {
-  /* Hide desktop info bar on mobile */
+  /* Hide info bar on mobile */
   .info-bar {
     display: none !important;
   }
@@ -975,9 +1106,13 @@ summary:focus-visible {
     }
     
     .navbar__actions {
-      .book-service-btn {
+      .navbar__book-service-btn {
         font-size: 1rem;
         padding: 0.875rem 1.75rem;
+        
+        .book-service-icon {
+          font-size: 1rem;
+        }
       }
       
       .profile-dropdown-menu {
@@ -1001,9 +1136,17 @@ summary:focus-visible {
       }
     }
     
-    .info-bar__book-btn {
-      font-size: 1.0625rem;
-      padding: 0.625rem 1.25rem;
+    .info-bar__search-form {
+      .search-input-wrapper {
+        .search-input {
+          font-size: 1rem;
+        }
+        
+        .search-submit-btn {
+          font-size: 1rem;
+          padding: 0.625rem 1.375rem;
+        }
+      }
     }
   }
 }
@@ -1040,9 +1183,13 @@ summary:focus-visible {
     }
     
     .navbar__actions {
-      .book-service-btn {
+      .navbar__book-service-btn {
         font-size: 0.8125rem;
         padding: 0.5625rem 1.125rem;
+        
+        .book-service-icon {
+          font-size: 0.75rem;
+        }
       }
     }
   }
@@ -1060,9 +1207,19 @@ summary:focus-visible {
       }
     }
     
-    .info-bar__book-btn {
-      font-size: 0.875rem;
-      padding: 0.4375rem 0.875rem;
+    .info-bar__search-form {
+      max-width: 260px;
+      
+      .search-input-wrapper {
+        .search-input {
+          font-size: 0.875rem;
+        }
+        
+        .search-submit-btn {
+          font-size: 0.875rem;
+          padding: 0.4375rem 0.875rem;
+        }
+      }
     }
   }
 }
@@ -1080,6 +1237,20 @@ summary:focus-visible {
       .mobile-locations-section {
         .mobile-locations-text {
           font-size: 0.8125rem;
+        }
+      }
+    }
+    
+    .navbar__mobile-search {
+      .mobile-search-form {
+        .mobile-search-input-wrapper {
+          .mobile-search-input {
+            font-size: 0.875rem;
+            
+            &::placeholder {
+              font-size: 0.875rem;
+            }
+          }
         }
       }
     }
@@ -1121,6 +1292,27 @@ summary:focus-visible {
       }
     }
     
+    .navbar__mobile-search {
+      .mobile-search-form {
+        .mobile-search-input-wrapper {
+          padding: 0.375rem 0.875rem;
+          
+          .mobile-search-icon {
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+          }
+          
+          .mobile-search-input {
+            font-size: 0.8125rem;
+            
+            &::placeholder {
+              font-size: 0.8125rem;
+            }
+          }
+        }
+      }
+    }
+    
     .navbar__mobile-nav {
       .mobile-nav-link {
         font-size: 0.875rem;
@@ -1157,6 +1349,29 @@ summary:focus-visible {
       }
     }
     
+    .navbar__mobile-search {
+      padding: 0.75rem;
+      
+      .mobile-search-form {
+        .mobile-search-input-wrapper {
+          padding: 0.25rem 0.75rem;
+          
+          .mobile-search-icon {
+            font-size: 0.8rem;
+            margin-right: 0.375rem;
+          }
+          
+          .mobile-search-input {
+            font-size: 0.75rem;
+            
+            &::placeholder {
+              font-size: 0.75rem;
+            }
+          }
+        }
+      }
+    }
+    
     .navbar__mobile-nav {
       .mobile-nav-link {
         font-size: 0.8125rem;
@@ -1178,14 +1393,16 @@ summary:focus-visible {
 
 /* Smooth font transitions */
 .navbar__nav-links .nav-link,
-.navbar__actions .book-service-btn,
+.navbar__actions .navbar__book-service-btn,
 .info-bar__contact-info a,
 .info-bar__locations .locations-text,
-.info-bar__book-btn,
+.info-bar__search-form .search-input,
+.info-bar__search-form .search-submit-btn,
 .navbar__mobile-contact a,
 .navbar__mobile-contact .mobile-locations-text,
 .navbar__mobile-nav .mobile-nav-link,
 .navbar__mobile-nav .mobile-dropdown-summary,
-.navbar__mobile-nav .mobile-dropdown-item {
+.navbar__mobile-nav .mobile-dropdown-item,
+.navbar__mobile-search .mobile-search-input {
   transition: font-size 0.3s ease;
 }

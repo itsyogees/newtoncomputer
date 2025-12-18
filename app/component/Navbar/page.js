@@ -14,7 +14,8 @@ import {
   FaTimes, 
   FaBookmark,
   FaSignOutAlt,
-  FaCalendarAlt
+  FaCalendarAlt,
+  FaSearch
 } from "react-icons/fa";
 import BookServiceModal from "../BookServiceModal/page";
 import "./Navbar.scss";
@@ -25,6 +26,7 @@ export default function Navbar() {
   const [isBookServiceModalOpen, setIsBookServiceModalOpen] = useState(false);
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const profileDropdownRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -94,6 +96,16 @@ export default function Navbar() {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Handle search logic here
+      console.log("Searching for:", searchQuery);
+      // You can redirect to search page or filter products
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+    }
+  };
+
   return (
     <>
       {/* Top Info Bar with Diagonal Split - HIDDEN ON MOBILE */}
@@ -118,16 +130,24 @@ export default function Navbar() {
               </div>
             </div>
             
-            {/* White Section (30%) */}
+            {/* White Section (30%) - Now with Search Input */}
             <div className="info-bar__section info-bar__section--white">
               <div className="info-bar__content">
-                <button 
-                  className="info-bar__book-btn"
-                  onClick={handleBookService}
-                >
-                  <FaCalendarAlt className="book-icon" />
-                  <span>Book Service</span>
-                </button>
+                <form className="info-bar__search-form" onSubmit={handleSearch}>
+                  <div className="search-input-wrapper">
+                    <FaSearch className="search-icon" />
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      className="search-input"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button type="submit" className="search-submit-btn">
+                      Search
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -215,19 +235,16 @@ export default function Navbar() {
                 <Link href="/pages/CloudHostingServices" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link> 
               </div>
             </div>
-     <div className="nav-item dropdown">
+            
+            <div className="nav-item dropdown">
               <button className="nav-link dropdown-toggle">
                Contact Us <FaChevronDown className="dropdown-arrow" />
               </button>
               <div className="dropdown-menu">
                 <Link href="/pages/About" className="dropdown-item" onClick={closeMenu}> About Us</Link>
                 <Link href="/pages/Branches" className="dropdown-item" onClick={closeMenu}>Branches</Link>
-                
               </div>
             </div>
-            {/* <Link href="/pages/About" className="nav-link" onClick={closeMenu}>
-              About Us
-            </Link> */}
           </nav>
 
           {/* Desktop Actions with Profile Dropdown */}
@@ -267,12 +284,14 @@ export default function Navbar() {
               )}
             </Link>
             
+            {/* Updated Book Service Button with Calendar Icon */}
             <button 
-              className="book-service-btn"
+              className="navbar__book-service-btn"
               onClick={handleBookService}
               title="Book Service"
             >
-              BOOK SERVICE
+              <FaCalendarAlt className="book-service-icon" />
+              <span>Book Service</span>
             </button>
           </div>
 
@@ -327,6 +346,22 @@ export default function Navbar() {
                 T.Nagar-9840604073 | Thoraipakkam-9940185417
               </span>
             </div>
+          </div>
+
+          {/* Mobile Search Input */}
+          <div className="navbar__mobile-search">
+            <form className="mobile-search-form" onSubmit={handleSearch}>
+              <div className="mobile-search-input-wrapper">
+                <FaSearch className="mobile-search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  className="mobile-search-input"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </form>
           </div>
 
           {/* Mobile Navigation Links */}
@@ -397,10 +432,10 @@ export default function Navbar() {
                 <div className="mobile-dropdown-content">
                   <Link href="/pages/BusinessMail" className="mobile-dropdown-item" onClick={closeMenu}>Business Mail Services</Link>
                   <Link href="/pages/NetworkSecurity" className="mobile-dropdown-item" onClick={closeMenu}>Network Security Solutions</Link>
-                  <Link href="/pages/ServerAndStorageSolutions" className="mobile-dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
-                  <Link href="/pages/WifiNetworkingSolutions" className="mobile-dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
-                  <Link href="/pages/CctvSolutions" className="mobile-dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
-                  <Link href="/pages/CloudHostingServices" className="mobile-dropdown-item" onClick={closeMenu}>Cloud hosting services</Link>
+                  <Link href="/pages/ServerAndStorageSolutions" className="dropdown-item" onClick={closeMenu}>Server and Storage Solutions</Link>
+                  <Link href="/pages/WifiNetworkingSolutions" className="dropdown-item" onClick={closeMenu}>Wi-Fi and Networking Solutions</Link>
+                  <Link href="/pages/CctvSolutions" className="dropdown-item" onClick={closeMenu}>CCTV Solution</Link>
+                  <Link href="/pages/CloudHostingServices" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link>
                 </div>
               </details>
             </div>

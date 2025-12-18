@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useRef} from 'react';
 import { FaLaptop, FaTools,FaStar, FaHeadset, FaCloud,FaUserCheck, FaServer,FaWifi,FaTruck, FaShieldAlt, FaHandshake, FaArrowRight, FaHeart, FaShoppingCart, FaList ,FaChevronDown ,FaBalanceScale ,FaMicrochip ,FaMemory,FaHdd ,FaBolt ,FaSyncAlt ,FaPhone, FaMapMarkerAlt, FaEye, FaTimes, FaChevronLeft, FaChevronRight,FaPhoneAlt, FaEnvelope, FaClock, FaUser, FaCommentAlt ,FaPaperPlane  } from 'react-icons/fa';
@@ -158,7 +159,47 @@ const [wishlist, setWishlist] = useState([]);
 const [cart, setCart] = useState([]);
 const [selectedBranch, setSelectedBranch] = useState(null);
 const [isPartnerAnimationPaused, setIsPartnerAnimationPaused] = useState(false);
+// Hero image slider states
+const [currentHeroImageIndex, setCurrentHeroImageIndex] = useState(0);
+const [heroImageTransition, setHeroImageTransition] = useState(false);
+const [heroImageTimer, setHeroImageTimer] = useState(0);
+const router = useRouter();
+// Hero images array
+const heroImages = [
+  '/home-img.png',
+  '/assets/firewall-and-antivirus.png',
+  '/assets/about-section-2.png',
+  '/assets/networking-srvices.png'
+];
 
+// Auto change hero image
+useEffect(() => {
+  const interval = setInterval(() => {
+    setHeroImageTransition(true);
+    setTimeout(() => {
+      setCurrentHeroImageIndex((prevIndex) => 
+        prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+      );
+      setHeroImageTransition(false);
+    }, 300); // Match this with CSS transition duration
+  }, 5000); // Change image every 5 seconds
+
+  return () => clearInterval(interval);
+}, [heroImages.length]);
+
+// Timer for progress bar
+useEffect(() => {
+  const timerInterval = setInterval(() => {
+    setHeroImageTimer(prev => {
+      if (prev >= 5000) {
+        return 0;
+      }
+      return prev + 100;
+    });
+  }, 100);
+
+  return () => clearInterval(timerInterval);
+}, [currentHeroImageIndex]);
 // Add these event handlers
 const handlePartnerMouseEnter = () => {
   setIsPartnerAnimationPaused(true);
@@ -794,7 +835,9 @@ useEffect(() => {
     }
   }, [isVisible, counted]);
   // Add to your existing state variables
- 
+ const handleShopNow = () => {
+    router.push('/pages/LaptopStore');
+  };
 
 // Partners logos data
 const partnerLogos = [
@@ -861,59 +904,7 @@ const partnerLogos = [
 </div>
       
       {/* Slider Section */}
-      <section 
-        className="slider-section"
-        onMouseEnter={() => setIsAutoPlaying(false)}
-        onMouseLeave={() => setIsAutoPlaying(true)}
-      >
-        <div className="slider-container">
-          {sliderData.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`slider-slide ${index === currentSlide ? 'active' : ''}`}
-            >
-              <div className="slide-image">
-                <Image
-                  src={slide.image}
-                  alt={slide.title}
-                  fill
-                  priority={index === 0}
-                  className="slider-img"
-                />
-                <div className="slide-overlay"></div>
-              </div>
-              {/* <div className="slide-content">
-                <div className="slide-text">
-                  <h1 className="slide-title">{slide.title}</h1>
-                  <p className="slide-subtitle">{slide.subtitle}</p>
-                  <button className="slide-btn">
-                    {slide.buttonText}
-                  </button>
-                </div>
-              </div> */}
-            </div>
-          ))}
-          
-          {/* Navigation Arrows */}
-          <button className="slider-arrow slider-arrow--prev" onClick={prevSlide}>
-            <FaChevronLeft />
-          </button>
-          <button className="slider-arrow slider-arrow--next" onClick={nextSlide}>
-            <FaChevronRight />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="slider-dots">
-            {sliderData.map((_, index) => (
-              <button
-                key={index}
-                className={`slider-dot ${index === currentSlide ? 'active' : ''}`}
-                onClick={() => goToSlide(index)}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+    
 
       {/* Hero Section - Moved below slider */}
        
@@ -933,22 +924,27 @@ const partnerLogos = [
         <div className="hero__actions">
           <button 
             className="hero__btn hero__btn--primary"
-            onClick={handleBookService}
-          >
-            Book Service
+            onClick={handleShopNow}
+          > <FaShoppingCart className="btn-icon" />
+            Shop Now  
           </button>
         </div>
       </div>
     </div>
+    
     <div className="hero__image-container">
-      <div className="hero__image">
-        <Image 
-          src="/home-img.png" 
-          alt="Laptop Collection" 
-          width={600} 
-          height={400}
-          priority
-        />
+      <div className="hero-image-slider">
+        {heroImages.map((image, index) => (
+          <Image 
+            key={index}
+            src={image} 
+            alt={`Hero image ${index + 1}`} 
+            width={600} 
+            height={400}
+            priority={index === 0}
+            className={`hero-slider-image ${index === currentHeroImageIndex ? 'active' : ''}`}
+          />
+        ))}
       </div>
     </div>
   </div>
@@ -969,7 +965,7 @@ const partnerLogos = [
         </p>
         <div className="feature-card__actions">
           <button className="feature-btn feature-btn--primary">
-            Book Service
+           Shop Now
             <FaArrowRight className="btn-arrow" />
           </button>
         </div>
@@ -1017,7 +1013,7 @@ const partnerLogos = [
  <div className="section-header">
       <div className="header-content">
         <h2 className="section-title">
-          <span className="services-main-title-accent">Refurbished</span> Laptops
+          <span className="services-main-title-accent">Refurbished</span> Laptops - New Arrivals
         </h2>
        
       </div>
@@ -1373,17 +1369,35 @@ const partnerLogos = [
     <div className="locations-grid">
       {/* T.Nagar Branch Card */}
       <div className="location-card">
-        <div className="location-map">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.860341832715!2d80.23043847330108!3d13.044560287277593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267c85017da53%3A0xc487691bdae5d0a4!2sNEWTON%20COMPUTERS%20-%20T.NAGAR!5e0!3m2!1sen!2sin!4v1766030345500!5m2!1sen!2sin" 
-            width="100%" 
-            height="250"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Newton Computers T.Nagar Branch"
-          ></iframe>
+        <div className="location-media">
+          {/* Map Container */}
+          <div className="location-map">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.860341832715!2d80.23043847330108!3d13.044560287277593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267c85017da53%3A0xc487691bdae5d0a4!2sNEWTON%20COMPUTERS%20-%20T.NAGAR!5e0!3m2!1sen!2sin!4v1766030345500!5m2!1sen!2sin" 
+              width="100%" 
+              height="200"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Newton Computers T.Nagar Branch"
+              className="map-frame"
+            ></iframe>
+          </div>
+          
+          {/* Image Container */}
+          <div className="location-image">
+            <Image 
+              src="/assets/newton-zigzag.jpg" 
+              alt="Newton Computers T.Nagar Store" 
+              width={400}
+              height={200}
+              className="store-image"
+            />
+            <div className="image-overlay">
+              <span className="overlay-text">Visit Our Store</span>
+            </div>
+          </div>
         </div>
         
         <div className="location-details">
@@ -1425,21 +1439,39 @@ const partnerLogos = [
       
       {/* Thoraipakkam Branch Card */}
       <div className="location-card">
-        <div className="location-map">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.573009499082!2d80.23063077329842!3d12.935142487376833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d09d9a1335f%3A0x481f049fe11e049d!2sNEWTON%20COMPUTERS%20-%20OMR%20THORAIPAKKAM!5e0!3m2!1sen!2sin!4v1766030408084!5m2!1sen!2sin" 
-            width="100%" 
-            height="250"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Newton Computers Thoraipakkam Branch"
-          ></iframe>
+        <div className="location-media">
+          {/* Map Container */}
+          <div className="location-map">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.573009499082!2d80.23063077329842!3d12.935142487376833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d09d9a1335f%3A0x481f049fe11e049d!2sNEWTON%20COMPUTERS%20-%20OMR%20THORAIPAKKAM!5e0!3m2!1sen!2sin!4v1766030408084!5m2!1sen!2sin" 
+              width="100%" 
+              height="200"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Newton Computers Thoraipakkam Branch"
+              className="map-frame"
+            ></iframe>
+          </div>
+          
+          {/* Image Container */}
+          <div className="location-image">
+            <Image 
+              src="/assets/newton-zigzag2.jpg" 
+              alt="Newton Computers Thoraipakkam Store" 
+              width={400}
+              height={200}
+              className="store-image"
+            />
+            <div className="image-overlay">
+              <span className="overlay-text">Visit Our Store</span>
+            </div>
+          </div>
         </div>
         
         <div className="location-details">
-          <h3 className="location-title">Branch Store</h3>
+          <h3 className="location-title">Branch - Service Center Thoraipakkam</h3>
           <div className="location-address">
             <FaMapMarkerAlt className="address-icon" />
             <p>Newton Computer Services<br />
