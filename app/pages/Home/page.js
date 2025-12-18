@@ -1014,13 +1014,20 @@ const partnerLogos = [
   
 <section className="online-store-section">
   <div className="container">
-    <div className="section-header">
+ <div className="section-header">
       <div className="header-content">
-   
-        <h2 className="section-title"> <span className="services-main-title-accent">Refurbished</span> Laptops</h2>
-        
+        <h2 className="section-title">
+          <span className="services-main-title-accent">Refurbished</span> Laptops
+        </h2>
+       
       </div>
       
+      <button 
+        className="view-all-btn-header"
+        onClick={() => router.push('/pages/LaptopStore')}
+      >
+        View All Products <FaArrowRight className="arrow-icon" />
+      </button>
     </div>
 
     {/* Products Carousel */}
@@ -1288,47 +1295,74 @@ const partnerLogos = [
 {/* IT Services Section */}
 <section className="services-section">
   <div className="container">
-    <div className="services-hero">
-      <div className="services-hero-content">
-        <h1 className="services-main-title">
-          Our {" "}
-          <span className="services-main-title-accent">IT Services</span>
-        </h1>
-        
-        <div className="services-list">
-          <div className="service-list-item">
-            <FaLaptop className="service-icon" />
-            <span className="service-list-name">Laptop & Desktop</span>
-          </div>
-          <div className="service-list-item">
-            <LuCctv className="service-icon" />
-            <span className="service-list-name">CCTV Solutions</span>
-          </div>
-          <div className="service-list-item">
-            <MdOutlineSecurity className="service-icon" />
-            <span className="service-list-name">Network Security</span>
-          </div>
-          <div className="service-list-item">
-            <LuWifi className="service-icon" />
-            <span className="service-list-name">Wi-Fi & Networking</span>
-          </div>
-          <div className="service-list-item">
-            <FiServer className="service-icon" />
-            <span className="service-list-name">Server and Storage</span>
-          </div>
-          <div className="service-list-item">
-            <CiMail className="service-icon" />
-            <span className="service-list-name">Business Mail</span>
-          </div>
-          <div className="service-list-item">
-            <TiCloudStorageOutline className="service-icon" />
-            <span className="service-list-name">Cloud Storage</span>
-          </div>
+    <div className="services-header">
+      <h2 className="services-title">
+        Our <span className="services-main-title-accent">IT Services</span>
+      </h2>
+      <p className="services-subtitle">
+        Comprehensive technology solutions for businesses and individuals
+      </p>
+    </div>
+    
+    <div className="services-grid">
+      <div className="service-card">
+        <div className="service-icon-box">
+          <FaLaptop className="service-icon" />
         </div>
+        <h3 className="service-name">Laptop & Desktop</h3>
+        <p className="service-description">Repair, upgrade & maintenance services</p>
+      </div>
+      
+      <div className="service-card">
+        <div className="service-icon-box">
+          <LuCctv className="service-icon" />
+        </div>
+        <h3 className="service-name">CCTV Solutions</h3>
+        <p className="service-description">Installation & monitoring systems</p>
+      </div>
+      
+      <div className="service-card">
+        <div className="service-icon-box">
+          <MdOutlineSecurity className="service-icon" />
+        </div>
+        <h3 className="service-name">Network Security</h3>
+        <p className="service-description">Firewall & threat protection</p>
+      </div>
+      
+      <div className="service-card">
+        <div className="service-icon-box">
+          <LuWifi className="service-icon" />
+        </div>
+        <h3 className="service-name">Wi-Fi & Networking</h3>
+        <p className="service-description">Setup & optimization services</p>
+      </div>
+      
+      <div className="service-card">
+        <div className="service-icon-box">
+          <FiServer className="service-icon" />
+        </div>
+        <h3 className="service-name">Server & Storage</h3>
+        <p className="service-description">Setup & management solutions</p>
+      </div>
+      
+      <div className="service-card">
+        <div className="service-icon-box">
+          <CiMail className="service-icon" />
+        </div>
+        <h3 className="service-name">Business Mail</h3>
+        <p className="service-description">Email setup & configuration</p>
+      </div>
+      
+      <div className="service-card">
+        <div className="service-icon-box">
+          <TiCloudStorageOutline className="service-icon" />
+        </div>
+        <h3 className="service-name">Cloud Storage</h3>
+        <p className="service-description">Secure data storage solutions</p>
       </div>
     </div>
   </div>
-</section> 
+</section>
 
 {/* Store Locations Section */}
 <section className="store-locations">
