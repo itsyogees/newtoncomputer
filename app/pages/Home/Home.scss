@@ -853,7 +853,7 @@ body {
   display: flex;
   align-items: center;
   min-height: 65vh;
-  max-height: 700px;
+  max-height: 650px;
   overflow: hidden;
   padding: 0;
 
@@ -927,7 +927,7 @@ body {
     position: relative;
     z-index: 2;
     max-width: 600px;
-    width: 100%;
+    max-width: 100%;
     animation: slideInFromLeft 1s ease-out 0.3s both;
 
     @media (max-width: 768px) {
@@ -962,7 +962,7 @@ body {
 
     /* Large monitors - 1920px and above */
     @media (min-width: 1920px) {
-      font-size: 4rem;
+      font-size: 3.5rem;
       line-height: 1.1;
       margin-bottom: 1.75rem;
     }
@@ -2021,7 +2021,7 @@ font-family: var(--font-primary);
     content: '';
     position: absolute;
     bottom: -8px;
-    left: 0;
+    left: 50%;
     width: 80px;
     height: 4px;
     background: $accent-red;
@@ -3603,7 +3603,7 @@ font-family: var(--font-primary);
 // STORE LOCATIONS SECTION
 // =============================================
 .store-locations {
-  padding: 4rem 0;
+  padding: 3rem 0;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   position: relative;
   overflow: hidden;
@@ -4329,7 +4329,10 @@ width: 90%;
   margin-bottom: 1rem;
   position: relative;
     text-transform: uppercase;
-
+  span.services-main-title-accent {
+    color: #dc2626;
+    position: relative;
+  }
   &::after {
     content: '';
     position: absolute;
@@ -4965,7 +4968,7 @@ width: 90%;
 // MODERN ABOUT NEWTON COMPUTERS SECTION
 // =============================================
 .about-newton {
-  padding: 5rem 0;
+  padding: 3rem 0;
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -5465,7 +5468,10 @@ width: 90%;
  margin-bottom: 2rem;
     text-transform: uppercase;
     position: relative;
-
+  span.services-main-title-accent {
+    color: #dc2626;
+    position: relative;
+  }
     &::after {
     content: '';
     position: absolute;
@@ -5759,7 +5765,7 @@ width: 90%;
 
 .partners-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   @media (max-width: 768px) {
     margin-bottom: 2rem;
@@ -5777,7 +5783,10 @@ width: 90%;
   margin-bottom: 1rem;
   position: relative;
   text-transform: uppercase;
-  
+    span.services-main-title-accent {
+    color: #dc2626;
+    position: relative;
+  }
   &::after {
     content: '';
     position: absolute;

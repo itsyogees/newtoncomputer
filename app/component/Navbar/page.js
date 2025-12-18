@@ -215,10 +215,19 @@ export default function Navbar() {
                 <Link href="/pages/CloudHostingServices" className="dropdown-item" onClick={closeMenu}>Cloud hosting services</Link> 
               </div>
             </div>
-
-            <Link href="/pages/About" className="nav-link" onClick={closeMenu}>
+     <div className="nav-item dropdown">
+              <button className="nav-link dropdown-toggle">
+               Contact Us <FaChevronDown className="dropdown-arrow" />
+              </button>
+              <div className="dropdown-menu">
+                <Link href="/pages/About" className="dropdown-item" onClick={closeMenu}> About Us</Link>
+                <Link href="/pages/Branches" className="dropdown-item" onClick={closeMenu}>Branches</Link>
+                
+              </div>
+            </div>
+            {/* <Link href="/pages/About" className="nav-link" onClick={closeMenu}>
               About Us
-            </Link>
+            </Link> */}
           </nav>
 
           {/* Desktop Actions with Profile Dropdown */}
