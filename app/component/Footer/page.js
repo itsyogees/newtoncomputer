@@ -136,7 +136,7 @@ const Footer = () => {
 
               {/* Branch Store */}
               <div className="nc-footer__section nc-footer__location-section">
-                <h4 className="nc-footer__section-title">Branch Store</h4>
+                <h4 className="nc-footer__section-title">Branch - Service Center Thoraipakkam</h4>
                 <div className="nc-footer__location-card">
                   <div className="nc-footer__location-header">
                     <FaMapMarkerAlt className="nc-footer__location-icon" />
