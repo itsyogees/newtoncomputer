@@ -156,6 +156,35 @@ const [sortBy, setSortBy] = useState('featured');
 const [loadingStates, setLoadingStates] = useState({});
 const [wishlist, setWishlist] = useState([]);
 const [cart, setCart] = useState([]);
+const [selectedBranch, setSelectedBranch] = useState(null);
+const [isPartnerAnimationPaused, setIsPartnerAnimationPaused] = useState(false);
+
+// Add these event handlers
+const handlePartnerMouseEnter = () => {
+  setIsPartnerAnimationPaused(true);
+};
+
+const handlePartnerMouseLeave = () => {
+  setIsPartnerAnimationPaused(false);
+};
+
+// Add this function after your other functions
+const handleGetDirections = (branch) => {
+  let mapsUrl = '';
+  
+  if (branch === 'tnagar') {
+    // T.Nagar branch coordinates
+    mapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=28-B%2F16%2C+Murugesan+Street%2C+North+Usman+Road%2C+T.Nagar%2C+Chennai-600017';
+  } else if (branch === 'thoraipakkam') {
+    // Thoraipakkam branch coordinates
+    mapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=No.+8%2F683+A%2C+Srividya+Avenue%2C+Rajiv+Gandhi+Salai%2C+Thoraipakkam%2C+Chennai+-+600097';
+  }
+  
+  // Open Google Maps in a new tab
+  if (mapsUrl) {
+    window.open(mapsUrl, '_blank', 'noopener,noreferrer');
+  }
+};
   const sliderData = [
     {
       id: 1,
@@ -1299,8 +1328,121 @@ const partnerLogos = [
       </div>
     </div>
   </div>
+</section> 
+
+{/* Store Locations Section */}
+<section className="store-locations">
+  <div className="container-location">
+    <h2 className="section-title">Our <span className="services-main-title-accent">Store Locations</span></h2>
+    <p className="section-subtitle">Visit us at our conveniently located branches</p>
+    
+    <div className="locations-grid">
+      {/* T.Nagar Branch Card */}
+      <div className="location-card">
+        <div className="location-map">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.860341832715!2d80.23043847330108!3d13.044560287277593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267c85017da53%3A0xc487691bdae5d0a4!2sNEWTON%20COMPUTERS%20-%20T.NAGAR!5e0!3m2!1sen!2sin!4v1766030345500!5m2!1sen!2sin" 
+            width="100%" 
+            height="250"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Newton Computers T.Nagar Branch"
+          ></iframe>
+        </div>
+        
+        <div className="location-details">
+          <h3 className="location-title">Head Office</h3>
+          <div className="location-address">
+            <FaMapMarkerAlt className="address-icon" />
+            <p>Newton Computer Services<br />
+               28-B/16, Murugesan Street, North Usman Road, T.Nagar,<br />
+               Chennai-600017</p>
+          </div>
+          
+          <div className="location-info">
+            <div className="info-item">
+              <FaPhone className="info-icon" />
+              <div className="info-content">
+                <span className="info-label">Phone:</span>
+                <a href="tel:+919840604073" className="info-value">+91 98406 04073</a>
+              </div>
+            </div>
+            
+            <div className="info-item">
+              <FaClock className="info-icon" />
+              <div className="info-content">
+                <span className="info-label">Timings:</span>
+                <span className="info-value">Mon to Sat - 9:30 AM to 6:30 PM</span>
+              </div>
+            </div>
+          </div>
+          
+          <button 
+            className="location-action-btn"
+            onClick={() => handleGetDirections('tnagar')}
+            aria-label="Get directions to T.Nagar branch"
+          >
+            Get Directions <FaArrowRight />
+          </button>
+        </div>
+      </div>
+      
+      {/* Thoraipakkam Branch Card */}
+      <div className="location-card">
+        <div className="location-map">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.573009499082!2d80.23063077329842!3d12.935142487376833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d09d9a1335f%3A0x481f049fe11e049d!2sNEWTON%20COMPUTERS%20-%20OMR%20THORAIPAKKAM!5e0!3m2!1sen!2sin!4v1766030408084!5m2!1sen!2sin" 
+            width="100%" 
+            height="250"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Newton Computers Thoraipakkam Branch"
+          ></iframe>
+        </div>
+        
+        <div className="location-details">
+          <h3 className="location-title">Branch Store</h3>
+          <div className="location-address">
+            <FaMapMarkerAlt className="address-icon" />
+            <p>Newton Computer Services<br />
+               No. 8/683 A, Srividya Avenue, Rajiv Gandhi Salai,<br />
+               Thoraipakkam, Chennai - 600097</p>
+          </div>
+          
+          <div className="location-info">
+            <div className="info-item">
+              <FaPhone className="info-icon" />
+              <div className="info-content">
+                <span className="info-label">Phone:</span>
+                <a href="tel:+919940185417" className="info-value">+91-99401 85417</a>
+              </div>
+            </div>
+            
+            <div className="info-item">
+              <FaClock className="info-icon" />
+              <div className="info-content">
+                <span className="info-label">Timings:</span>
+                <span className="info-value">Everyday - 10:30 AM to 8:30 PM</span>
+              </div>
+            </div>
+          </div>
+          
+          <button 
+            className="location-action-btn"
+            onClick={() => handleGetDirections('thoraipakkam')}
+            aria-label="Get directions to Thoraipakkam branch"
+          >
+            Get Directions <FaArrowRight />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
- 
   {/* <div className="service-details-circles">
     <div className="circle-decoration circle-1"></div>
     <div className="circle-decoration circle-2"></div>
@@ -1386,87 +1528,87 @@ const partnerLogos = [
 </section>
 {/* About Newton Computers Section */}
  
-<section className="about-newton" ref={aboutSectionRef}>
-  <div className="container" ref={aboutSectionRef}>
-    <div className="about-content" ref={aboutSectionRef}>
-      <div className="about-images" ref={aboutSectionRef}>
-        <div className="image-collage">
-          <div className="image-main">
-            <Image 
-              src="/assets/newton-zigzag2.jpg" 
-              alt="Newton Computers Store"
-              width={400}
-              height={500}
-              className="about-img main-img"
-            />
-            <div className="experience-badge">
-              <span className="years">{animatedStats.years}+</span>
-              <span className="text">Years of Excellence</span>
+  <section className="about-newton" ref={aboutSectionRef}>
+    <div className="container-about" ref={aboutSectionRef}>
+      <div className="about-content" ref={aboutSectionRef}>
+        <div className="about-images" ref={aboutSectionRef}>
+          <div className="image-collage">
+            <div className="image-main">
+              <Image 
+                src="/assets/newton-zigzag2.jpg" 
+                alt="Newton Computers Store"
+                width={400}
+                height={500}
+                className="about-img main-img"
+              />
+              <div className="experience-badge">
+                <span className="years">{animatedStats.years}+</span>
+                <span className="text">Years of Excellence</span>
+              </div>
             </div>
-          </div>
-          <div className="image-secondary" ref={aboutSectionRef}>
-            <Image 
-              src="/assets/newton-zigzag.jpg" 
-              alt="Our Team"
-              width={400}  
-              height={350}  
-              className="about-img secondary-img"
-            />
-            <div className="stats-overlay">
-              <div className="stat-item">
-                <span className="stat-number">{animatedStats.customers}+</span>
-                <span className="stat-text">Happy Customers</span>
+            <div className="image-secondary" ref={aboutSectionRef}>
+              <Image 
+                src="/assets/newton-zigzag.jpg" 
+                alt="Our Team"
+                width={400}  
+                height={350}  
+                className="about-img secondary-img"
+              />
+              <div className="stats-overlay">
+                <div className="stat-item">
+                  <span className="stat-number">{animatedStats.customers}+</span>
+                  <span className="stat-text">Happy Customers</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="about-text">
-        <div className="section-badge">
-          <span>About Us</span>
-        </div>
-        
-        <h2 className="about-title">
-          Newton Computers
-          <span className="subtitle">Your One-Stop Multi-Brand Laptop Store</span>
-        </h2>
-        
-        <p className="about-tagline">
-          More Than 14 Years We Provide Multi-Brand Laptop Store & Service
-        </p>
-        
-        <p className="about-description">
-          Since the establishment in 2010, we are dealing all major brands and achieving more than 1500+ satisfied customers across India. We are receiving overwhelming response from all the sides of the customers.
-        </p>
-
-        <div className="features-grid">
-          <div className="feature-item">
-            <div className="feature-icon">
-              <FaHeadset />
-            </div>
-            <div className="feature-content">
-              <h4>Brilliant Client Service</h4>
-              <p>24/7 Support & Free Consultations</p>
-            </div>
+        <div className="about-text">
+          <div className="section-badge">
+            <span>About Us</span>
           </div>
           
-          <div className="feature-item">
-            <div className="feature-icon">
-              <FaUserCheck />
+          <h2 className="about-title">
+            Newton Computers
+            <span className="subtitle">Your One-Stop Multi-Brand Laptop Store</span>
+          </h2>
+          
+          <p className="about-tagline">
+            More Than 14 Years We Provide Multi-Brand Laptop Store & Service
+          </p>
+          
+          <p className="about-description">
+            Since the establishment in 2010, we are dealing all major brands and achieving more than 1500+ satisfied customers across India. We are receiving overwhelming response from all the sides of the customers.
+          </p>
+
+          <div className="features-grid">
+            <div className="feature-item">
+              <div className="feature-icon">
+                <FaHeadset />
+              </div>
+              <div className="feature-content">
+                <h4>Brilliant Client Service</h4>
+                <p>24/7 Support & Free Consultations</p>
+              </div>
             </div>
-            <div className="feature-content">
-              <h4>User Experience</h4>
-              <p>Laptop & Desktop Quick Tips and Advice</p>
+            
+            <div className="feature-item">
+              <div className="feature-icon">
+                <FaUserCheck />
+              </div>
+              <div className="feature-content">
+                <h4>User Experience</h4>
+                <p>Laptop & Desktop Quick Tips and Advice</p>
+              </div>
             </div>
           </div>
-        </div>
 
-       
+        
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 <section className="compact-contact-section">
   <div className="container">
     <h2 className="contact-section-title">Get in <span className="services-main-title-accent">Touch</span></h2>
@@ -1568,7 +1710,14 @@ const partnerLogos = [
     
     <div className="partners-container">
       <div className="partners-scroll">
-        <div className="partners-track">
+     <div 
+  className={`partners-track ${isPartnerAnimationPaused ? 'paused' : ''}`}
+  onMouseEnter={handlePartnerMouseEnter}
+  onMouseLeave={handlePartnerMouseLeave}
+  style={{
+    animationPlayState: isPartnerAnimationPaused ? 'paused' : 'running'
+  }}
+>
           {/* First set of logos */}
           {partnerLogos.map((logo, index) => (
             <div key={`first-${index}`} className="partner-logo">
