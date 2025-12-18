@@ -917,7 +917,7 @@ const partnerLogos = [
 
       {/* Hero Section - Moved below slider */}
        
-   <section className="hero">
+<section className="hero">
   <div className="hero__container">
     <div className="hero__content-wrapper">
       <div className="hero__content">
@@ -955,62 +955,62 @@ const partnerLogos = [
 </section>
 
       {/* Rest of your existing sections remain the same */} 
-      <section className="features">
-        <div className="container">
-          <div className="features__grid">
-            {/* Card 1: Free Pickup and Delivery */}
-            <div className="feature-card">
-              <div className="feature-card__icon">
-                <FaTruck />
-              </div>
-              <h3 className="feature-card__title">Free pickup and delivery</h3>
-              <p className="feature-card__description">
-                Convenient, reliable, and stress-free – we bring the service to you
-              </p>
-              <div className="feature-card__actions">
-                <button className="feature-btn feature-btn--primary">
-                  Book Service
-                     <FaArrowRight className="btn-arrow" />
-                </button>
-              </div>
-            </div>
-
-            {/* Card 2: Trusted Repairs */}
-            <div className="feature-card">
-              <div className="feature-card__icon">
-                <FaShieldAlt />
-              </div>
-              <h3 className="feature-card__title">Get a Quote</h3>
-              <p className="feature-card__description">
-               Trusted, safe, and reliable repairs. Your devices security is our top priority!
-              </p>
-              <div className="feature-card__actions">
-                <button className="feature-btn feature-btn--primary">
-                  Get a Quote
-                     <FaArrowRight className="btn-arrow" />
-                </button>
-              </div>
-            </div>
-
-            {/* Card 3: Become a Partner */}
-            <div className="feature-card">
-              <div className="feature-card__icon">
-                <FaHandshake />
-              </div>
-              <h3 className="feature-card__title">Become a partner</h3>
-              <p className="feature-card__description">
-               Join our network to access top-quality products, expert support.
-              </p>
-              <div className="feature-card__actions">
-                <button className="feature-btn feature-btn--primary">
-                  Become a Partner
-                     <FaArrowRight className="btn-arrow" />
-                </button>
-              </div>
-            </div>
-          </div>
+    <section className="features">
+  <div className="container">
+    <div className="features__grid">
+      {/* Card 1: Free Pickup and Delivery */}
+      <div className="feature-card">
+        <div className="feature-card__icon">
+          <FaTruck />
         </div>
-      </section>
+        <h3 className="feature-card__title">Free pickup and delivery</h3>
+        <p className="feature-card__description">
+          Convenient, reliable, and stress-free – we bring the service to you
+        </p>
+        <div className="feature-card__actions">
+          <button className="feature-btn feature-btn--primary">
+            Book Service
+            <FaArrowRight className="btn-arrow" />
+          </button>
+        </div>
+      </div>
+
+      {/* Card 2: Trusted Repairs */}
+      <div className="feature-card">
+        <div className="feature-card__icon">
+          <FaShieldAlt />
+        </div>
+        <h3 className="feature-card__title">Get a Quote</h3>
+        <p className="feature-card__description">
+          Trusted, safe, and reliable repairs. Your devices security is our top priority!
+        </p>
+        <div className="feature-card__actions">
+          <button className="feature-btn feature-btn--primary">
+            Get a Quote
+            <FaArrowRight className="btn-arrow" />
+          </button>
+        </div>
+      </div>
+
+      {/* Card 3: Become a Partner */}
+      <div className="feature-card">
+        <div className="feature-card__icon">
+          <FaHandshake />
+        </div>
+        <h3 className="feature-card__title">Become a partner</h3>
+        <p className="feature-card__description">
+          Join our network to access top-quality products, expert support.
+        </p>
+        <div className="feature-card__actions">
+          <button className="feature-btn feature-btn--primary">
+            Become a Partner
+            <FaArrowRight className="btn-arrow" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
   
 <section className="online-store-section">
   <div className="container">
@@ -1367,7 +1367,7 @@ const partnerLogos = [
 {/* Store Locations Section */}
 <section className="store-locations">
   <div className="container-location">
-    <h2 className="section-title">Our <span className="services-main-title-accent">Store Locations</span></h2>
+    <h2 className="section-titles">Our <span className="services-main-title-accent">Store Locations</span></h2>
     <p className="section-subtitle">Visit us at our conveniently located branches</p>
     
     <div className="locations-grid">

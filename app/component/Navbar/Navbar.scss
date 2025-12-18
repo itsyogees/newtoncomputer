@@ -956,3 +956,236 @@ summary:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Responsive Font Sizes for Large and Small Monitors */
+@media (min-width: 1920px) {
+  /* Large Monitors (1920px+) */
+  .navbar {
+    .navbar__nav-links {
+      .nav-link {
+        font-size: 1.125rem;
+      }
+      
+      .dropdown-menu {
+        .dropdown-item {
+          font-size: 1rem;
+          padding: 0.875rem 1.5rem;
+        }
+      }
+    }
+    
+    .navbar__actions {
+      .book-service-btn {
+        font-size: 1rem;
+        padding: 0.875rem 1.75rem;
+      }
+      
+      .profile-dropdown-menu {
+        .profile-dropdown-item {
+          font-size: 1.0625rem;
+        }
+      }
+    }
+  }
+  
+  .info-bar {
+    .info-bar__contact-info {
+      a {
+        font-size: 1.0625rem;
+      }
+    }
+    
+    .info-bar__locations {
+      .locations-text {
+        font-size: 1.0625rem;
+      }
+    }
+    
+    .info-bar__book-btn {
+      font-size: 1.0625rem;
+      padding: 0.625rem 1.25rem;
+    }
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  /* Medium Monitors (1440px-1919px) */
+  .navbar {
+    .navbar__nav-links {
+      .nav-link {
+        font-size: 1.0625rem;
+      }
+    }
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1199px) {
+  /* Small Monitors (1024px-1199px) */
+  .navbar {
+    .navbar__nav-links {
+      gap: 1.25rem;
+      
+      .nav-link {
+        font-size: 0.9375rem;
+      }
+      
+      .dropdown-menu {
+        min-width: 200px;
+        
+        .dropdown-item {
+          font-size: 0.8125rem;
+          padding: 0.625rem 1rem;
+        }
+      }
+    }
+    
+    .navbar__actions {
+      .book-service-btn {
+        font-size: 0.8125rem;
+        padding: 0.5625rem 1.125rem;
+      }
+    }
+  }
+  
+  .info-bar {
+    .info-bar__contact-info {
+      a {
+        font-size: 0.875rem;
+      }
+    }
+    
+    .info-bar__locations {
+      .locations-text {
+        font-size: 0.875rem;
+      }
+    }
+    
+    .info-bar__book-btn {
+      font-size: 0.875rem;
+      padding: 0.4375rem 0.875rem;
+    }
+  }
+}
+
+/* Mobile Responsive Font Sizes */
+@media (max-width: 768px) {
+  .navbar {
+    .navbar__mobile-contact {
+      .mobile-contact-section {
+        a {
+          font-size: 0.875rem;
+        }
+      }
+      
+      .mobile-locations-section {
+        .mobile-locations-text {
+          font-size: 0.8125rem;
+        }
+      }
+    }
+    
+    .navbar__mobile-nav {
+      .mobile-nav-link {
+        font-size: 0.9375rem;
+        padding: 0.875rem 1.25rem;
+      }
+      
+      .mobile-dropdown-summary {
+        font-size: 0.9375rem;
+        padding: 0.875rem 1.25rem;
+      }
+      
+      .mobile-dropdown-item {
+        font-size: 0.8125rem;
+        padding: 0.75rem 1.25rem 0.75rem 1.75rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile Portrait */
+  .navbar {
+    .navbar__mobile-contact {
+      .mobile-contact-section {
+        a {
+          font-size: 0.8125rem;
+        }
+      }
+      
+      .mobile-locations-section {
+        .mobile-locations-text {
+          font-size: 0.75rem;
+          line-height: 1.3;
+        }
+      }
+    }
+    
+    .navbar__mobile-nav {
+      .mobile-nav-link {
+        font-size: 0.875rem;
+        padding: 0.75rem 1rem;
+      }
+      
+      .mobile-dropdown-summary {
+        font-size: 0.875rem;
+        padding: 0.75rem 1rem;
+      }
+      
+      .mobile-dropdown-item {
+        font-size: 0.75rem;
+        padding: 0.625rem 1rem 0.625rem 1.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  /* Very Small Phones */
+  .navbar {
+    .navbar__mobile-contact {
+      .mobile-contact-section {
+        a {
+          font-size: 0.75rem;
+        }
+      }
+      
+      .mobile-locations-section {
+        .mobile-locations-text {
+          font-size: 0.6875rem;
+        }
+      }
+    }
+    
+    .navbar__mobile-nav {
+      .mobile-nav-link {
+        font-size: 0.8125rem;
+        padding: 0.625rem 0.875rem;
+      }
+      
+      .mobile-dropdown-summary {
+        font-size: 0.8125rem;
+        padding: 0.625rem 0.875rem;
+      }
+      
+      .mobile-dropdown-item {
+        font-size: 0.6875rem;
+        padding: 0.5rem 0.875rem 0.5rem 1.25rem;
+      }
+    }
+  }
+}
+
+/* Smooth font transitions */
+.navbar__nav-links .nav-link,
+.navbar__actions .book-service-btn,
+.info-bar__contact-info a,
+.info-bar__locations .locations-text,
+.info-bar__book-btn,
+.navbar__mobile-contact a,
+.navbar__mobile-contact .mobile-locations-text,
+.navbar__mobile-nav .mobile-nav-link,
+.navbar__mobile-nav .mobile-dropdown-summary,
+.navbar__mobile-nav .mobile-dropdown-item {
+  transition: font-size 0.3s ease;
+}
