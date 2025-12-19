@@ -175,7 +175,7 @@ export default function BusinessMail() {
       {/* Plans Section */} 
       <section className="mail-plans">
         <div className="container">
-          <h2 className="section-title">Solutions for Every Business Need</h2>
+          <h2 className="mail-section-title">Solutions for Every Business Need</h2>
           <p className="mail-plans__intro">
             We recognize that each business has unique needs, which is why Newton Computer Services offers comprehensive solutions 
             for Google Workspace and Microsoft 365. Our experts work with you to determine the ideal setup that aligns with 
@@ -272,7 +272,7 @@ export default function BusinessMail() {
       <section className="mail-offering">
         <div className="mail-offering__bg">
           <div className="container">
-            <h2 className="section-title section-title--light">Newton Computer Services' Business Mail Offering</h2>
+            <h2 className="mail-section-title-2 section-title--light">Newton Computer Services' Business Mail Offering</h2>
             
             <div className="mail-offering__grid">
               <div className="mail-offering__item">

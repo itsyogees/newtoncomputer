@@ -6302,11 +6302,9 @@ width: 90%;
 
 .partners-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 
-  @media (max-width: 768px) {
-    margin-bottom: 2rem;
-  }
+ 
 
   @media (max-width: 480px) {
      margin-bottom: 1rem;
@@ -6367,8 +6365,7 @@ width: 90%;
 .partners-container {
   position: relative;
   width: 100%;
-  overflow: hidden;
-  padding: 2rem 0;
+  overflow: hidden; 
 }
 
 .partners-scroll {

@@ -57,11 +57,48 @@ $transition: all 0.25s ease;
   }
 }
 
-.section-title {
+.mail-section-title {
   text-align: center;
   font-size: 2rem;
   font-weight: 700;
   color: $text-dark;
+  margin-bottom: 2rem;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    @include gradient-bg;
+    border-radius: 2px;
+  }
+
+  &--light {
+    color: $white !important;
+    
+    &::after {
+      background: $white;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+  }
+}
+.mail-section-title-2 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: $white;
   margin-bottom: 2rem;
   position: relative;
   
