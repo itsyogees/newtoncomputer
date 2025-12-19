@@ -143,14 +143,12 @@ export default function WifiNetworkingSolutions() {
   };
 
   return (
-    <div className="wifi-networking-page">
+    <div className="wifi-networking">
       {/* Hero Section */}
       <section className="wifi-hero">
         <div className="wifi-hero__container">
           <div className="wifi-hero__content">
-            <div className="certified-badge">
-              <span>Certified Partner</span>
-            </div>
+            
             <h1 className="wifi-hero__title">
               Wi-Fi and Networking Solutions
             </h1>
@@ -160,23 +158,23 @@ export default function WifiNetworkingSolutions() {
               advanced IT services that ensure seamless connectivity and optimal performance.
             </p>
             
-            {/* Partners Slider Section */}
-            <div className="partners-sections">
-              <div className="partners-header">
-                <h3 className="partners-title">Trusted Technology Partners</h3>
+            {/* Partners Section */}
+            <div className="wifi-partners">
+              <div className="wifi-partners__header">
+                <h3 className="wifi-partners__title">Trusted Technology Partners</h3>
               </div>
               
-              <div className="partners-slider">
-                <div className="partners-track">
+              <div className="wifi-partners__slider">
+                <div className="wifi-partners__track">
                   {getCurrentSlideImages().map((partner, index) => (
-                    <div key={index} className="partner-item">
-                      <div className="partner-image-container">
+                    <div key={index} className="wifi-partner__item">
+                      <div className="wifi-partner__image-container">
                         <Image
                           src={partner}
                           alt={`Networking Partner ${index + 1}`}
                           width={100}
                           height={60}
-                          className="partner-image"
+                          className="wifi-partner__image"
                         />
                       </div>
                     </div>
@@ -203,26 +201,21 @@ export default function WifiNetworkingSolutions() {
         </div>
       </section>
 
-      {/* Comprehensive Solutions Section */}
+      {/* Solutions Section */}
       <section id="wifi-solutions" className="wifi-solutions">
-        {/* Floating background circles */}
-        <div className="floating-circle floating-circle-1"></div>
-        <div className="floating-circle floating-circle-2"></div>
-        <div className="floating-circle floating-circle-3"></div>
-        
         <div className="wifi-solutions__container">
           <div className="wifi-solutions__content">
-            <div className="content-wrapper">
+            <div className="wifi-solutions__text-wrapper">
               <h2 className="wifi-solutions__title">
                 Comprehensive Wi-Fi and Networking Solutions
               </h2>
               <div className="wifi-solutions__text">
-                <p className="intro-text">
+                <p className="wifi-solutions__intro">
                   Newton Computer Services offers comprehensive WiFi and networking solutions for businesses 
                   of all sizes. Our expertise spans wireless integrations, network infrastructure setup, and 
                   advanced IT services that ensure seamless connectivity and optimal performance.
                 </p>
-                <p className="description-text">
+                <p className="wifi-solutions__description">
                   With a focus on quality, security, and scalability, we deploy cutting-edge technology from 
                   trusted brands like Cisco, TP-Link, Ubiquiti, Netgear, and Aruba, bringing reliable and 
                   customized networking to your organization.
@@ -232,33 +225,33 @@ export default function WifiNetworkingSolutions() {
           </div>
           
           <div className="wifi-solutions__image">
-            <div className="image-container">
+            <div className="wifi-solutions__image-container">
               <Image
                 src="/assets/wifi-provider-chennai.png"
                 alt="Wi-Fi Networking Overview"
                 width={600}
                 height={500}
-                className={`solution-image ${isVisible ? 'animate-in' : ''}`}
+                className={`wifi-solutions__img ${isVisible ? 'animate-in' : ''}`}
               />
             </div>
           </div>
         </div>
         
-        <div className="wifi-services-overview">
-          <h3 className="services-title">WiFi and Networking Services</h3>
-          <p className="services-subtitle">
+        <div className="wifi-services">
+          <h3 className="wifi-services__title">WiFi and Networking Services</h3>
+          <p className="wifi-services__subtitle">
             Our range of services addresses every aspect of business networking, from wireless 
             solutions and network infrastructure to advanced support and IT services.
           </p>
           
-          <div className="services-grid">
+          <div className="wifi-services__grid">
             {services.map((service, index) => (
-              <div key={index} className="service-card">
-                <div className="service-icon">
+              <div key={index} className="wifi-service__card">
+                <div className="wifi-service__icon">
                   {service.icon}
                 </div>
-                <h4>{service.title}</h4>
-                <p>{service.description}</p>
+                <h4 className="wifi-service__title">{service.title}</h4>
+                <p className="wifi-service__description">{service.description}</p>
               </div>
             ))}
           </div>
@@ -266,26 +259,26 @@ export default function WifiNetworkingSolutions() {
       </section>
 
       {/* Wireless Integration Section */}
-      <section className="wireless-integration">
-        <div className="wireless-integration__container">
-          <div className="wireless-integration__content">
-            <div className="wireless-integration__text-content">
-              <h2 className="wireless-integration__title">
+      <section className="wifi-wireless">
+        <div className="wifi-wireless__container">
+          <div className="wifi-wireless__content">
+            <div className="wifi-wireless__text-content">
+              <h2 className="wifi-wireless__title">
                 Wireless Integration Services
               </h2>
-              <div className="wireless-integration__description">
-                <p className="intro-text">
+              <div className="wifi-wireless__description">
+                <p className="wifi-wireless__intro">
                   We provide full-spectrum wireless integration services, setting up wireless networks 
                   that cover your entire workspace and support multiple users and devices with seamless connectivity.
                 </p>
                 
-                <div className="wireless-services">
+                <div className="wifi-wireless__services">
                   {wirelessServices.map((service, index) => (
-                    <div key={index} className="wireless-service">
-                      <div className="service-icon">
+                    <div key={index} className="wifi-wireless__service-item">
+                      <div className="wifi-wireless__service-icon">
                         {service.icon}
                       </div>
-                      <div className="service-content">
+                      <div className="wifi-wireless__service-content">
                         <h4>{service.title}</h4>
                         <p>{service.description}</p>
                       </div>
@@ -295,14 +288,14 @@ export default function WifiNetworkingSolutions() {
               </div>
             </div>
             
-            <div className="wireless-integration__image">
-              <div className="image-wrapper">
+            <div className="wifi-wireless__image">
+              <div className="wifi-wireless__image-wrapper">
                 <Image
                   src="/assets/wifi-services.png"
                   alt="Wi-Fi Services"
                   width={500}
                   height={400}
-                  className="wifi-services-image"
+                  className="wifi-wireless__img"
                 />
               </div>
             </div>
@@ -311,26 +304,26 @@ export default function WifiNetworkingSolutions() {
       </section>
 
       {/* Network Infrastructure Section */}
-      <section className="network-infrastructure">
-        <div className="network-infrastructure__container">
-          <div className="network-infrastructure__content">
-            <div className="network-infrastructure__text-content">
-              <h2 className="network-infrastructure__title">
+      <section className="wifi-infrastructure">
+        <div className="wifi-infrastructure__container">
+          <div className="wifi-infrastructure__content">
+            <div className="wifi-infrastructure__text-content">
+              <h2 className="wifi-infrastructure__title">
                 End-to-End Network Infrastructure Setup
               </h2>
-              <div className="network-infrastructure__description">
-                <p className="intro-text">
+              <div className="wifi-infrastructure__description">
+                <p className="wifi-infrastructure__intro">
                   Setting up a high-performance network infrastructure requires expertise in both design and deployment. 
                   Newton Computer Services brings industry-leading technology and years of experience to build a resilient, scalable network infrastructure.
                 </p>
                 
-                <div className="infrastructure-services">
+                <div className="wifi-infrastructure__services">
                   {infrastructureServices.map((service, index) => (
-                    <div key={index} className="infrastructure-service">
-                      <div className="service-icon">
+                    <div key={index} className="wifi-infrastructure__service-item">
+                      <div className="wifi-infrastructure__service-icon">
                         {service.icon}
                       </div>
-                      <div className="service-content">
+                      <div className="wifi-infrastructure__service-content">
                         <h4>{service.title}</h4>
                         <p>{service.description}</p>
                       </div>
@@ -340,64 +333,14 @@ export default function WifiNetworkingSolutions() {
               </div>
             </div>
             
-            <div className="network-infrastructure__image">
-              <div className="image-wrapper">
+            <div className="wifi-infrastructure__image">
+              <div className="wifi-infrastructure__image-wrapper">
                 <Image
                   src="/assets/networking-srvices.png"
                   alt="Network Infrastructure"
                   width={500}
                   height={400}
-                  className="infrastructure-image"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* IT Services Section */}
-      <section className="new-wifi-it-section">
-        <div className="new-wifi-it-section__container">
-          <div className="new-wifi-it-section__content">
-            <div className="new-wifi-it-section__text-content">
-              <div className="section-label">
-                <span>Advanced IT Support</span>
-              </div>
-              <h2 className="new-wifi-it-section__title">
-                IT Services
-              </h2>
-              <div className="new-wifi-it-section__description">
-                <p className="intro-text">
-                  We go beyond network setup by providing ongoing support, maintenance, and advanced IT services 
-                  to keep your network secure and optimized.
-                </p>
-                
-                <div className="it-services-list">
-                  {itServices.map((service, index) => (
-                    <div key={index} className="it-service-item">
-                      <div className="service-icon-wrapper">
-                        <div className="service-icon">
-                          {service.icon}
-                        </div>
-                      </div>
-                      <div className="service-content">
-                        <h4>{service.title}</h4>
-                        <p>{service.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            <div className="new-wifi-it-section__image">
-              <div className="image-wrapper">
-                <Image
-                  src="/assets/newton-charger.png"
-                  alt="IT Services and Support"
-                  width={600}
-                  height={500}
-                  className="it-services-image"
-                  priority
+                  className="wifi-infrastructure__img"
                 />
               </div>
             </div>
@@ -405,6 +348,56 @@ export default function WifiNetworkingSolutions() {
         </div>
       </section>
 
+      {/* IT Services Section */}
+      <section className="wifi-it">
+        <div className="wifi-it__container">
+          <div className="wifi-it__content">
+            <div className="wifi-it__text-content">
+              <div className="wifi-it__badge">
+                <span>Advanced IT Support</span>
+              </div>
+              <h2 className="wifi-it__title">
+                IT Services
+              </h2>
+              <div className="wifi-it__description">
+                <p className="wifi-it__intro">
+                  We go beyond network setup by providing ongoing support, maintenance, and advanced IT services 
+                  to keep your network secure and optimized.
+                </p>
+                
+                <div className="wifi-it__services">
+                  {itServices.map((service, index) => (
+                    <div key={index} className="wifi-it__service-item">
+                      <div className="wifi-it__service-icon-wrapper">
+                        <div className="wifi-it__service-icon">
+                          {service.icon}
+                        </div>
+                      </div>
+                      <div className="wifi-it__service-content">
+                        <h4>{service.title}</h4>
+                        <p>{service.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <div className="wifi-it__image">
+              <div className="wifi-it__image-wrapper">
+                <Image
+                  src="/assets/newton-charger.png"
+                  alt="IT Services and Support"
+                  width={600}
+                  height={500}
+                  className="wifi-it__img"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

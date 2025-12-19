@@ -41,8 +41,9 @@ const LaptopStoreContent = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedStorage, setSelectedStorage] = useState([]);
   const [selectedProcessor, setSelectedProcessor] = useState([]);
-  const [selectedProductType, setSelectedProductType] = useState([]);
+  const [selectedAccessoryType, setSelectedAccessoryType] = useState([]);
   const [selectedPrinterType, setSelectedPrinterType] = useState([]);
+  const [selectedPrinterFunction, setSelectedPrinterFunction] = useState([]);
   const [showSidebar, setShowSidebar] = useState(typeof window !== 'undefined' && window.innerWidth > 768);
 
   // Enhanced product data with all categories
@@ -162,6 +163,7 @@ const LaptopStoreContent = () => {
       image: '/assets/placeholder-lap.png',
       category: 'accessories',
       type: 'mouse',
+      accessoryType: 'mouse',
       condition: 'new',
       rating: 4.6,
       reviews: 89,
@@ -183,6 +185,7 @@ const LaptopStoreContent = () => {
       image: '/assets/placeholder-lap.png',
       category: 'accessories',
       type: 'bag',
+      accessoryType: 'bag',
       condition: 'new',
       rating: 4.3,
       reviews: 45,
@@ -204,6 +207,7 @@ const LaptopStoreContent = () => {
       image: '/assets/placeholder-lap.png',
       category: 'accessories',
       type: 'docking-station',
+      accessoryType: 'docking-station',
       condition: 'new',
       rating: 4.4,
       reviews: 67,
@@ -225,7 +229,9 @@ const LaptopStoreContent = () => {
       currentPrice: 29999,
       image: '/assets/placeholder-lap.png',
       category: 'printer',
-      type: 'laser-mfp',
+      type: 'laser',
+      printerType: 'laser',
+      printerFunction: 'mfp',
       condition: 'new',
       rating: 4.7,
       reviews: 120,
@@ -247,6 +253,8 @@ const LaptopStoreContent = () => {
       image: '/assets/placeholder-lap.png',
       category: 'printer',
       type: 'ink-tank',
+      printerType: 'ink-tank',
+      printerFunction: 'print',
       condition: 'new',
       rating: 4.5,
       reviews: 95,
@@ -268,6 +276,8 @@ const LaptopStoreContent = () => {
       image: '/assets/placeholder-lap.png',
       category: 'printer',
       type: 'ink-tank',
+      printerType: 'ink-tank',
+      printerFunction: 'mfp',
       condition: 'new',
       rating: 4.6,
       reviews: 110,
@@ -281,14 +291,28 @@ const LaptopStoreContent = () => {
     }
   ];
 
+  // Filter options
   const brands = ['dell', 'lenovo', 'hp', 'apple', 'asus', 'logitech', 'canon', 'epson'];
   const operatingSystems = ['windows', 'macos', 'linux'];
   const ramOptions = [4, 8, 16, 32];
   const productCategories = ['refurbished-laptop', 'new-laptop', 'accessories', 'printer'];
   const storageOptions = ['256GB SSD', '512GB SSD', '1TB SSD', '1TB HDD'];
   const processorOptions = ['Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Apple M1'];
-  const printerTypes = ['laser', 'ink-tank', 'laser-mfp', 'all-in-one'];
-  const accessoryTypes = ['mouse', 'keyboard', 'bag', 'docking-station', 'adapter', 'stand'];
+  const printerTypes = ['laser', 'ink-tank', 'inkjet'];
+  const accessoryTypes = ['mouse', 'bag', 'docking-station'];
+  const printerFunctions = ['print', 'mfp'];
+
+  // Get brands by category
+  const getBrandsByCategory = () => {
+    if (selectedCategories.includes('printer')) {
+      return ['hp', 'canon', 'epson'];
+    } else if (selectedCategories.includes('accessories')) {
+      return ['dell', 'hp', 'logitech'];
+    } else if (selectedCategories.includes('refurbished-laptop') || selectedCategories.includes('new-laptop')) {
+      return ['dell', 'lenovo', 'hp', 'apple', 'asus'];
+    }
+    return brands; // Show all brands if no category selected
+  };
 
   // Initialize with brand or category from URL
   useEffect(() => {
@@ -317,80 +341,97 @@ const LaptopStoreContent = () => {
     }, 1000);
   }, []);
 
-  // Filtering function
+  // Filtering function - FIXED VERSION
   const filterProducts = useCallback(() => {
+    console.log('Filtering products...');
+    console.log('Selected categories:', selectedCategories);
+    console.log('Selected brands:', selectedBrands);
+    console.log('Selected RAM:', selectedRAM);
+    console.log('Selected storage:', selectedStorage);
+    console.log('Selected accessory types:', selectedAccessoryType);
+    console.log('Selected printer types:', selectedPrinterType);
+    console.log('Selected printer functions:', selectedPrinterFunction);
+    console.log('Price range:', priceRange);
+    
     let filtered = [...productData];
 
-    // Product Category filter
+    // 1. Category filter
     if (selectedCategories.length > 0) {
-      filtered = filtered.filter(product => selectedCategories.includes(product.category));
+      filtered = filtered.filter(product => 
+        selectedCategories.includes(product.category)
+      );
+      console.log('After category filter:', filtered.length);
     }
 
-    // Brand filter
+    // 2. Brand filter
     if (selectedBrands.length > 0) {
-      filtered = filtered.filter(product => selectedBrands.includes(product.brand));
-    }
-
-    // Operating System filter (only for laptops)
-    if (selectedOS.length > 0) {
       filtered = filtered.filter(product => 
-        product.type === 'laptop' && selectedOS.includes(product.specifications?.operatingSystem)
+        selectedBrands.includes(product.brand)
       );
+      console.log('After brand filter:', filtered.length);
     }
 
-    // RAM filter (only for laptops)
-    if (selectedRAM.length > 0) {
-      filtered = filtered.filter(product => 
-        product.type === 'laptop' && selectedRAM.includes(product.specifications?.ramCapacity)
-      );
-    }
-
-    // Storage filter (only for laptops)
-    if (selectedStorage.length > 0) {
-      filtered = filtered.filter(product => 
-        product.type === 'laptop' && selectedStorage.includes(product.specifications?.storage)
-      );
-    }
-
-    // Processor filter (only for laptops)
-    if (selectedProcessor.length > 0) {
-      filtered = filtered.filter(product => 
-        product.type === 'laptop' && 
-        selectedProcessor.some(proc => product.specifications?.processor?.includes(proc))
-      );
-    }
-
-    // Product Type filter (for accessories and printers)
-    if (selectedProductType.length > 0) {
-      filtered = filtered.filter(product => 
-        (product.category === 'accessories' || product.category === 'printer') &&
-        selectedProductType.includes(product.type)
-      );
-    }
-
-    // Printer Type filter
-    if (selectedPrinterType.length > 0 && selectedCategories.includes('printer')) {
-      filtered = filtered.filter(product => 
-        selectedPrinterType.some(type => product.type.includes(type))
-      );
-    }
-
-    // Price filter
+    // 3. Price filter
     filtered = filtered.filter(product => 
       product.currentPrice >= priceRange[0] && product.currentPrice <= priceRange[1]
     );
+    console.log('After price filter:', filtered.length);
 
-    // Search filter
+    // 4. RAM filter (only for laptops)
+    if (selectedRAM.length > 0 && (selectedCategories.includes('refurbished-laptop') || selectedCategories.includes('new-laptop'))) {
+      filtered = filtered.filter(product => 
+        product.type === 'laptop' && 
+        product.specifications?.ramCapacity && 
+        selectedRAM.includes(product.specifications.ramCapacity)
+      );
+      console.log('After RAM filter:', filtered.length);
+    }
+
+    // 5. Storage filter (only for laptops)
+    if (selectedStorage.length > 0 && (selectedCategories.includes('refurbished-laptop') || selectedCategories.includes('new-laptop'))) {
+      filtered = filtered.filter(product => 
+        product.type === 'laptop' && 
+        product.specifications?.storage && 
+        selectedStorage.includes(product.specifications.storage)
+      );
+      console.log('After storage filter:', filtered.length);
+    }
+
+    // 6. Accessory type filter
+    if (selectedAccessoryType.length > 0 && selectedCategories.includes('accessories')) {
+      filtered = filtered.filter(product => 
+        selectedAccessoryType.includes(product.accessoryType)
+      );
+      console.log('After accessory type filter:', filtered.length);
+    }
+
+    // 7. Printer type filter
+    if (selectedPrinterType.length > 0 && selectedCategories.includes('printer')) {
+      filtered = filtered.filter(product => 
+        selectedPrinterType.includes(product.printerType)
+      );
+      console.log('After printer type filter:', filtered.length);
+    }
+
+    // 8. Printer function filter
+    if (selectedPrinterFunction.length > 0 && selectedCategories.includes('printer')) {
+      filtered = filtered.filter(product => 
+        selectedPrinterFunction.includes(product.printerFunction)
+      );
+      console.log('After printer function filter:', filtered.length);
+    }
+
+    // 9. Search filter
     if (searchTerm) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.specs.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase())
+        product.brand.toLowerCase().includes(searchTerm.toLowerCase())
       );
+      console.log('After search filter:', filtered.length);
     }
 
-    // Sort
+    // 10. Sort
     switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => a.currentPrice - b.currentPrice);
@@ -405,9 +446,17 @@ const LaptopStoreContent = () => {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
       default:
+        // Default sort by category and then by rating
+        filtered.sort((a, b) => {
+          if (a.category !== b.category) {
+            return a.category.localeCompare(b.category);
+          }
+          return b.rating - a.rating;
+        });
         break;
     }
 
+    console.log('Final filtered products:', filtered.length);
     setFilteredProducts(filtered);
   }, [
     selectedBrands, 
@@ -416,13 +465,15 @@ const LaptopStoreContent = () => {
     selectedCategories,
     selectedStorage,
     selectedProcessor,
-    selectedProductType,
+    selectedAccessoryType,
     selectedPrinterType,
+    selectedPrinterFunction,
     priceRange, 
     searchTerm, 
     sortBy
   ]);
 
+  // Run filter whenever dependencies change
   useEffect(() => {
     filterProducts();
   }, [filterProducts]);
@@ -450,15 +501,17 @@ const LaptopStoreContent = () => {
   };
 
   const handleCategoryToggle = (categoryItem) => {
-    setSelectedCategories(prev =>
-      prev.includes(categoryItem)
-        ? prev.filter(c => c !== categoryItem)
-        : [...prev, categoryItem]
-    );
+    setSelectedCategories(prev => {
+      if (prev.includes(categoryItem)) {
+        return prev.filter(c => c !== categoryItem);
+      } else {
+        return [...prev, categoryItem];
+      }
+    });
   };
 
-  const handleProductTypeToggle = (type) => {
-    setSelectedProductType(prev =>
+  const handleAccessoryTypeToggle = (type) => {
+    setSelectedAccessoryType(prev =>
       prev.includes(type)
         ? prev.filter(t => t !== type)
         : [...prev, type]
@@ -473,6 +526,14 @@ const LaptopStoreContent = () => {
     );
   };
 
+  const handlePrinterFunctionToggle = (func) => {
+    setSelectedPrinterFunction(prev =>
+      prev.includes(func)
+        ? prev.filter(f => f !== func)
+        : [...prev, func]
+    );
+  };
+
   const clearAllFilters = () => {
     setSelectedBrands([]);
     setSelectedOS([]);
@@ -480,18 +541,21 @@ const LaptopStoreContent = () => {
     setSelectedCategories([]);
     setSelectedStorage([]);
     setSelectedProcessor([]);
-    setSelectedProductType([]);
+    setSelectedAccessoryType([]);
     setSelectedPrinterType([]);
+    setSelectedPrinterFunction([]);
     setPriceRange([0, 200000]);
     setSearchTerm('');
   };
 
   const handleAddToCart = (product) => {
     console.log('Added to cart:', product);
+    alert(`${product.name} added to cart!`);
   };
 
   const handleAddToWishlist = (product) => {
     console.log('Added to wishlist:', product);
+    alert(`${product.name} added to wishlist!`);
   };
 
   const handleViewDetails = (productId) => {
@@ -507,7 +571,17 @@ const LaptopStoreContent = () => {
   };
 
   const getBrandDisplayName = (brandItem) => {
-    return brandItem.charAt(0).toUpperCase() + brandItem.slice(1);
+    const brandNames = {
+      'dell': 'Dell',
+      'lenovo': 'Lenovo',
+      'hp': 'HP',
+      'apple': 'Apple',
+      'asus': 'ASUS',
+      'logitech': 'Logitech',
+      'canon': 'Canon',
+      'epson': 'Epson'
+    };
+    return brandNames[brandItem] || brandItem.charAt(0).toUpperCase() + brandItem.slice(1);
   };
 
   const getCategoryDisplayName = (categoryItem) => {
@@ -533,6 +607,23 @@ const LaptopStoreContent = () => {
       default:
         return <FaLaptop />;
     }
+  };
+
+  const getPrinterTypeDisplayName = (type) => {
+    const names = {
+      'laser': 'Laser Printer',
+      'ink-tank': 'Ink Tank Printer',
+      'inkjet': 'Inkjet Printer'
+    };
+    return names[type] || type;
+  };
+
+  const getPrinterFunctionDisplayName = (func) => {
+    const names = {
+      'print': 'Print Only',
+      'mfp': 'All-in-One (Print/Scan/Copy/Fax)'
+    };
+    return names[func] || func;
   };
 
   const getBannerTitle = () => {
@@ -660,11 +751,11 @@ const LaptopStoreContent = () => {
                   </div>
                 </div>
 
-                {/* Brands Filter */}
+                {/* Brands Filter - Dynamic based on selected category */}
                 <div className="filter-section">
                   <h4>Brands</h4>
                   <div className="filter-options">
-                    {brands.map(brandItem => (
+                    {getBrandsByCategory().map(brandItem => (
                       <label key={brandItem} className="filter-option">
                         <input
                           type="checkbox"
@@ -701,7 +792,7 @@ const LaptopStoreContent = () => {
                   </div>
                 </div>
 
-                {/* Laptop Specific Filters */}
+                {/* Laptop Specific Filters - Only show for laptop categories */}
                 {(selectedCategories.includes('refurbished-laptop') || 
                   selectedCategories.includes('new-laptop') || 
                   selectedCategories.length === 0) && (
@@ -749,10 +840,32 @@ const LaptopStoreContent = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* Processor Filter */}
+                    <div className="filter-section">
+                      <h4>Processor</h4>
+                      <div className="filter-options">
+                        {processorOptions.map(processor => (
+                          <label key={processor} className="filter-option">
+                            <input
+                              type="checkbox"
+                              checked={selectedProcessor.includes(processor)}
+                              onChange={() => setSelectedProcessor(prev =>
+                                prev.includes(processor)
+                                  ? prev.filter(p => p !== processor)
+                                  : [...prev, processor]
+                              )}
+                            />
+                            <span className="checkmark"></span>
+                            {processor}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
                   </>
                 )}
 
-                {/* Accessories Type Filter */}
+                {/* Accessories Type Filter - Only show for accessories */}
                 {(selectedCategories.includes('accessories') || selectedCategories.length === 0) && (
                   <div className="filter-section">
                     <h4>Accessory Type</h4>
@@ -761,8 +874,8 @@ const LaptopStoreContent = () => {
                         <label key={type} className="filter-option">
                           <input
                             type="checkbox"
-                            checked={selectedProductType.includes(type)}
-                            onChange={() => handleProductTypeToggle(type)}
+                            checked={selectedAccessoryType.includes(type)}
+                            onChange={() => handleAccessoryTypeToggle(type)}
                           />
                           <span className="checkmark"></span>
                           {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -772,24 +885,43 @@ const LaptopStoreContent = () => {
                   </div>
                 )}
 
-                {/* Printer Type Filter */}
+                {/* Printer Type Filter - Only show for printers */}
                 {(selectedCategories.includes('printer') || selectedCategories.length === 0) && (
-                  <div className="filter-section">
-                    <h4>Printer Type</h4>
-                    <div className="filter-options">
-                      {printerTypes.map(type => (
-                        <label key={type} className="filter-option">
-                          <input
-                            type="checkbox"
-                            checked={selectedPrinterType.includes(type)}
-                            onChange={() => handlePrinterTypeToggle(type)}
-                          />
-                          <span className="checkmark"></span>
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </label>
-                      ))}
+                  <>
+                    <div className="filter-section">
+                      <h4>Printer Type</h4>
+                      <div className="filter-options">
+                        {printerTypes.map(type => (
+                          <label key={type} className="filter-option">
+                            <input
+                              type="checkbox"
+                              checked={selectedPrinterType.includes(type)}
+                              onChange={() => handlePrinterTypeToggle(type)}
+                            />
+                            <span className="checkmark"></span>
+                            {getPrinterTypeDisplayName(type)}
+                          </label>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+
+                    <div className="filter-section">
+                      <h4>Functions</h4>
+                      <div className="filter-options">
+                        {printerFunctions.map(func => (
+                          <label key={func} className="filter-option">
+                            <input
+                              type="checkbox"
+                              checked={selectedPrinterFunction.includes(func)}
+                              onChange={() => handlePrinterFunctionToggle(func)}
+                            />
+                            <span className="checkmark"></span>
+                            {getPrinterFunctionDisplayName(func)}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
@@ -919,7 +1051,7 @@ const LaptopStoreContent = () => {
               </div>
               <h3 className="store-feature__title">12 Months Warranty</h3>
               <p className="store-feature__description">
-                Comprehensive warranty on all refurbished laptops
+                Comprehensive warranty on all products
               </p>
             </div>
             

@@ -109,29 +109,29 @@ export default function BusinessMail() {
   ];
 
   return (
-    <div className="business-mail-page">
+    <div className="business-mail">
       {/* Hero Section */}
-      <section className="business-hero">
-        <div className="business-hero__container">
-          <div className="business-hero__content">
-            <h1 className="business-hero__title">
+      <section className="mail-hero">
+        <div className="mail-hero__container">
+          <div className="mail-hero__content">
+            <h1 className="mail-hero__title">
               Business Mail Services
             </h1>
-            <p className="business-hero__description">
+            <p className="mail-hero__description">
               In today's digital landscape, efficient and secure communication is at the core of any successful business. 
               Newton Computer Services specializes in providing comprehensive business mail services, empowering organizations 
               with reliable and adaptable email platforms.
             </p>
-            <div className="business-hero__actions">
-              <button className="business-hero__btn business-hero__btn--primary">
+            <div className="mail-hero__actions">
+              <button className="mail-hero__btn mail-hero__btn--primary">
                 Get Quote
               </button>
-              <button className="business-hero__btn business-hero__btn--secondary">
+              <button className="mail-hero__btn mail-hero__btn--secondary">
                 Contact Us
               </button>
             </div>
           </div>
-          <div className="business-hero__image">
+          <div className="mail-hero__image">
             <Image 
               src="/assets/business-mail-services.png" 
               alt="Business Mail Services" 
@@ -144,12 +144,12 @@ export default function BusinessMail() {
       </section>
 
       {/* Certified Partner Section */}
-      <section className="certified-partner">
+      <section className="mail-partner">
         <div className="container">
-          <div className="certified-partner__content">
-            <div className="certified-partner__info">
-              <h2 className="certified-partner__title">Certified Partner</h2>
-              <div className="certified-partner__logo">
+          <div className="mail-partner__content">
+            <div className="mail-partner__info">
+              <h2 className="mail-partner__title">Certified Partner</h2>
+              <div className="mail-partner__logo">
                 <Image 
                   src="/assets/Google_Workspace_Logo.png" 
                   alt="Google Workspace Partner" 
@@ -157,11 +157,11 @@ export default function BusinessMail() {
                   height={100}
                 />
               </div>
-              <button className="certified-partner__btn">
+              <button className="mail-partner__btn">
                 Book Service
               </button>
             </div>
-            <div className="certified-partner__description">
+            <div className="mail-partner__description">
               <p>
                 We offer end-to-end support for setting up and managing Google Workspace and Microsoft 365 email solutions. 
                 Whether you're upgrading from another email provider or starting fresh, Newton Computer Services ensures 
@@ -173,25 +173,25 @@ export default function BusinessMail() {
       </section>
 
       {/* Plans Section */} 
-      <section className="plans-section">
+      <section className="mail-plans">
         <div className="container">
           <h2 className="section-title">Solutions for Every Business Need</h2>
-          <p className="plans-intro">
+          <p className="mail-plans__intro">
             We recognize that each business has unique needs, which is why Newton Computer Services offers comprehensive solutions 
             for Google Workspace and Microsoft 365. Our experts work with you to determine the ideal setup that aligns with 
             your operational requirements, helping you choose options that optimize productivity, security, and scalability.
           </p>
           
-          <div className="plans-toggle">
+          <div className="mail-plans__toggle">
             <button 
-              className={`plans-toggle__btn ${activePlan === 'google' ? 'active' : ''}`}
+              className={`mail-plans__toggle-btn ${activePlan === 'google' ? 'active' : ''}`}
               onClick={() => setActivePlan('google')}
             >
               <FaGoogle className="toggle-icon" />
               Google Workspace
             </button>
             <button 
-              className={`plans-toggle__btn ${activePlan === 'microsoft' ? 'active' : ''}`}
+              className={`mail-plans__toggle-btn ${activePlan === 'microsoft' ? 'active' : ''}`}
               onClick={() => setActivePlan('microsoft')}
             >
               <FaMicrosoft className="toggle-icon" />
@@ -199,33 +199,41 @@ export default function BusinessMail() {
             </button>
           </div>
 
-          <div className="solutions-grid">
+          <div className="mail-plans__grid">
             {(activePlan === 'google' ? googlePlans : microsoftPlans).map((plan, index) => (
-              <div key={index} className="solution-card">
-                <div className="solution-card__header">
-                  <h3 className="solution-card__name">{plan.name}</h3>
-                  <div className="solution-card__type">
+              <div key={index} className="mail-plan-card">
+                <div className="mail-plan-card__header">
+                  <h3 className="mail-plan-card__name">{plan.name}</h3>
+                  <div className="mail-plan-card__type">
                     {activePlan === 'google' ? 'Google Workspace' : 'Microsoft 365'}
                   </div>
                 </div>
-                <div className="solution-card__content">
-                  <h4 className="solution-card__subtitle">Key Features & Benefits</h4>
-                  <ul className="solution-card__features">
+                <div className="mail-plan-card__content">
+                  <h4 className="mail-plan-card__subtitle">Key Features & Benefits</h4>
+                  <ul className="mail-plan-card__features">
                     {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="solution-feature">
-                        <FaCheck className="feature-icon" />
+                      <li key={featureIndex} className="mail-plan-feature">
+                        <FaCheck className="mail-plan-feature__icon" />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="solution-card__description">
+                  <div className="mail-plan-card__description">
                     <p>
                       This solution is ideal for businesses looking for {plan.name.toLowerCase()} capabilities 
                       with robust collaboration tools and enterprise-grade security features.
                     </p>
                   </div>
                 </div>
-               
+                <div className="mail-plan-card__footer">
+                  <div className="mail-plan-card__price">
+                    <span className="mail-plan-card__price-amount">{plan.price}</span>
+                    <span className="mail-plan-card__price-period">{plan.period}</span>
+                  </div>
+                  <button className="mail-plan-card__btn mail-plan-card__btn--primary">
+                    Choose Plan
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -233,27 +241,27 @@ export default function BusinessMail() {
       </section>
 
       {/* Services Section */}
-      <section className="business-services">
+      <section className="mail-services">
         <div className="container">
-          <div className="business-services__content">
-            <div className="business-services__text">
-              <h2 className="business-services__title">
+          <div className="mail-services__content">
+            <div className="mail-services__text">
+              <h2 className="mail-services__title">
                 Complete Email Solutions: Why Choose Newton Computer Services?
               </h2>
-              <p className="business-services__description">
+              <p className="mail-services__description">
                 Newton Computer Services is dedicated to delivering excellence in business email management. Our team of 
                 experienced professionals is committed to facilitating smooth and secure transitions, minimizing disruption 
                 to your day-to-day operations. We guide you through each step, from selecting the right plan for Google 
                 Workspace or Microsoft 365, to full migration, and provide robust backup and recovery options to safeguard your data.
               </p>
             </div>
-            <div className="business-services__image">
+            <div className="mail-services__image">
               <Image 
                 src="/assets/business-mail-services-chennai.jpg" 
                 alt="Business Mail Services Chennai" 
                 width={600} 
                 height={400}
-                className="services-img"
+                className="mail-services__img"
               />
             </div>
           </div>
@@ -261,25 +269,25 @@ export default function BusinessMail() {
       </section>
 
       {/* Offering Section */}
-      <section className="offering-section">
-        <div className="offering-bg">
+      <section className="mail-offering">
+        <div className="mail-offering__bg">
           <div className="container">
-            <h2 className="section-title">Newton Computer Services' Business Mail Offering</h2>
+            <h2 className="section-title section-title--light">Newton Computer Services' Business Mail Offering</h2>
             
-            <div className="offering-grid">
-              <div className="offering-item">
-                <div className="offering-icon">
+            <div className="mail-offering__grid">
+              <div className="mail-offering__item">
+                <div className="mail-offering__icon">
                   <FaEnvelope />
                 </div>
-                <h3 className="offering-title">Setting Up Google Workspace and Microsoft 365 Accounts</h3>
-                <div className="offering-details">
-                  <h4>Google Workspace</h4>
-                  <p>
+                <h3 className="mail-offering__title">Setting Up Google Workspace and Microsoft 365 Accounts</h3>
+                <div className="mail-offering__details">
+                  <h4 className="mail-offering__subtitle">Google Workspace</h4>
+                  <p className="mail-offering__text">
                     Our team configures Google Workspace, allowing your team to leverage familiar tools such as Gmail, 
                     Drive, Docs, and Meet, designed for efficient communication and collaboration.
                   </p>
-                  <h4>Microsoft 365</h4>
-                  <p>
+                  <h4 className="mail-offering__subtitle">Microsoft 365</h4>
+                  <p className="mail-offering__text">
                     We set up Microsoft 365 to give you access to Outlook, Teams, SharePoint, and Office apps, optimizing 
                     them for your business needs. With Newton Computer Services, your Microsoft 365 account is tailored 
                     for maximum productivity and seamless integration.
@@ -287,23 +295,23 @@ export default function BusinessMail() {
                 </div>
               </div>
               
-              <div className="offering-item">
-                <div className="offering-icon">
+              <div className="mail-offering__item">
+                <div className="mail-offering__icon">
                   <FaSync />
                 </div>
-                <h3 className="offering-title">Flexible Data Migration Solutions</h3>
-                <div className="offering-details">
-                  <h4>From Any Email Server</h4>
-                  <p>
+                <h3 className="mail-offering__title">Flexible Data Migration Solutions</h3>
+                <div className="mail-offering__details">
+                  <h4 className="mail-offering__subtitle">From Any Email Server</h4>
+                  <p className="mail-offering__text">
                     No matter the origin of your current email service, Newton Computer Services can efficiently migrate 
                     your data to Google Workspace or Microsoft 365.
                   </p>
-                  <h4>Reliable and Secure Transfer</h4>
-                  <p>
+                  <h4 className="mail-offering__subtitle">Reliable and Secure Transfer</h4>
+                  <p className="mail-offering__text">
                     We use industry-leading tools to safeguard data integrity during migration, preserving email history, 
                     folder structures, and attachments without compromising security.
                   </p>
-                  <p>
+                  <p className="mail-offering__text">
                     With a customer-centric approach, Newton Computer Services provides dependable support to manage and 
                     troubleshoot your Google Workspace and Microsoft 365 services.
                   </p>
@@ -311,12 +319,12 @@ export default function BusinessMail() {
               </div>
             </div>
             
-            <div className="support-section">
-              <div className="support-icon">
+            <div className="mail-support">
+              <div className="mail-support__icon">
                 <FaHeadset />
               </div>
-              <h3 className="support-title">24/7 Technical Assistance</h3>
-              <p className="support-description">
+              <h3 className="mail-support__title">24/7 Technical Assistance</h3>
+              <p className="mail-support__description">
                 Our team is available around the clock to address issues, ensuring uninterrupted business communication.
               </p>
             </div>
@@ -324,40 +332,40 @@ export default function BusinessMail() {
         </div>
       </section>
 
-       {/* Advantages Section */}
-      <section className="advantages-section">
+      {/* Advantages Section */}
+      <section className="mail-advantages">
         <div className="container">
-          <div className="advantages-content">
-            <div className="advantages-text">
-              <h2 className="advantages-title">
+          <div className="mail-advantages__content">
+            <div className="mail-advantages__text">
+              <h2 className="mail-advantages__title">
                 Advantages of Choosing Newton Computer Services for Business Email Solutions
               </h2>
-              <p className="advantages-intro">
+              <p className="mail-advantages__intro">
                 By choosing Newton Computer Services, you gain a reliable partner committed to delivering tailored email 
                 solutions that enhance productivity, security, and scalability. Our services offer:
               </p>
             </div>
             
-            <div className="advantages-container">
-              <div className="advantages-flex">
+            <div className="mail-advantages__container">
+              <div className="mail-advantages__grid">
                 {advantages.map((advantage, index) => (
-                  <div key={index} className="advantage-item">
-                    <div className="advantage-icon">
+                  <div key={index} className="mail-advantage-card">
+                    <div className="mail-advantage-card__icon">
                       {advantage.icon}
                     </div>
-                    <h3 className="advantage-title">{advantage.title}</h3>
-                    <p className="advantage-description">{advantage.description}</p>
+                    <h3 className="mail-advantage-card__title">{advantage.title}</h3>
+                    <p className="mail-advantage-card__description">{advantage.description}</p>
                   </div>
                 ))}
               </div>
               
-              <div className="advantages-image">
+              <div className="mail-advantages__image">
                 <Image 
                   src="/assets/business-mail-advantages.jpg" 
                   alt="Business Mail Advantages" 
                   width={600} 
                   height={500}
-                  className="advantages-img"
+                  className="mail-advantages__img"
                 />
               </div>
             </div>

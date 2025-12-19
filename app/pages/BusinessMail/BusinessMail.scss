@@ -14,11 +14,11 @@ $bg-light: #f8fafc;
 $bg-medium: #f1f5f9;
 $border-color: #e2e8f0;
 $white: #ffffff;
-$shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
-$shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.1);
-$shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
-$border-radius: 1rem;
-$transition: all 0.3s ease;
+$shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
+$shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.12);
+$border-radius: 0.75rem;
+$transition: all 0.25s ease;
 
 // Mixins
 @mixin flex-center {
@@ -41,13 +41,14 @@ $transition: all 0.3s ease;
 // =============================================
 // BASE STYLES
 // =============================================
-.business-mail-page {
+.business-mail {
   min-height: 100vh;
-  scroll-behavior: smooth;
+  scroll-behavior: smooth; 
 }
 
 .container {
-  width: 90%; 
+  width: 90%;
+  max-width: 1200px;
   margin: 0 auto;
   
   @media (max-width: 768px) {
@@ -58,54 +59,59 @@ $transition: all 0.3s ease;
 
 .section-title {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: $text-dark;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   position: relative;
   
   &::after {
     content: '';
     position: absolute;
-    bottom: -0.75rem;
+    bottom: -0.5rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
+    width: 60px;
+    height: 3px;
     @include gradient-bg;
     border-radius: 2px;
   }
+
+  &--light {
+    color: $white;
+    
+    &::after {
+      background: $white;
+    }
+  }
   
   @media (max-width: 768px) {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 }
 
 // =============================================
 // HERO SECTION
 // =============================================
-.business-hero {
+.mail-hero {
   position: relative;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: #ffffff;
   color: #000;
   padding: 3rem 0;
-  min-height: 80vh;
   display: flex;
   align-items: center;
   overflow: hidden;
-
- 
 
   &__container {
     @extend .container;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 3rem;
     align-items: center;
     position: relative;
     z-index: 2;
@@ -114,64 +120,62 @@ $transition: all 0.3s ease;
       grid-template-columns: 1fr;
       gap: 2rem;
       text-align: center;
+      padding: 1rem 0;
     }
   }
 
   &__content {
-    animation: slideInFromLeft 1s ease-out 0.3s both;
-    
-    @media (max-width: 768px) {
-      animation: fadeInUp 1s ease-out 0.3s both;
-    }
+    animation: fadeInUp 0.8s ease-out 0.3s both;
   }
 
   &__title {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
+    line-height: 1.3;
+    margin-bottom: 1rem;
     color: $text-dark;
     animation: fadeInUp 0.8s ease-out 0.5s both;
     @include text-gradient;
 
     @media (max-width: 768px) {
-      font-size: 2.5rem;
+      font-size: 2rem;
     }
 
     @media (max-width: 480px) {
-      font-size: 2rem;
+      font-size: 1.75rem;
     }
   }
 
   &__description {
-    font-size: 1.2rem;
-    line-height: 1.7;
-    margin-bottom: 2rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
     color: $text-light;
     animation: fadeInUp 0.8s ease-out 0.7s both;
 
     @media (max-width: 768px) {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
   }
 
   &__actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
     animation: fadeInUp 0.8s ease-out 0.9s both;
 
     @media (max-width: 480px) {
       flex-direction: column;
       align-items: center;
+      gap: 0.5rem;
     }
   }
 
   &__btn {
-    padding: 1rem 2rem;
+    padding: 0.875rem 1.75rem;
     border: none;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
+    border-radius: 0.375rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: $transition;
@@ -202,14 +206,14 @@ $transition: all 0.3s ease;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
       }
     }
 
     &--secondary {
       background: transparent;
       color: $primary-color;
-      border: 2px solid $primary-color;
+      border: 1.5px solid $primary-color;
 
       &:hover {
         background: $primary-color;
@@ -226,40 +230,34 @@ $transition: all 0.3s ease;
     width: 100%;
     height: 100%;
     position: relative;
-    animation: slideInFromRight 1s ease-out 0.3s both;
-
-    @media (max-width: 768px) {
-      animation: fadeInUp 1s ease-out 0.5s both;
-    }
+    animation: fadeInUp 0.8s ease-out 0.5s both;
 
     img {
       width: 100%;
       height: auto;
-      max-width: 600px;
-      // object-fit: contain;
-      border-radius: $border-radius;
+      max-width: 400px; 
       transition: $transition;
-      animation: imageFadeIn 0.8s ease-out 0.5s both;
+      animation: imageFadeIn 0.8s ease-out 0.5s both; 
     }
   }
 }
 
 // =============================================
-// CERTIFIED PARTNER SECTION
+// PARTNER SECTION
 // =============================================
-.certified-partner {
-  padding: 5rem 0;
-  background: $white;
+.mail-partner {
+  padding: 3rem 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
 
   &__content {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    gap: 3rem;
+    gap: 2.5rem;
     align-items: center;
 
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
-      gap: 2rem;
+      gap: 1.5rem;
       text-align: center;
     }
   }
@@ -268,11 +266,11 @@ $transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   &__title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: $text-dark;
     margin: 0;
@@ -284,18 +282,18 @@ $transition: all 0.3s ease;
     justify-content: center;
     
     img {
-      max-width: 300px;
+      max-width: 250px;
       height: auto;
     }
   }
 
   &__btn {
-    padding: 1rem 2rem;
+    padding: 0.875rem 1.75rem;
     background: $primary-color;
     color: $white;
     border: none;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
+    border-radius: 0.375rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: $transition;
@@ -316,18 +314,14 @@ $transition: all 0.3s ease;
     &:hover {
       background: $secondary-color;
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-
-      &::before {
-        left: 100%;
-      }
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
     }
   }
 
   &__description {
     p {
-      font-size: 1.1rem;
-      line-height: 1.7;
+      font-size: 1.05rem;
+      line-height: 1.6;
       color: $text-light;
       margin: 0;
     }
@@ -337,112 +331,112 @@ $transition: all 0.3s ease;
 // =============================================
 // PLANS SECTION
 // =============================================
-.plans-section {
-  padding: 5rem 0;
+.mail-plans {
+  padding: 3rem 0;
   background: linear-gradient(135deg, $bg-light 0%, $bg-medium 100%);
-}
 
-.plans-intro {
-  text-align: center;
-  font-size: 1.2rem;
-  line-height: 1.7;
-  color: $text-light;
-  max-width: 800px;
-  margin: 0 auto 3rem;
-  
-  @media (max-width: 768px) {
-    font-size: 1.1rem;
+  &__intro {
+    text-align: center;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: $text-light;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    
+    @media (max-width: 768px) {
+      font-size: 1.05rem;
+    }
   }
-}
 
-.plans-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
+  &__toggle {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
 
-  @media (max-width: 480px) {
-    flex-direction: column;
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__toggle-btn {
+    display: flex;
     align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: $white;
+    border: 1.5px solid $border-color;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-medium;
+    cursor: pointer;
+    transition: $transition;
+
+    &.active {
+      @include gradient-bg;
+      color: $white;
+      border-color: $primary-color;
+    }
+
+    &:hover:not(.active) {
+      border-color: $primary-color;
+      color: $primary-color;
+    }
+
+    .toggle-icon {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      max-width: 450px;
+      margin: 0 auto;
+    }
   }
 }
 
-.plans-toggle__btn {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
+.mail-plan-card {
   background: $white;
-  border: 2px solid $border-color;
-  border-radius: 0.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: $text-medium;
-  cursor: pointer;
-  transition: $transition;
-
-  &.active {
-    @include gradient-bg;
-    color: $white;
-    border-color: $primary-color;
-  }
-
-  &:hover:not(.active) {
-    border-color: $primary-color;
-    color: $primary-color;
-  }
-
-  .toggle-icon {
-    font-size: 1.5rem;
-  }
-}
-
-.solutions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-}
-
-.solution-card {
-  background: $white;
- 
   padding: 1.5rem;
   box-shadow: $shadow-medium;
   transition: $transition;
   display: flex;
   flex-direction: column;
   height: 100%;
- 
   position: relative;
   overflow: hidden;
+  border: 1px solid $border-color;
 
- 
-
-  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-heavy;
+  }
 
   &__header {
     text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid $border-color;
   }
 
   &__name {
-    font-size: 1.5rem;
+    font-size: 1.375rem;
     font-weight: 700;
     color: $text-dark;
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.375rem;
     @include text-gradient;
   }
 
   &__type {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: $text-light;
     text-transform: uppercase;
@@ -451,34 +445,34 @@ $transition: all 0.3s ease;
 
   &__content {
     flex-grow: 1;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   &__subtitle {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: $text-dark;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid $bg-light;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid $bg-light;
   }
 
   &__features {
     list-style: none;
     padding: 0;
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.25rem;
   }
 
   &__description {
     background: $bg-light;
-    padding: 1.25rem;
-    border-radius: 0.75rem;
- 
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 3px solid $primary-color;
 
     p {
       margin: 0;
-      font-size: 0.95rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.5;
       color: $text-medium;
       font-style: italic;
     }
@@ -486,23 +480,39 @@ $transition: all 0.3s ease;
 
   &__footer {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
     margin-top: auto;
+  }
 
-    @media (max-width: 480px) {
-      flex-direction: column;
-    }
+  &__price {
+    text-align: center;
+    padding: 0.75rem;
+    background: $bg-light;
+    border-radius: 0.5rem;
+  }
+
+  &__price-amount {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: $text-dark;
+    display: block;
+    @include text-gradient;
+  }
+
+  &__price-period {
+    font-size: 0.875rem;
+    color: $text-light;
   }
 
   &__btn {
-    padding: 0.875rem 1.5rem;
+    padding: 0.75rem 1.25rem;
     border: none;
-    border-radius: 0.5rem;
-    font-size: 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: $transition;
-    flex: 1;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -528,36 +538,24 @@ $transition: all 0.3s ease;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-      }
-    }
-
-    &--secondary {
-      background: transparent;
-      color: $primary-color;
-      border: 2px solid $primary-color;
-
-      &:hover {
-        background: $primary-color;
-        color: $white;
-        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25);
       }
     }
   }
 }
 
-.solution-feature {
+.mail-plan-feature {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
   color: $text-medium;
   line-height: 1.5;
 
-  .feature-icon {
+  &__icon {
     color: #10b981;
-    font-size: 1rem;
+    font-size: 0.95rem;
     flex-shrink: 0;
     margin-top: 0.125rem;
   }
@@ -566,37 +564,44 @@ $transition: all 0.3s ease;
     flex: 1;
   }
 }
+
 // =============================================
-// BUSINESS SERVICES SECTION
+// SERVICES SECTION
 // =============================================
-.business-services {
-  padding: 5rem 0;
+.mail-services {
+  padding: 3rem 0;
   background: $white;
 
   &__content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 3rem;
     align-items: center;
 
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
-      gap: 2rem;
+      gap: 1.5rem;
       text-align: center;
     }
   }
 
+  &__text {
+    @media (max-width: 768px) {
+      order: 2;
+    }
+  }
+
   &__title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: $text-dark;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     line-height: 1.3;
   }
 
   &__description {
-    font-size: 1.1rem;
-    line-height: 1.7;
+    font-size: 1.05rem;
+    line-height: 1.6;
     color: $text-light;
     margin: 0;
   }
@@ -606,82 +611,82 @@ $transition: all 0.3s ease;
     justify-content: center;
     align-items: center;
 
-    .services-img {
-      width: 100%;
-      height: auto;
-      max-width: 500px;
-      border-radius: $border-radius;
-      box-shadow: $shadow-heavy;
+    @media (max-width: 768px) {
+      order: 1;
     }
+  }
+
+  &__img {
+    width: 100%;
+    height: auto;
+    max-width: 450px;
+    border-radius: $border-radius;
+    box-shadow: $shadow-heavy;
   }
 }
 
 // =============================================
 // OFFERING SECTION
 // =============================================
-.offering-section {
-  padding: 5rem 0;
+.mail-offering {
+  padding: 3rem 0;
 
-  .offering-bg {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+  &__bg {
+    background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.9)), 
                 url('/assets/business-mail-partner-chennai.jpg');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
     color: $white;
-    padding: 5rem 0; 
+    padding: 3rem 0;
+    border-radius: $border-radius;
   }
 
-  .section-title {
-    color: $white;
-    
-    &::after {
-      background: $white;
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
   }
-}
 
-.offering-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 3rem;
-  margin-bottom: 3rem;
+  &__item {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: $border-radius;
+    padding: 1.75rem;
+    transition: $transition;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
   }
-}
 
-.offering-item {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: $border-radius;
-  padding: 2rem;
-  transition: $transition;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-5px);
+  &__icon {
+    font-size: 2.5rem;
+    color: $primary-color;
+    margin-bottom: 1.25rem;
   }
-}
 
-.offering-icon {
-  font-size: 3rem;
-  color: $primary-color;
-  margin-bottom: 1.5rem;
-}
+  &__title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: $white;
+  }
 
-.offering-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: $white;
-}
+  &__details {
+    margin-top: 1.5rem;
+  }
 
-.offering-details {
-  h4 {
-    font-size: 1.2rem;
+  &__subtitle {
+    font-size: 1.125rem;
     font-weight: 600;
     margin: 1.5rem 0 0.5rem;
     color: $primary-color;
@@ -691,270 +696,237 @@ $transition: all 0.3s ease;
     }
   }
   
-  p {
-    font-size: 1rem;
+  &__text {
+    font-size: 0.95rem;
     line-height: 1.6;
     margin: 0 0 1rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.85);
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
-.support-section {
+.mail-support {
   text-align: center;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
   border-radius: $border-radius;
-  padding: 3rem 2rem;
-  margin-top: 2rem;
-}
+  padding: 2.5rem 1.5rem;
+  margin-top: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
-.support-icon {
-  font-size: 3rem;
-  color: $primary-color;
-  margin-bottom: 1.5rem;
-}
+  &__icon {
+    font-size: 2.5rem;
+    color: $primary-color;
+    margin-bottom: 1.25rem;
+  }
 
-.support-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: $white;
-}
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: $white;
+  }
 
-.support-description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 600px;
-  margin: 0 auto;
+  &__description {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 550px;
+    margin: 0 auto;
+  }
 }
 
 // =============================================
 // ADVANTAGES SECTION
 // =============================================
-.advantages-section {
-  padding: 5rem 0;
+.mail-advantages {
+  padding: 3rem 0;
   background: linear-gradient(135deg, $bg-light 0%, $bg-medium 100%);
-}
 
-.advantages-content {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-}
-
-.advantages-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: $text-dark;
-  margin-bottom: 1.5rem;
-  line-height: 1.3;
-  text-align: center;
-
-  @media (max-width: 768px) {
-    font-size: 1.75rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.5rem;
-  }
-}
-
-.advantages-intro {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: $text-light;
-  margin-bottom: 2rem;
-  text-align: center;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
-}
-
-.advantages-container {
-  display: flex;
-  gap: 4rem;
-  align-items: flex-start;
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    gap: 3rem;
-  }
-}
-
-.advantages-flex {
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-
-  // Desktop: 2 items per row
-  .advantage-item {
-    flex: 1 1 calc(50% - 1.5rem);
-    min-width: 280px;
+  &__content {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 2rem;
-    background: $white;
-    border-radius: $border-radius;
-    box-shadow: $shadow-light;
-    transition: $transition;
-    text-align: left;
+    gap: 2.5rem;
+  }
 
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: $shadow-heavy;
-    }
+  &__text {
+    text-align: center;
+  }
 
-    @media (max-width: 1024px) {
-      // Tablet: 2 items per row
-      flex: 1 1 calc(50% - 1.5rem);
-    }
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 1rem;
+    line-height: 1.3;
 
     @media (max-width: 768px) {
-      // Mobile: 1 item per row
-      flex: 1 1 100%;
-      text-align: center;
-      align-items: center;
-      padding: 1.5rem;
-    }
-
-    @media (max-width: 480px) {
-      padding: 1.25rem;
+      font-size: 1.5rem;
     }
   }
 
-  @media (max-width: 768px) {
-    gap: 1rem;
+  &__intro {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: $text-light;
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
   }
-}
 
-.advantage-icon {
-  font-size: 2.5rem;
-  color: $primary-color;
-  margin-bottom: 1rem;
-  flex-shrink: 0;
+  &__container {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
 
-  @media (max-width: 768px) {
-    font-size: 2.25rem;
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      gap: 2.5rem;
+    }
   }
-}
 
-.advantage-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: $text-dark;
-  margin: 0 0 1rem;
-  line-height: 1.4;
+  &__grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
 
-  @media (max-width: 768px) {
-    font-size: 1.2rem;
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
   }
-}
 
-.advantage-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: $text-light;
-  margin: 0;
-  text-align: left;
+  &__image {
+    flex: 0 0 35%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: sticky;
+    top: 2rem;
 
-  @media (max-width: 768px) {
-    text-align: center;
-    font-size: 0.95rem;
+    @media (max-width: 1024px) {
+      flex: 0 0 100%;
+      position: static;
+    }
   }
-}
 
-.advantages-image {
-  flex: 0 0 40%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  position: sticky;
-  top: 2rem;
-
-  .advantages-img {
+  &__img {
     width: 100%;
     height: auto;
-    max-width: 500px;
+    max-width: 400px;
     border-radius: $border-radius;
     box-shadow: $shadow-heavy;
     transition: $transition;
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 1024px) {
+      max-width: 350px;
     }
   }
+}
 
-  @media (max-width: 1024px) {
-    flex: 0 0 100%;
-    position: static;
-    
-    .advantages-img {
-      max-width: 400px;
-    }
+.mail-advantage-card {
+  background: $white;
+  border-radius: $border-radius;
+  padding: 1.75rem;
+  transition: $transition;
+  text-align: left;
+  border: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-heavy;
+    border-color: $primary-color;
   }
 
-  @media (max-width: 480px) {
-    .advantages-img {
-      max-width: 100%;
-    }
+  @media (max-width: 768px) {
+    text-align: center;
+    align-items: center;
+    padding: 1.5rem;
+  }
+
+  &__icon {
+    font-size: 2rem;
+    color: $primary-color;
+    margin-bottom: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+  }
+
+  &__description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: $text-light;
+    margin: 0;
+    flex-grow: 1;
   }
 }
 
 // =============================================
 // CTA SECTION
 // =============================================
-.business-cta {
-  padding: 5rem 0;
+.mail-cta {
+  padding: 4rem 0;
   background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
   color: $white;
   text-align: center;
 
   &__title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     
     @media (max-width: 768px) {
-      font-size: 2rem;
+      font-size: 1.75rem;
     }
   }
 
   &__description {
-    font-size: 1.2rem;
-    line-height: 1.7;
-    max-width: 600px;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: 550px;
     margin: 0 auto 2rem;
     
     @media (max-width: 768px) {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
   }
 
   &__actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     justify-content: center;
     flex-wrap: wrap;
 
     @media (max-width: 480px) {
       flex-direction: column;
       align-items: center;
+      gap: 0.5rem;
     }
   }
 
   &__btn {
-    padding: 1rem 2rem;
+    padding: 0.875rem 1.75rem;
     border: none;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
+    border-radius: 0.375rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: $transition;
@@ -982,14 +954,14 @@ $transition: all 0.3s ease;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.25);
       }
     }
 
     &--secondary {
       background: transparent;
       color: $white;
-      border: 2px solid $white;
+      border: 1.5px solid $white;
 
       &:hover {
         background: $white;
@@ -1003,31 +975,9 @@ $transition: all 0.3s ease;
 // =============================================
 // ANIMATIONS
 // =============================================
-@keyframes slideInFromLeft {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInFromRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
 @keyframes fadeInUp {
   0% {
-    transform: translateY(30px);
+    transform: translateY(20px);
     opacity: 0;
   }
   100% {
@@ -1048,7 +998,7 @@ $transition: all 0.3s ease;
 @keyframes imageFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
   to {
     opacity: 1;

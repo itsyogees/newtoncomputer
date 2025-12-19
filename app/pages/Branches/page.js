@@ -63,26 +63,26 @@ export default function BranchesPage() {
 
       {/* Hero Introduction */}
       <section className="branches-hero">
-        <div className="container">
-          <div className="hero-content">
-            <h1>Experience Excellence at Our Stores</h1>
-            <p>
+        <div className="branches-container">
+          <div className="branches-hero__content">
+            <h1 className="branches-hero__title">Experience Excellence at Our Stores</h1>
+            <p className="branches-hero__text">
               Visit our conveniently located branches in Chennai to explore our extensive range of laptops, 
               desktops, and accessories. Get expert advice, hands-on experience with products, and personalized 
               service from our knowledgeable team.
             </p>
-            <div className="hero-stats">
-              <div className="stat">
-                <span className="number">14+</span>
-                <span className="label">Years Experience</span>
+            <div className="branches-stats">
+              <div className="branches-stat">
+                <span className="branches-stat__number">14+</span>
+                <span className="branches-stat__label">Years Experience</span>
               </div>
-              <div className="stat">
-                <span className="number">2</span>
-                <span className="label">Convenient Locations</span>
+              <div className="branches-stat">
+                <span className="branches-stat__number">2</span>
+                <span className="branches-stat__label">Convenient Locations</span>
               </div>
-              <div className="stat">
-                <span className="number">3000+</span>
-                <span className="label">Happy Customers</span>
+              <div className="branches-stat">
+                <span className="branches-stat__number">3000+</span>
+                <span className="branches-stat__label">Happy Customers</span>
               </div>
             </div>
           </div>
@@ -91,11 +91,11 @@ export default function BranchesPage() {
 
       {/* Branch Cards Section */}
       <section className="branches-section">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Our Stores</span>
-            <h2>Visit Our Branches</h2>
-            <p className="section-intro">
+        <div className="branches-container">
+          <div className="branches-header">
+            <span className="branches-tag">Our Stores</span>
+            <h2 className="branches-title">Visit Our Branches</h2>
+            <p className="branches-subtitle">
               Find the nearest Newton Computer store for personalized assistance and expert guidance
             </p>
           </div>
@@ -103,48 +103,48 @@ export default function BranchesPage() {
           <div className="branches-grid">
             {branches.map((branch) => (
               <div key={branch.id} className="branch-card">
-                <div className="branch-image">
+                <div className="branch-card__image">
                   <Image
                     src={branch.image}
                     alt={branch.name}
                     width={600}
                     height={400}
-                    className="branch-img"
+                    className="branch-card__img"
                   />
-                  <div className="image-overlay">
-                    <span className="store-badge">{branch.area}</span>
+                  <div className="branch-card__overlay">
+                    <span className="branch-card__badge">{branch.area}</span>
                   </div>
                 </div>
 
-                <div className="branch-content">
-                  <div className="branch-header">
-                    <h3>{branch.name}</h3>
-                    <div className="branch-tag">
+                <div className="branch-card__content">
+                  <div className="branch-card__header">
+                    <h3 className="branch-card__title">{branch.name}</h3>
+                    <div className="branch-card__location">
                       <FaMapMarkerAlt />
                       <span>{branch.area}</span>
                     </div>
                   </div>
 
-                  <div className="branch-details">
-                    <div className="detail-item">
-                      <FaMapMarkerAlt className="detail-icon" />
-                      <div className="detail-content">
+                  <div className="branch-card__details">
+                    <div className="branch-detail">
+                      <FaMapMarkerAlt className="branch-detail__icon" />
+                      <div className="branch-detail__content">
                         <h4>Address</h4>
                         <p>{branch.address}</p>
-                        <p className="city">{branch.city}</p>
+                        <p className="branch-detail__city">{branch.city}</p>
                       </div>
                     </div>
 
-                    <div className="detail-item">
-                      <FaPhoneAlt className="detail-icon" />
-                      <div className="detail-content">
+                    <div className="branch-detail">
+                      <FaPhoneAlt className="branch-detail__icon" />
+                      <div className="branch-detail__content">
                         <h4>Contact</h4>
-                        <a href={`tel:${branch.mobile.replace(/\s+/g, '')}`} className="contact-link">
+                        <a href={`tel:${branch.mobile.replace(/\s+/g, '')}`} className="branch-contact__link">
                           {branch.mobile}
                         </a>
                         <a 
                           href={`https://wa.me/${branch.whatsapp.replace(/\D/g, '')}`} 
-                          className="whatsapp-link"
+                          className="branch-whatsapp__link"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -153,39 +153,23 @@ export default function BranchesPage() {
                       </div>
                     </div>
 
-                    {/* <div className="detail-item">
-                      <FaClock className="detail-icon" />
-                      <div className="detail-content">
+                    <div className="branch-detail">
+                      <FaClock className="branch-detail__icon" />
+                      <div className="branch-detail__content">
                         <h4>Timings</h4>
                         <p>{branch.timings}</p>
-                        <p className="days">{branch.days}</p>
+                        <p className="branch-detail__days">{branch.days}</p>
                       </div>
-                    </div> */}
-
-                    {/* <div className="detail-item">
-                      <FaParking className="detail-icon" />
-                      <div className="detail-content">
-                        <h4>Parking</h4>
-                        <p>{branch.parking}</p>
-                      </div>
-                    </div> */}
-                  </div>
-
-                  {/* <div className="branch-features">
-                    <h4>Store Features</h4>
-                    <div className="features-list">
-                      {branch.features.map((feature, index) => (
-                        <span key={index} className="feature-tag">
-                          {feature}
-                        </span>
-                      ))}
                     </div>
-                  </div> */}
 
-                  <div className="branch-actions">
+                   
+                  </div>
+ 
+
+                  <div className="branch-card__actions">
                     <a 
                       href={branch.mapLink}
-                      className="btn-direction"
+                      className="branch-btn branch-btn--direction"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -193,7 +177,7 @@ export default function BranchesPage() {
                     </a>
                     <a 
                       href={`tel:${branch.mobile.replace(/\s+/g, '')}`}
-                      className="btn-call"
+                      className="branch-btn branch-btn--call"
                     >
                       <FaPhoneAlt /> Call Now
                     </a>
@@ -205,9 +189,41 @@ export default function BranchesPage() {
         </div>
       </section>
 
- 
- 
- 
+      {/* Contact Info */}
+      <section className="branches-contact">
+        <div className="branches-container">
+          <div className="branches-contact__grid">
+            <div className="branches-contact__card">
+              <div className="branches-contact__icon">
+                <FaEnvelope />
+              </div>
+              <h3>General Inquiries</h3>
+              <a href={`mailto:${contactInfo.email}`} className="branches-email__link">
+                {contactInfo.email}
+              </a>
+            </div>
+
+            <div className="branches-contact__card">
+              <div className="branches-contact__icon">
+                <FaClock />
+              </div>
+              <h3>Business Hours</h3>
+              <p className="branches-timings">{contactInfo.hours}</p>
+            </div>
+
+            <div className="branches-contact__card">
+              <div className="branches-contact__icon">
+                <FaPhoneAlt />
+              </div>
+              <h3>Emergency Support</h3>
+              <a href={`tel:${contactInfo.emergency}`} className="branches-emergency__link">
+                {contactInfo.emergency}
+              </a>
+              <p className="branches-note">Available 24/7 for urgent inquiries</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

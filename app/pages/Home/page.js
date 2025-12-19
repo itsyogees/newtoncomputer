@@ -265,6 +265,31 @@ const laptopServices = [
   'WIFI & Bluetooth',
   'Keypads'
 ];
+const laptopServiceMap = {
+  'Laptop Upgradation': '/pages/UpgradePage',
+  'Motherboard': '/pages/ChipLevelServicePage',
+  'Hinges': '/pages/LaptopDamage',
+  'Touchpad': '/pages/LaptopDamage',
+  'Chip Level Service': '/pages/ChipLevelServicePage',
+  'Ram & SSD': '/pages/LaptopAccessories',
+  'Adapters': '/pages/LaptopAccessories',
+  'Data Recovery': '/pages/DataRecoveryPage',
+  'Batteries': '/pages/LaptopAccessories',
+  'Display': '/pages/LaptopDamage',
+  'WIFI & Bluetooth': '/pages/LaptopAccessories',
+  'Keypads': '/pages/LaptopDamage'
+};
+
+// Service mappings for IT services
+const itServiceMap = {
+  'Laptop & Desktop': '/pages/LaptopStore', // or create a dedicated page
+  'CCTV Solutions': '/pages/CctvSolutions',
+  'Network Security': '/pages/NetworkSecurity',
+  'Wi-Fi & Networking': '/pages/WifiNetworkingSolutions',
+  'Server & Storage': '/pages/ServerAndStorageSolutions',
+  'Business Mail': '/pages/BusinessMail',
+  'Cloud Storage': '/pages/CloudHostingServices'
+};
 const [slidesToShowRefurbished, setSlidesToShowRefurbished] = useState(4);
 const [slidesToShowServices, setSlidesToShowServices] = useState(4);
  
@@ -1242,7 +1267,7 @@ const partnerLogos = [
         <FaChevronLeft />
       </button>
       
-      <div className="carousel-viewport">
+ <div className="carousel-viewport">
         <div 
           className="carousel-track"
           ref={carouselTrackRef}
@@ -1254,6 +1279,7 @@ const partnerLogos = [
             <div 
               key={index} 
               className="carousel-card"
+              onClick={() => router.push(laptopServiceMap[service])}
               style={{ 
                 flex: `0 0 calc(${100 / slidesToShowServices}% - ${slidesToShowServices > 2 ? '1rem' : '0.5rem'})`,
                 minWidth: `calc(${100 / slidesToShowServices}% - ${slidesToShowServices > 2 ? '1rem' : '0.5rem'})`
@@ -1301,60 +1327,81 @@ const partnerLogos = [
     </div>
     
     <div className="services-grid">
-      <div className="service-card">
+      {/* Laptop & Desktop */}
+      <div 
+        className="service-card"
+        onClick={() => router.push('/pages/LaptopStore')}
+      >
         <div className="service-icon-box">
           <FaLaptop className="service-icon" />
         </div>
         <h3 className="service-name">Laptop & Desktop</h3>
-        {/* <p className="service-description">Repair, upgrade & maintenance services</p> */}
       </div>
       
-      <div className="service-card">
+      {/* CCTV Solutions */}
+      <div 
+        className="service-card"
+        onClick={() => router.push('/pages/CctvSolutions')}
+      >
         <div className="service-icon-box">
           <LuCctv className="service-icon" />
         </div>
         <h3 className="service-name">CCTV Solutions</h3>
-        {/* <p className="service-description">Installation & monitoring systems</p> */}
       </div>
       
-      <div className="service-card">
+      {/* Network Security */}
+      <div 
+        className="service-card"
+        onClick={() => router.push('/pages/NetworkSecurity')}
+      >
         <div className="service-icon-box">
           <MdOutlineSecurity className="service-icon" />
         </div>
         <h3 className="service-name">Network Security</h3>
-        {/* <p className="service-description">Firewall & threat protection</p> */}
       </div>
       
-      <div className="service-card">
+      {/* Wi-Fi & Networking */}
+      <div 
+        className="service-card"
+        onClick={() => router.push('/pages/WifiNetworkingSolutions')}
+      >
         <div className="service-icon-box">
           <LuWifi className="service-icon" />
         </div>
         <h3 className="service-name">Wi-Fi & Networking</h3>
-        {/* <p className="service-description">Setup & optimization services</p> */}
       </div>
       
-      <div className="service-card">
+      {/* Server & Storage */}
+      <div 
+        className="service-card"
+        onClick={() => router.push('/pages/ServerAndStorageSolutions')}
+      >
         <div className="service-icon-box">
           <FiServer className="service-icon" />
         </div>
         <h3 className="service-name">Server & Storage</h3>
-        {/* <p className="service-description">Setup & management solutions</p> */}
       </div>
       
-      <div className="service-card">
+      {/* Business Mail */}
+      <div 
+        className="service-card"
+        onClick={() => router.push('/pages/BusinessMail')}
+      >
         <div className="service-icon-box">
           <CiMail className="service-icon" />
         </div>
         <h3 className="service-name">Business Mail</h3>
-        {/* <p className="service-description">Email setup & configuration</p> */}
       </div>
       
-      <div className="service-card">
+      {/* Cloud Storage */}
+      <div 
+        className="service-card"
+        onClick={() => router.push('/pages/CloudHostingServices')}
+      >
         <div className="service-icon-box">
           <TiCloudStorageOutline className="service-icon" />
         </div>
         <h3 className="service-name">Cloud Storage</h3>
-        {/* <p className="service-description">Secure data storage solutions</p> */}
       </div>
     </div>
   </div>
@@ -1506,6 +1553,17 @@ const partnerLogos = [
           </button>
         </div>
       </div>
+    </div>
+      <div className="visit-all-branches-container" style={{ textAlign: 'center', marginTop: '3rem' }}>
+      <button 
+        className="location-action-btn"
+        onClick={() => router.push('/pages/Branches')}
+        style={{ maxWidth: '250px', margin: '0 auto' }}
+      >
+        <FaMapMarkerAlt style={{ marginRight: '8px' }} />
+        Visit All Branches
+        <FaArrowRight style={{ marginLeft: '8px' }} />
+      </button>
     </div>
   </div>
 </section>

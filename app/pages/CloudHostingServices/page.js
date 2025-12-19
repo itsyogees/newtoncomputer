@@ -13,7 +13,6 @@ export default function CloudHostingServices() {
     '/assets/azure-cloud-server.png',
     '/assets/aws-cloud-server.png',
     '/assets/google-cloud-1.png',
-   
   ];
 
   const cloudServices = [
@@ -69,27 +68,23 @@ export default function CloudHostingServices() {
   const additionalFeatures = [
     {
       title: "24/7 Monitoring",
-      description: "Round-the-clock monitoring and proactive support",
-      icon: "monitor"
+      description: "Round-the-clock monitoring and proactive support"
     },
     {
       title: "Security First",
-      description: "Enterprise-grade security with regular updates",
-      icon: "security"
+      description: "Enterprise-grade security with regular updates"
     },
     {
       title: "Cost Optimization",
-      description: "Optimized pricing with transparent billing",
-      icon: "cost"
+      description: "Optimized pricing with transparent billing"
     },
     {
       title: "Migration Services",
-      description: "Seamless migration from existing infrastructure",
-      icon: "migration"
+      description: "Seamless migration from existing infrastructure"
     }
   ];
 
-  // Intersection Observer for scroll animations
+  // Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -97,7 +92,7 @@ export default function CloudHostingServices() {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     const section = document.getElementById('cloud-solutions');
@@ -112,7 +107,7 @@ export default function CloudHostingServices() {
     };
   }, []);
 
-  // Auto-slide functionality
+  // Auto-slide
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPartner((prev) => (prev + 1) % Math.ceil(cloudPartners.length / 4));
@@ -121,214 +116,187 @@ export default function CloudHostingServices() {
     return () => clearInterval(interval);
   }, [cloudPartners.length]);
 
-  // Get current slide images
   const getCurrentSlideImages = () => {
     const startIndex = currentPartner * 4;
     return cloudPartners.slice(startIndex, startIndex + 4);
   };
 
   return (
-    <div className="cloud-hosting-page">
+    <div className="cloud-hosting">
       {/* Hero Section */}
       <section className="cloud-hero">
-        <div className="cloud-hero__container">
-          <div className="cloud-hero__content">
-            <div className="certified-badge">
-              <span>Certified Partner</span>
-            </div>
-            <h1 className="cloud-hero__title">
-              Cloud Hosting Services
-            </h1>
-            <p className="cloud-hero__description">
-              At Newton Computers, we specialize in delivering cutting-edge cloud hosting 
-              solutions designed to empower your business.
-            </p>
-            
-            {/* Partners Slider Section */}
-            <div className="partners-sections">
-              <div className="partners-header">
-                <h3 className="partners-title">Trusted Cloud Partners</h3>
-              </div>
+        <div className="container">
+          <div className="cloud-hero__container">
+            <div className="cloud-hero__content">
+              <h1 className="cloud-hero__title">
+                Cloud Hosting Services
+              </h1>
+              <p className="cloud-hero__description">
+                At Newton Computers, we specialize in delivering cutting-edge cloud hosting 
+                solutions designed to empower your business.
+              </p>
               
-              <div className="partners-slider">
-                <div className="partners-track">
+              {/* Trusted Partners */}
+              <div className="cloud-partners">
+                <h3 className="cloud-partners__title">Trusted Cloud Partners</h3>
+                <div className="cloud-partners__grid">
                   {getCurrentSlideImages().map((partner, index) => (
-                    <div key={index} className="partner-item">
-                      <div className="partner-image-container">
+                    <div key={index} className="cloud-partner__item">
+                      <div className="cloud-partner__img">
                         <Image
                           src={partner}
-                          alt={`Cloud Partner ${index + 1}`}
-                          width={100}
+                          alt={`Partner ${index + 1}`}
+                          width={120}
                           height={60}
-                          className="partner-image"
+                          className="cloud-partner__logo"
                         />
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
 
-            <div className="cloud-hero__actions">
-              <button className="cloud-hero__btn cloud-hero__btn--primary">
-                Book Service
-              </button>
-              <button className="cloud-hero__btn cloud-hero__btn--secondary">
-                View Plans
-              </button>
-            </div>
-          </div>
-          <div className="cloud-hero__image">
-            <Image 
-              src="/assets/cloud-storage-services-1.png" 
-              alt="Cloud Hosting Services" 
-              width={600} 
-              height={400}
-              priority
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Main Solutions Section */}
-      <section id="cloud-solutions" className="cloud-solutions">
-        {/* Floating background circles */}
-        <div className="floating-circle"></div>
-        <div className="floating-circle"></div>
-        <div className="floating-circle"></div>
-        
-        <div className="cloud-solutions__container">
-          <div className="cloud-solutions__content">
-            <div className="content-wrapper">
-              <h2 className="cloud-solutions__title">
-                Cloud Hosting Solutions Tailored for Your Business
-              </h2>
-              <div className="cloud-solutions__text">
-                <p className="intro-text">
-                  At Newton Computers, we specialize in delivering cutting-edge cloud hosting 
-                  solutions designed to empower your business. Our comprehensive services include:
-                </p>
+              <div className="cloud-hero__actions">
+                <button className="cloud-btn cloud-btn--primary">
+                  Book Service
+                  <FaArrowRight />
+                </button>
+                <button className="cloud-btn cloud-btn--secondary">
+                  View Plans
+                </button>
               </div>
             </div>
-          </div>
-          
-          <div className="cloud-solutions__image">
-            <div className="image-container">
-              <Image
-                src="/assets/cloud-storage-1.png"
-                alt="Cloud Hosting Solutions Overview"
-                width={600}
-                height={500}
-                className={`solution-image ${isVisible ? 'animate-in' : ''}`}
+            <div className="cloud-hero__image">
+              <Image 
+                src="/assets/cloud-storage-services-1.png" 
+                alt="Cloud Hosting Services" 
+                width={600} 
+                height={450}
+                priority
               />
             </div>
           </div>
         </div>
-        
-        <div className="cloud-services-grid">
-          {cloudServices.map((service, index) => (
-            <div key={index} className="cloud-service-card">
-              <div className="service-header">
-                <div className="service-icon">
-                  {service.icon}
-                </div>
-                <h3 className="service-title">{service.title}</h3>
-              </div>
-              <p className="service-description">{service.description}</p>
-              <div className="service-features">
-                {service.features.map((feature, idx) => (
-                  <span key={idx} className="feature-tag">
-                    <FaCheck className="check-icon" />
-                    {feature}
-                  </span>
+      </section>
+
+      {/* Main Solutions */}
+      <section id="cloud-solutions" className="cloud-solutions">
+        <div className="container">
+          <div className="cloud-solutions__container">
+            <div className="cloud-solutions__content">
+              <h2 className="cloud-section__title">
+                Cloud Hosting Solutions Tailored for Your Business
+              </h2>
+              <p className="cloud-solutions__text">
+                At Newton Computers, we specialize in delivering cutting-edge cloud hosting 
+                solutions designed to empower your business. Our comprehensive services include:
+              </p>
+              
+              <div className="cloud-services__grid">
+                {cloudServices.map((service, index) => (
+                  <div key={index} className="cloud-service__card">
+                    <div className="cloud-service__icon">
+                      {service.icon}
+                    </div>
+                    <h4 className="cloud-service__title">{service.title}</h4>
+                    <p className="cloud-service__description">{service.description}</p>
+                    <div className="cloud-service__features">
+                      {service.features.map((feature, idx) => (
+                        <span key={idx} className="cloud-feature__tag">
+                          <FaCheck className="cloud-check__icon" />
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
-          ))}
+            <div className="cloud-solutions__image">
+              <Image
+                src="/assets/cloud-storage-1.png"
+                alt="Cloud Hosting Solutions"
+                width={550}
+                height={450}
+                className={`cloud-solutions__img ${isVisible ? 'animate-in' : ''}`}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="why-choose-cloud">
-        <div className="why-choose-cloud__container container">
-          <div className="why-choose-cloud__header">
-            <h2 className="why-choose-cloud__title">
-              Why Choose Us?
-            </h2>
-            <p className="why-choose-cloud__subtitle">
+      {/* Why Choose Us */}
+      <section className="cloud-why">
+        <div className="container">
+          <div className="cloud-section__header">
+            <h2 className="cloud-section__title">Why Choose Us?</h2>
+            <p className="cloud-section__subtitle">
               Experience the future of cloud hosting with us. Contact our experts today 
               to explore the best hosting solution for your business.
             </p>
           </div>
           
-          <div className="why-choose-grid">
+          <div className="cloud-why__grid">
             {whyChooseUs.map((reason, index) => (
-              <div key={index} className="reason-card">
-                <div className="reason-icon">
+              <div key={index} className="cloud-why__card">
+                <div className="cloud-why__icon">
                   {reason.icon}
                 </div>
-                <h3 className="reason-title">{reason.title}</h3>
-                <p className="reason-description">{reason.description}</p>
+                <h3 className="cloud-why__title">{reason.title}</h3>
+                <p className="cloud-why__description">{reason.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Additional Features Section */}
-      <section className="additional-features">
-        <div className="additional-features__container container">
-          <div className="additional-features__content">
-            <div className="additional-features__text-content">
-              <h2 className="additional-features__title">
-                Comprehensive Cloud Solutions
-              </h2>
-              <div className="additional-features__description">
-                <p className="intro-text">
-                  We provide end-to-end cloud hosting solutions that cover every aspect 
-                  of your digital infrastructure needs.
-                </p>
-                
-                <div className="features-list">
-                  {additionalFeatures.map((feature, index) => (
-                    <div key={index} className="feature-item">
-                      <div className="feature-icon">
-                        {feature.icon === 'monitor' && <FaHeadset />}
-                        {feature.icon === 'security' && <FaShieldAlt />}
-                        {feature.icon === 'cost' && <FaCogs />}
-                        {feature.icon === 'migration' && <FaSync />}
-                      </div>
-                      <div className="feature-content">
-                        <h4>{feature.title}</h4>
-                        <p>{feature.description}</p>
-                      </div>
+      {/* Additional Features */}
+      <section className="cloud-features">
+        <div className="container">
+          <div className="cloud-features__container">
+            <div className="cloud-features__content">
+              <h2 className="cloud-section__title">Comprehensive Cloud Solutions</h2>
+              <p className="cloud-features__text">
+                We provide end-to-end cloud hosting solutions that cover every aspect 
+                of your digital infrastructure needs.
+              </p>
+              
+              <div className="cloud-features__list">
+                {additionalFeatures.map((feature, index) => (
+                  <div key={index} className="cloud-feature__item">
+                    <div className="cloud-feature__icon">
+                      {index === 0 && <FaHeadset />}
+                      {index === 1 && <FaShieldAlt />}
+                      {index === 2 && <FaCogs />}
+                      {index === 3 && <FaSync />}
                     </div>
-                  ))}
-                </div>
-                
-                <div className="benefits-summary">
-                  <h3>Key Benefits</h3>
-                  <ul className="benefits-list">
-                    <li><FaCheck /> Reduced infrastructure costs by up to 60%</li>
-                    <li><FaCheck /> Improved application performance and reliability</li>
-                    <li><FaCheck /> Enhanced security with enterprise-grade protection</li>
-                    <li><FaCheck /> Flexible scaling to match business growth</li>
-                    <li><FaCheck /> Expert support and 24/7 monitoring</li>
-                  </ul>
-                </div>
+                    <div className="cloud-feature__info">
+                      <h4>{feature.title}</h4>
+                      <p>{feature.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="cloud-benefits">
+                <h3 className="cloud-benefits__title">Key Benefits</h3>
+                <ul className="cloud-benefits__list">
+                  <li><FaCheck /> Reduced infrastructure costs by up to 60%</li>
+                  <li><FaCheck /> Improved application performance and reliability</li>
+                  <li><FaCheck /> Enhanced security with enterprise-grade protection</li>
+                  <li><FaCheck /> Flexible scaling to match business growth</li>
+                  <li><FaCheck /> Expert support and 24/7 monitoring</li>
+                </ul>
               </div>
             </div>
-            
-            <div className="additional-features__image">
-              <div className="image-wrapper">
-                <Image
-                  src="/assets/cloud-storage-services-1-1.png"
-                  alt="Cloud Infrastructure"
-                  width={500}
-                  height={400}
-                  className="features-image"
-                />
-              </div>
+            <div className="cloud-features__image">
+              <Image
+                src="/assets/cloud-storage-services-1-1.png"
+                alt="Cloud Infrastructure"
+                width={500}
+                height={400}
+                className="cloud-features__img"
+              />
             </div>
           </div>
         </div>
@@ -336,39 +304,39 @@ export default function CloudHostingServices() {
 
       {/* Process Section */}
       <section className="cloud-process">
-        <div className="cloud-process__container container">
-          <h2 className="cloud-process__title">
-            Our Cloud Migration Process
-          </h2>
+        <div className="container">
+          <div className="cloud-section__header">
+            <h2 className="cloud-section__title">Our Cloud Migration Process</h2>
+          </div>
           
-          <div className="process-steps">
-            <div className="process-step">
-              <div className="step-number">01</div>
-              <div className="step-content">
+          <div className="cloud-process__grid">
+            <div className="cloud-process__step">
+              <div className="cloud-step__number">01</div>
+              <div className="cloud-step__content">
                 <h3>Assessment & Planning</h3>
                 <p>Comprehensive analysis of your current infrastructure and requirements</p>
               </div>
             </div>
             
-            <div className="process-step">
-              <div className="step-number">02</div>
-              <div className="step-content">
+            <div className="cloud-process__step">
+              <div className="cloud-step__number">02</div>
+              <div className="cloud-step__content">
                 <h3>Solution Design</h3>
                 <p>Custom cloud architecture design based on your business needs</p>
               </div>
             </div>
             
-            <div className="process-step">
-              <div className="step-number">03</div>
-              <div className="step-content">
+            <div className="cloud-process__step">
+              <div className="cloud-step__number">03</div>
+              <div className="cloud-step__content">
                 <h3>Migration & Setup</h3>
                 <p>Seamless migration with minimal downtime and disruption</p>
               </div>
             </div>
             
-            <div className="process-step">
-              <div className="step-number">04</div>
-              <div className="step-content">
+            <div className="cloud-process__step">
+              <div className="cloud-step__number">04</div>
+              <div className="cloud-step__content">
                 <h3>Optimization & Support</h3>
                 <p>Continuous optimization and 24/7 expert support</p>
               </div>
@@ -376,8 +344,6 @@ export default function CloudHostingServices() {
           </div>
         </div>
       </section>
-
-    
     </div>
   );
 }

@@ -183,26 +183,17 @@ export default function Navbar() {
                 Shop <FaChevronDown className="dropdown-arrow" />
               </button>
               <div className="dropdown-menu">
-                <Link href="/pages/LaptopStore" className="dropdown-item" onClick={closeMenu}>
-                  All Laptops
+                <Link href="/pages/LaptopStore?category=refurbished-laptop" className="dropdown-item" onClick={closeMenu}>
+                  Refurbished Laptop
                 </Link>
-                <Link href="/pages/LaptopStore?brand=dell" className="dropdown-item" onClick={closeMenu}>
-                  Dell Laptops
+                <Link href="/pages/LaptopStore?category=new-laptop" className="dropdown-item" onClick={closeMenu}>
+                  Brand New Laptop
                 </Link>
-                <Link href="/pages/LaptopStore?brand=lenovo" className="dropdown-item" onClick={closeMenu}>
-                  Lenovo Laptops
+                <Link href="/pages/LaptopStore?category=accessories" className="dropdown-item" onClick={closeMenu}>
+                  Laptop Accessories
                 </Link>
-                <Link href="/pages/LaptopStore?brand=hp" className="dropdown-item" onClick={closeMenu}>
-                  HP Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=acer" className="dropdown-item" onClick={closeMenu}>
-                  Acer Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=asus" className="dropdown-item" onClick={closeMenu}>
-                  ASUS Laptops
-                </Link>
-                <Link href="/pages/LaptopStore?brand=msi" className="dropdown-item" onClick={closeMenu}>
-                  MSI Laptops
+                <Link href="/pages/LaptopStore?category=printer" className="dropdown-item" onClick={closeMenu}>
+                  Printer
                 </Link>
               </div>
             </div>
@@ -380,26 +371,17 @@ export default function Navbar() {
                   <FaChevronDown className="mobile-dropdown-arrow" />
                 </summary>
                 <div className="mobile-dropdown-content">
-                  <Link href="/pages/LaptopStore" className="mobile-dropdown-item" onClick={closeMenu}>
-                    All Laptops
+                  <Link href="/pages/LaptopStore?category=refurbished-laptop" className="mobile-dropdown-item" onClick={closeMenu}>
+                    Refurbished Laptop
                   </Link>
-                  <Link href="/pages/LaptopStore?brand=dell" className="mobile-dropdown-item" onClick={closeMenu}>
-                    Dell Laptops
+                  <Link href="/pages/LaptopStore?category=new-laptop" className="mobile-dropdown-item" onClick={closeMenu}>
+                    Brand New Laptop
                   </Link>
-                  <Link href="/pages/LaptopStore?brand=lenovo" className="mobile-dropdown-item" onClick={closeMenu}>
-                    Lenovo Laptops
+                  <Link href="/pages/LaptopStore?category=accessories" className="mobile-dropdown-item" onClick={closeMenu}>
+                    Laptop Accessories
                   </Link>
-                  <Link href="/pages/LaptopStore?brand=hp" className="mobile-dropdown-item" onClick={closeMenu}>
-                    HP Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=acer" className="mobile-dropdown-item" onClick={closeMenu}>
-                    Acer Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=asus" className="mobile-dropdown-item" onClick={closeMenu}>
-                    ASUS Laptops
-                  </Link>
-                  <Link href="/pages/LaptopStore?brand=msi" className="mobile-dropdown-item" onClick={closeMenu}>
-                    MSI Laptops
+                  <Link href="/pages/LaptopStore?category=printer" className="mobile-dropdown-item" onClick={closeMenu}>
+                    Printer
                   </Link>
                 </div>
               </details>

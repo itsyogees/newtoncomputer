@@ -94,7 +94,7 @@ export default function ServerAndStorageSolutions() {
   };
 
   return (
-    <div className="server-storage-page">
+    <div className="server-storage">
       {/* Hero Section */}
       <section className="server-hero">
         <div className="server-hero__container">
@@ -108,22 +108,22 @@ export default function ServerAndStorageSolutions() {
             </p>
             
             {/* Partners Slider Section */}
-            <div className="partners-sections">
-              <div className="partners-header">
-                <h3 className="partners-title">Trusted Technology Partners</h3>
+            <div className="server-partners">
+              <div className="server-partners__header">
+                <h3 className="server-partners__title">Trusted Technology Partners</h3>
               </div>
               
-              <div className="partners-slider">
-                <div className="partners-track">
+              <div className="server-partners__slider">
+                <div className="server-partners__track">
                   {getCurrentSlideImages().map((partner, index) => (
-                    <div key={index} className="partner-item">
-                      <div className="partner-image-container">
+                    <div key={index} className="server-partner__item">
+                      <div className="server-partner__image-container">
                         <Image
                           src={partner}
                           alt={`Technology Partner ${index + 1}`}
                           width={100}
                           height={60}
-                          className="partner-image"
+                          className="server-partner__image"
                         />
                       </div>
                     </div>
@@ -136,7 +136,6 @@ export default function ServerAndStorageSolutions() {
               <button className="server-hero__btn server-hero__btn--primary">
                 Get Consultation
               </button>
-            
             </div>
           </div>
           <div className="server-hero__image">
@@ -153,22 +152,17 @@ export default function ServerAndStorageSolutions() {
 
       {/* Comprehensive Solutions Section */}
       <section id="server-solutions" className="server-solutions">
-        {/* Floating background circles */}
-        <div className="floating-circle"></div>
-        <div className="floating-circle"></div>
-        <div className="floating-circle"></div>
-        
         <div className="server-solutions__container">
           <div className="server-solutions__content">
-            <div className="content-wrapper">
+            <div className="server-solutions__text-wrapper">
               <h2 className="server-solutions__title">
                 Complete Server and Storage Infrastructure Solutions
               </h2>
               <div className="server-solutions__text">
-                <p className="intro-text">
+                <p className="server-solutions__intro">
                   Newton Computer Services offers a complete range of server and storage solutions tailored to meet the demands of modern businesses. Whether your organization requires new server installations, upgrades, configuration, or reliable support, we provide end-to-end solutions across major server brands like Dell, IBM, Lenovo, and HPE ProLiant.
                 </p>
-                <p className="description-text">
+                <p className="server-solutions__description">
                   Additionally, we specialize in diverse storage solutions, including NAS (Network Attached Storage), cloud file storage, and leading storage brands like Synology, Thecus, EMC, and NetApp. Our mission is to ensure your infrastructure runs smoothly, securely, and efficiently, helping your organization maximize its IT investment.
                 </p>
               </div>
@@ -176,13 +170,13 @@ export default function ServerAndStorageSolutions() {
           </div>
           
           <div className="server-solutions__image">
-            <div className="image-container">
+            <div className="server-solutions__image-container">
               <Image
                 src="/assets/server-storage-500x406.png"
                 alt="Server Infrastructure"
                 width={600}
                 height={500}
-                className={`solution-image ${isVisible ? 'animate-in' : ''}`}
+                className={`server-solutions__img ${isVisible ? 'animate-in' : ''}`}
               />
             </div>
           </div>
@@ -190,11 +184,11 @@ export default function ServerAndStorageSolutions() {
         
         <div className="server-features">
           {features.map((feature, index) => (
-            <div key={index} className="feature-item">
-              <div className="feature-icon">
+            <div key={index} className="server-feature__item">
+              <div className="server-feature__icon">
                 {feature.icon}
               </div>
-              <div className="feature-content">
+              <div className="server-feature__content">
                 <h4>{feature.title}</h4>
                 <p>{feature.description}</p>
               </div>
@@ -204,17 +198,17 @@ export default function ServerAndStorageSolutions() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="why-choose-server">
+      <section className="server-choose">
         <div className="container">
-          <div className="why-choose-server__header">
-            <h2 className="why-choose-server__title">
+          <div className="server-choose__header">
+            <h2 className="server-choose__title">
               Why Choose Newton Computer Services for Your Server and Storage Needs?
             </h2>
-            <div className="why-choose-server__content">
-              <p className="why-choose-server__description">
+            <div className="server-choose__content">
+              <p className="server-choose__description">
                 With the ever-evolving demands of business technology, having the right server and storage setup is crucial. Newton Computer Services delivers tailored services that allow your infrastructure to scale seamlessly with your needs, maximizing performance and minimizing downtime.
               </p>
-              <p className="why-choose-server__description">
+              <p className="server-choose__description">
                 Our experienced team provides a full spectrum of server and storage solutions, from initial setup and configuration to ongoing support and maintenance.
               </p>
             </div>
@@ -232,19 +226,19 @@ export default function ServerAndStorageSolutions() {
             At Newton Computer Services, we believe in working with only the best. Our partnerships with top brands ensure that your infrastructure is built with quality products.
           </p>
           
-          <div className="brands-grid">
-            <div className="brands-category">
-              <h3 className="brands-category__title">
-                <FaServer className="category-icon" />
+          <div className="server-brands__grid">
+            <div className="server-brands__category">
+              <h3 className="server-brands__category-title">
+                <FaServer className="server-brands__category-icon" />
                 Server Solutions
               </h3>
-              <div className="brands-list">
+              <div className="server-brands__list">
                 {serverBrands.map((brand, index) => (
-                  <div key={index} className="brand-item">
-                    <div className="brand-icon">
+                  <div key={index} className="server-brands__item">
+                    <div className="server-brands__item-icon">
                       <FaCheck />
                     </div>
-                    <div className="brand-content">
+                    <div className="server-brands__item-content">
                       <h4>{brand.name}</h4>
                       <p>{brand.description}</p>
                     </div>
@@ -253,18 +247,18 @@ export default function ServerAndStorageSolutions() {
               </div>
             </div>
             
-            <div className="brands-category">
-              <h3 className="brands-category__title">
-                <FaDatabase className="category-icon" />
+            <div className="server-brands__category">
+              <h3 className="server-brands__category-title">
+                <FaDatabase className="server-brands__category-icon" />
                 Storage Solutions
               </h3>
-              <div className="brands-list">
+              <div className="server-brands__list">
                 {storageBrands.map((brand, index) => (
-                  <div key={index} className="brand-item">
-                    <div className="brand-icon">
+                  <div key={index} className="server-brands__item">
+                    <div className="server-brands__item-icon">
                       <FaCheck />
                     </div>
-                    <div className="brand-content">
+                    <div className="server-brands__item-content">
                       <h4>{brand.name}</h4>
                       <p>{brand.description}</p>
                     </div>
@@ -277,43 +271,43 @@ export default function ServerAndStorageSolutions() {
       </section>
 
       {/* Custom Solutions Section */}
-      <section className="custom-solutions">
-        <div className="custom-solutions__container container">
-          <div className="custom-solutions__content">
-            <div className="custom-solutions__text-content">
-              <h2 className="custom-solutions__title">
+      <section className="server-custom">
+        <div className="server-custom__container container">
+          <div className="server-custom__content">
+            <div className="server-custom__text-content">
+              <h2 className="server-custom__title">
                 Custom Solutions for Every Business
               </h2>
-              <div className="custom-solutions__description">
-                <p className="intro-text">
+              <div className="server-custom__description">
+                <p className="server-custom__intro">
                   Newton Computer Services understands that each business is unique. Our team works closely with you to design solutions that meet your specific requirements and budget constraints.
                 </p>
                 
-                <div className="solution-benefits">
-                  <div className="benefit-item">
-                    <div className="benefit-icon">
+                <div className="server-custom__benefits">
+                  <div className="server-custom__benefit-item">
+                    <div className="server-custom__benefit-icon">
                       <FaCogs />
                     </div>
-                    <div className="benefit-content">
+                    <div className="server-custom__benefit-content">
                       <h4>Cost Optimization</h4>
                       <p>We help you choose servers and storage solutions that meet your needs without unnecessary features, ensuring you get the most value.</p>
                     </div>
                   </div>
                   
-                  <div className="benefit-item">
-                    <div className="benefit-icon">
+                  <div className="server-custom__benefit-item">
+                    <div className="server-custom__benefit-icon">
                       <FaSync />
                     </div>
-                    <div className="benefit-content">
+                    <div className="server-custom__benefit-content">
                       <h4>Scalability and Flexibility</h4>
                       <p>Our solutions are designed to grow with your business, offering flexibility and scalability as your needs evolve.</p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="additional-benefits">
+                <div className="server-custom__additional">
                   <h3>Additional Benefits</h3>
-                  <ul className="benefits-list">
+                  <ul className="server-custom__benefits-list">
                     <li><FaCheck /> Expert consultation and planning</li>
                     <li><FaCheck /> Seamless integration with existing systems</li>
                     <li><FaCheck /> Comprehensive training and documentation</li>
@@ -324,22 +318,20 @@ export default function ServerAndStorageSolutions() {
               </div>
             </div>
             
-            <div className="custom-solutions__image">
-              <div className="image-wrapper">
+            <div className="server-custom__image">
+              <div className="server-custom__image-wrapper">
                 <Image
                   src="/assets/server-support-chennai.png"
                   alt="Custom Server Solutions"
                   width={500}
                   height={400}
-                  className="custom-solution-image"
+                  className="server-custom__img"
                 />
               </div>
             </div>
           </div>
         </div>
       </section>
-
-    
     </div>
   );
 }

@@ -13,7 +13,6 @@ export default function CctvSolutions() {
     '/assets/Dahua_Technology_logo-camera.png',
     '/assets/hik-vision-camera-logo.png',
     '/assets/Honeywell_logo-camera.png',
-  
   ];
 
   const cctvSystems = [
@@ -45,7 +44,7 @@ export default function CctvSolutions() {
       title: "Analog Camera Integration",
       features: [
         "Efficient video compression to maximize storage",
-        "Intuitive playback for quick access to recorded footage",
+        "Intuitive playback for quick access to footage",
         "Cost-effective solution for analog setups",
         "Multi-channel recording capabilities"
       ],
@@ -57,7 +56,7 @@ export default function CctvSolutions() {
       features: [
         "Superior video resolution and clarity",
         "Scalable systems for multi-camera setups",
-        "Smart features like AI analytics for proactive monitoring",
+        "Smart features like AI analytics",
         "Remote access and cloud connectivity"
       ],
       icon: <FaCloud />
@@ -67,52 +66,48 @@ export default function CctvSolutions() {
   const trustedBrands = [
     {
       name: "Hikvision",
-      description: "Leading in AI-powered surveillance solutions",
-      icon: "hikvision"
+      description: "Leading in AI-powered surveillance solutions"
     },
     {
       name: "Dahua",
-      description: "Known for high-quality video and innovative features",
-      icon: "dahua"
+      description: "Known for high-quality video and innovative features"
     },
     {
       name: "CP Plus",
-      description: "Reliable and budget-friendly options for homes and businesses",
-      icon: "cpplus"
+      description: "Reliable and budget-friendly options"
     },
     {
-      name: "Honeywell Commercial Security",
-      description: "Robust and scalable enterprise solutions",
-      icon: "honeywell"
+      name: "Honeywell",
+      description: "Robust and scalable enterprise solutions"
     }
   ];
 
   const services = [
     {
-      number: "1",
+      number: "01",
       title: "Professional Installation",
-      description: "Our expert technicians ensure a hassle-free setup",
+      description: "Expert setup and seamless integration",
       details: [
-        "Customized designs to meet specific needs",
+        "Customized designs for specific needs",
         "Optimized camera placement for maximum coverage",
-        "Seamless integration with existing security systems"
+        "Integration with existing security systems"
       ],
       icon: <FaCogs />
     },
     {
-      number: "2",
-      title: "Ongoing Maintenance and Support",
-      description: "We provide top-tier service to keep your systems running smoothly",
+      number: "02",
+      title: "Maintenance & Support",
+      description: "Ongoing service for smooth operation",
       details: [
-        "Regular system checks to ensure optimal performance",
-        "Troubleshooting and quick repairs for minimal downtime",
-        "Software updates to maintain compatibility and security"
+        "Regular system checks for optimal performance",
+        "Troubleshooting and quick repairs",
+        "Software updates and security maintenance"
       ],
       icon: <FaHeadset />
     }
   ];
 
-  // Intersection Observer for scroll animations
+  // Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -120,7 +115,7 @@ export default function CctvSolutions() {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     const section = document.getElementById('cctv-solutions');
@@ -135,7 +130,7 @@ export default function CctvSolutions() {
     };
   }, []);
 
-  // Auto-slide functionality
+  // Auto-slide
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPartner((prev) => (prev + 1) % Math.ceil(cctvPartners.length / 4));
@@ -144,212 +139,142 @@ export default function CctvSolutions() {
     return () => clearInterval(interval);
   }, [cctvPartners.length]);
 
-  // Get current slide images
   const getCurrentSlideImages = () => {
     const startIndex = currentPartner * 4;
     return cctvPartners.slice(startIndex, startIndex + 4);
   };
 
   return (
-    <div className="cctv-solutions-page">
+    <div className="cctv-solutions">
       {/* Hero Section */}
       <section className="cctv-hero">
-        <div className="cctv-hero__container">
-          <div className="cctv-hero__content">
-            <div className="certified-badge">
-              <span>Certified Partner</span>
-            </div>
-            <h1 className="cctv-hero__title">
-              CCTV Solutions
-            </h1>
-            <p className="cctv-hero__description">
-              In today's world, safeguarding your property is a priority. At Newton Computers, 
-              we offer a full range of CCTV systems, including IP, dome, bullet, and PTZ cameras, 
-              paired with cutting-edge DVRs and NVRs.
-            </p>
-            
-            {/* Partners Slider Section */}
-            <div className="partners-sections">
-              <div className="partners-header">
-                <h3 className="partners-title">Trusted Security Partners</h3>
-              </div>
+        <div className="container">
+          <div className="cctv-hero__container">
+            <div className="cctv-hero__content">
+              <h1 className="cctv-hero__title">
+                CCTV Solutions
+              </h1>
+              <p className="cctv-hero__description">
+                Advanced surveillance systems with IP, dome, bullet, and PTZ cameras, 
+                integrated with cutting-edge DVRs and NVRs for comprehensive security.
+              </p>
               
-              <div className="partners-slider">
-                <div className="partners-track">
+              {/* Trusted Partners */}
+              <div className="cctv-partners">
+                <h3 className="cctv-partners__title">Trusted Security Partners</h3>
+                <div className="cctv-partners__grid">
                   {getCurrentSlideImages().map((partner, index) => (
-                    <div key={index} className="partner-item">
-                      <div className="partner-image-container">
+                    <div key={index} className="cctv-partner__item">
+                      <div className="cctv-partner__img">
                         <Image
                           src={partner}
-                          alt={`CCTV Partner ${index + 1}`}
-                          width={100}
+                          alt={`Partner ${index + 1}`}
+                          width={120}
                           height={60}
-                          className="partner-image"
+                          className="cctv-partner__logo"
                         />
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
 
-            <div className="cctv-hero__actions">
-              <button className="cctv-hero__btn cctv-hero__btn--primary">
-                Book Service
-              </button>
-              <button className="cctv-hero__btn cctv-hero__btn--secondary">
-                View Solutions
-              </button>
-            </div>
-          </div>
-          <div className="cctv-hero__image">
-            <Image 
-              src="/assets/cctv.png" 
-              alt="CCTV Solutions" 
-              width={600} 
-              height={400}
-              priority
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Main Solutions Section */}
-      <section id="cctv-solutions" className="cctv-solutions">
-        {/* Floating background circles */}
-        <div className="floating-circle"></div>
-        <div className="floating-circle"></div>
-        <div className="floating-circle"></div>
-        
-        <div className="cctv-solutions__container">
-          <div className="cctv-solutions__content">
-            <div className="content-wrapper">
-              <h2 className="cctv-solutions__title">
-                Unmatched Security with Advanced CCTV Systems
-              </h2>
-              <div className="cctv-solutions__text">
-                <p className="intro-text">
-                  In today's world, safeguarding your property is a priority. At Newton Computers, 
-                  we offer a full range of CCTV systems, including IP, dome, bullet, and PTZ cameras, 
-                  paired with cutting-edge DVRs and NVRs.
-                </p>
-                <p className="description-text">
-                  We specialize in offering installation and service for all major brands such as 
-                  Hikvision, Dahua, CP Plus, and Honeywell Commercial Security, ensuring round-the-clock 
-                  monitoring and unparalleled protection.
-                </p>
+              <div className="cctv-hero__actions">
+                <button className="cctv-btn cctv-btn--primary">
+                  Book Service
+                  <FaArrowRight />
+                </button>
+                <button className="cctv-btn cctv-btn--secondary">
+                  View Solutions
+                </button>
               </div>
             </div>
-          </div>
-          
-          <div className="cctv-solutions__image">
-            <div className="image-container">
-              <Image
-                src="/assets/cctv-services-chennai.png"
-                alt="CCTV System Overview"
-                width={600}
-                height={500}
-                className={`solution-image ${isVisible ? 'animate-in' : ''}`}
+            <div className="cctv-hero__image">
+              <Image 
+                src="/assets/cctv.png" 
+                alt="CCTV Systems" 
+                width={600} 
+                height={450}
+                priority
               />
             </div>
           </div>
         </div>
-        
-        <div className="cctv-systems-overview">
-          <h3 className="systems-title">Complete CCTV Systems</h3>
-          <p className="systems-subtitle">
-            Comprehensive surveillance solutions for every security need
-          </p>
-          
-          <div className="systems-grid">
-            {cctvSystems.map((system, index) => (
-              <div key={index} className="system-card">
-                <div className="system-icon">
-                  {system.icon}
-                </div>
-                <h4>{system.title}</h4>
-                <p>{system.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
-      {/* DVR & NVR Systems Section */}
-      <section className="recording-systems">
-        <div className="recording-systems__container container">
-          <div className="recording-systems__header">
-            <h2 className="recording-systems__title">
-              DVR and NVR Systems for Seamless Recording
-            </h2>
-          </div>
-          
-          <div className="recording-systems__content">
-            {recordingSystems.map((system, index) => (
-              <div key={index} className="recording-system-card">
-                <div className="system-type">
-                  <span className="type-badge">{system.type}</span>
-                  <h3 className="system-title">{system.title}</h3>
-                </div>
-                
-                <div className="system-details">
-                  <div className="system-icon-wrapper">
-                    <div className="system-icon">
+      {/* Main Solutions */}
+      <section id="cctv-solutions" className="cctv-systems">
+        <div className="container">
+          <div className="cctv-systems__container">
+            <div className="cctv-systems__content">
+              <h2 className="cctv-section__title">
+                Advanced Surveillance Systems
+              </h2>
+              <p className="cctv-systems__text">
+                We provide comprehensive CCTV solutions tailored to your security needs. 
+                From installation to ongoing support, we ensure your property is protected 
+                with the latest technology and professional expertise.
+              </p>
+              
+              <div className="cctv-systems__grid">
+                {cctvSystems.map((system, index) => (
+                  <div key={index} className="cctv-system__card">
+                    <div className="cctv-system__icon">
                       {system.icon}
                     </div>
+                    <h4 className="cctv-system__title">{system.title}</h4>
+                    <p className="cctv-system__description">{system.description}</p>
                   </div>
-                  
-                  <div className="system-features">
-                    <ul className="features-list">
-                      {system.features.map((feature, idx) => (
-                        <li key={idx}>
-                          <FaCheck className="check-icon" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="system-benefits">
-                  <p>
-                    {system.type === "DVR" 
-                      ? "Ideal for existing analog camera setups with cost-effective recording solutions"
-                      : "Perfect for modern IP camera systems with advanced features and scalability"}
-                  </p>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+            <div className="cctv-systems__image">
+              <Image
+                src="/assets/cctv-services-chennai.png"
+                alt="CCTV Installation"
+                width={550}
+                height={450}
+                className={`cctv-systems__img ${isVisible ? 'animate-in' : ''}`}
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Trusted Brands Section */}
-      <section className="trusted-brands">
-        <div className="trusted-brands__container container">
-          <div className="trusted-brands__header">
-            <h2 className="trusted-brands__title">
-              Trusted Brands We Work With
-            </h2>
-            <p className="trusted-brands__subtitle">
-              We provide systems and support for all major CCTV brands:
-            </p>
+      {/* Recording Systems */}
+      <section className="cctv-recording">
+        <div className="container">
+          <div className="cctv-section__header">
+            <h2 className="cctv-section__title">Recording Solutions</h2>
+            <p className="cctv-section__subtitle">Choose the right system for your needs</p>
           </div>
           
-          <div className="brands-grid">
-            {trustedBrands.map((brand, index) => (
-              <div key={index} className="brand-card">
-                <div className="brand-header">
-                  <div className="brand-icon-placeholder">
-                    {brand.name.charAt(0)}
+          <div className="cctv-recording__grid">
+            {recordingSystems.map((system, index) => (
+              <div key={index} className="cctv-recording__card">
+                <div className="cctv-recording__header">
+                  <div className="cctv-recording__type">{system.type}</div>
+                  <h3 className="cctv-recording__title">{system.title}</h3>
+                  <div className="cctv-recording__icon">
+                    {system.icon}
                   </div>
-                  <h3 className="brand-name">{brand.name}</h3>
                 </div>
-                <p className="brand-description">{brand.description}</p>
-                <div className="brand-features">
-                  <span className="feature-tag">Professional Grade</span>
-                  <span className="feature-tag">Reliable Performance</span>
-                  <span className="feature-tag">Advanced Features</span>
+                <div className="cctv-recording__body">
+                  <ul className="cctv-recording__features">
+                    {system.features.map((feature, idx) => (
+                      <li key={idx} className="cctv-recording__feature">
+                        <FaCheck className="cctv-feature__icon" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="cctv-recording__footer">
+                    <p className="cctv-recording__note">
+                      {system.type === "DVR" 
+                        ? "Ideal for existing analog camera setups"
+                        : "Perfect for modern IP camera systems"}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -357,40 +282,50 @@ export default function CctvSolutions() {
         </div>
       </section>
 
-      {/* Comprehensive Services Section */}
-      <section className="comprehensive-services">
-        <div className="comprehensive-services__container container">
-          <div className="comprehensive-services__content">
-            <div className="comprehensive-services__text-content">
-              <h2 className="comprehensive-services__title">
-                Our Comprehensive Services
-              </h2>
+      {/* Trusted Brands */}
+      <section className="cctv-brands">
+        <div className="container">
+          <div className="cctv-section__header cctv-section__header--center">
+            <h2 className="cctv-section__title">Trusted Brands</h2>
+            <p className="cctv-section__subtitle">We work with industry-leading manufacturers</p>
+          </div>
+          
+          <div className="cctv-brands__grid">
+            {trustedBrands.map((brand, index) => (
+              <div key={index} className="cctv-brand__card">
+                <div className="cctv-brand__header">
+                  <h3 className="cctv-brand__name">{brand.name}</h3>
+                  <div className="cctv-brand__tag">Professional Grade</div>
+                </div>
+                <p className="cctv-brand__description">{brand.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section className="cctv-services">
+        <div className="container">
+          <div className="cctv-services__container">
+            <div className="cctv-services__content">
+              <h2 className="cctv-section__title">Our Services</h2>
               
-              <div className="services-list">
+              <div className="cctv-services__list">
                 {services.map((service, index) => (
-                  <div key={index} className="service-item">
-                    <div className="service-header">
-                      <div className="service-number">
-                        {service.number}
-                      </div>
-                      <div className="service-title-content">
-                        <h3 className="service-title">
-                          {service.title}
-                        </h3>
-                        <p className="service-description">
-                          {service.description}
-                        </p>
-                      </div>
-                      <div className="service-icon">
-                        {service.icon}
+                  <div key={index} className="cctv-service__card">
+                    <div className="cctv-service__header">
+                      <div className="cctv-service__number">{service.number}</div>
+                      <div className="cctv-service__info">
+                        <h3 className="cctv-service__title">{service.title}</h3>
+                        <p className="cctv-service__summary">{service.description}</p>
                       </div>
                     </div>
-                    
-                    <div className="service-details">
-                      <ul className="details-list">
+                    <div className="cctv-service__body">
+                      <ul className="cctv-service__features">
                         {service.details.map((detail, idx) => (
-                          <li key={idx}>
-                            <FaCheck className="detail-check" />
+                          <li key={idx} className="cctv-service__feature">
+                            <FaCheck className="cctv-service__check" />
                             {detail}
                           </li>
                         ))}
@@ -400,32 +335,25 @@ export default function CctvSolutions() {
                 ))}
               </div>
               
-              <div className="service-conclusion">
-                <p>
-                  Our team assists you in selecting the right CCTV solution based on your property's 
-                  size, security requirements, and budget, ensuring you get optimal protection at the best value.
+              <div className="cctv-services__note">
+                <p className="cctv-services__text">
+                  We help you select the right CCTV solution based on your property's size, 
+                  security requirements, and budget for optimal protection.
                 </p>
               </div>
             </div>
-            
-            <div className="comprehensive-services__image">
-              <div className="image-wrapper">
-                <Image
-                  src="/assets/cctv-services-chennai-1.png"
-                  alt="CCTV Installation"
-                  width={500}
-                  height={400}
-                  className="installation-image"
-                />
-              </div>
+            <div className="cctv-services__image">
+              <Image
+                src="/assets/cctv-services-chennai-1.png"
+                alt="CCTV Services"
+                width={500}
+                height={400}
+                className="cctv-services__img"
+              />
             </div>
           </div>
         </div>
       </section>
-
- 
-
-  
     </div>
   );
 }
